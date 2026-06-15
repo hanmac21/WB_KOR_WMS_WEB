@@ -17,7 +17,10 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
+<!-- <script src="/resources/js/w_menuList.js"></script> -->
 <link rel="stylesheet" href="../resources/css/w_header.css" >
+<!-- <link rel="icon" href="/resources/images/favicon.png"/>
+<link rel="apple-touch-icon" href="/resources/images/favicon.png"/>  -->
 
 
 </head>

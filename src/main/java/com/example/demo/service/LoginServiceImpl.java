@@ -5,13 +5,13 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.mapper.wbpt.WbptMapper;
+import com.example.demo.mapper.wbusa.WbusaMapper;
 
 @Service
 public class LoginServiceImpl implements LoginService{
 	
 	@Autowired
-	WbptMapper mexMapper;
+	WbusaMapper mexMapper;
 	
 	@Override
 	public Map<String, Object> loginCheck(Map<String,Object> idParam) {

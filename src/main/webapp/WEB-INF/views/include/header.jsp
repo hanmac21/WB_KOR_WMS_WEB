@@ -226,13 +226,22 @@
 .header_modal_userUpdateForm_btn_secondary:hover {
     background-color: #545b62;
 }
+
+	
 </style>
+<!-- <link rel="icon" href="/resources/images/favicon.png"/> -->
+<!-- <link rel="apple-touch-icon" href="/resources/images/favicon.png"/> --> 
 </head>
 <body>
 	<div class="header-wrap">
 		<div class="header-content">
+			<!-- <span class="rpaMainTitle_1">WOOBO</span> 해더에 탭별 메인 타이틀 이름 넣는 것부터
+			<span class="rpaMainTitle_2">TECH</span> 해더에 탭별 메인 타이틀 이름 넣는 것부터
+			<span class="rpaMainTitle_3">WMS</span> 해더에 탭별 메인 타이틀 이름 넣는 것부터 -->
 			<div class="headerFrontIcon">
 				<img class="wooboTopLogo" src="../resources/images/wooboTechLogo_white_usa.png">
+				<!-- <img src='../resources/images/woobotechLogo.png' class='headerHanmacLogo'> -->
+				<!-- <span class="hanmacText">한맥시스템</span> -->
 			</div>
 			<div class="loginUserArea">
 				<div class = "factoryArea">
@@ -294,6 +303,65 @@
 		</div>
 	
 <script>
+	//hover효과
+	/*
+	$("li:eq(0)").hover(function(){
+		$(".menu1Sub").css("display","block");
+		$(".menu2Sub,.menu3Sub").css("display","none");
+	});
+	$(".menu1Sub").hover(function(){
+		$(this).css("display","block");
+		$(".menu2Sub,.menu3Sub").css("display","none");
+	},function(){
+		$(this).css("display","none");
+	});
+	
+	$("li:eq(1)").hover(function(){
+		$(".menu2Sub").css("display","block");
+		$(".menu1Sub,.menu3Sub").css("display","none");
+	});
+	$(".menu2Sub").hover(function(){
+		$(this).css("display","block");
+		$(".menu1Sub,.menu3Sub").css("display","none");
+	},function(){
+		$(this).css("display","none");
+	});
+	
+	$("li:eq(2)").hover(function(){
+		$(".menu3Sub").css("display","block");
+		$(".menu1Sub,.menu2Sub").css("display","none");
+	});
+	$(".menu3Sub").hover(function(){
+		$(this).css("display","block");
+		$(".menu1Sub,.menu2Sub").css("display","none");
+	},function(){
+		$(this).css("display","none");
+	});
+	*/
+	
+	//클릭효과(혹시몰라서 남겨둠)
+	/*
+	$("li:eq(0)").on("click",function(){
+		$(".menu1Sub").css("display","block");
+		$(".menu2Sub,.menu3Sub").css("display","none");
+	});
+	$("li:eq(1)").on("click",function(){
+		$(".menu2Sub").css("display","block");
+		$(".menu1Sub,.menu3Sub").css("display","none");
+	});
+	$("li:eq(2)").on("click",function(){
+		$(".menu3Sub").css("display","block");
+		$(".menu1Sub,.menu2Sub").css("display","none");
+	});
+	*/
+	/* $("#logout").on("click",function(){
+		if(confirm("로그아웃 하시겠습니까?")){
+			location.href = '/';
+			return true;
+		}else{
+			return false;
+		}
+	}); */
 	$(document).ready(function(){
 	    $(".btnLogout").click(function(){
 	        $("#logout").click();
@@ -312,6 +380,7 @@
         } else {
 	        $(".loginFactory").text((getCookie('selectedFactory') || 'Factory Not Found'));
         }
+	    /* $(".loginId").text(getCookie('userLoginId') || 'Name Not Found'); */
 	    const loginId = sessionStorage.getItem('userId') || 'Name Not Found';
 	    $(".loginId").text(loginId);
 	});
@@ -326,6 +395,7 @@
 	    }
 	    return null;
 	}
+	
 	
 	// 모달 열기
 	$(document).on('click', '.userLogo', function(e) {
@@ -439,7 +509,22 @@
 
 	});
 	
+	
+	
 	$(document).on('click', '.wooboTopLogo', function(e) {
+		/* e.stopPropagation();
+		
+		if ($(".tapAreaCommon").length >= 1) {
+			$(".tapAreaCommon").each(function() {
+	            let tapId = $(this).data("tapid");
+	            $("#view_" + tapId).remove();
+	        });
+	        $(".tapAreaCommon").remove();
+	        
+	        // 메인 화면 표시
+	        $(".w_titleArea").empty();
+	        $(".w_defaultArea").show();
+		} */
 		location.reload();
 	});
 	
@@ -457,6 +542,9 @@
 	    location.reload(true);
 	});
 
+
+
+	
 </script>
 </body>
 </html>

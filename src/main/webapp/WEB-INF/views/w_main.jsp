@@ -27,11 +27,19 @@ final long v = System.currentTimeMillis();
 <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
+<!-- 다국어 jsp -->
+<jsp:include page="/WEB-INF/views/include/i18n-str.jsp" />
+<jsp:include page="/WEB-INF/views/include/i18n-text.jsp" />
+<jsp:include page="/WEB-INF/views/include/i18n-dashboard.jsp" />
+<jsp:include page="/WEB-INF/views/include/i18n-btn.jsp" />
+
 <script src="/resources/js/global-table-wrapper.js"></script>
 
 <!-- 공용 JS -->
+<!-- <script src="/resources/js/common/accordian.js"></script> -->
 <script src="/resources/js/common/loadCSS.js"></script>
 <!-- 번들 : 메뉴리스트 Import -->
+<%-- <script src="${bundleJs}"></script> --%>
 <script src='/resources/dist/bundle.js'></script>
 <link rel="stylesheet"
 	href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -65,8 +73,23 @@ final long v = System.currentTimeMillis();
 	<link rel="stylesheet" href="/resources/css/lang_es.css">
 </c:if>
 
+
+
+<!-- 배포용 -->
+<!-- 
+<link rel="stylesheet" href="/resources/css/menulist/common.css">
+<link rel="stylesheet" href="/resources/css/menulist/m1.css">
+<link rel="stylesheet" href="/resources/css/menulist/m2.css">
+<link rel="stylesheet" href="/resources/css/menulist/m3.css">
+<link rel="stylesheet" href="/resources/css/menulist/m4.css">
+<link rel="stylesheet" href="/resources/css/menulist/m5.css">
+<link rel="stylesheet" href="/resources/css/menulist/m6.css"> 
+-->
+
+
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 <!-- 해결 -->
+<!-- <link rel="stylesheet" href="../resources/css/rpa-schedule.css" > -->
 <script src="https://kit.fontawesome.com/505799415e.js"
 	crossorigin="anonymous"></script>
 <!-- 아이콘 kits -->
@@ -82,6 +105,9 @@ body {
 	display: flex;
 	flex-wrap: wrap;
 }
+/* label{
+	width: 65px;
+} */
 .fc-content {
 	cursor: pointer
 }
@@ -205,13 +231,34 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
 		<div class="contentArea">
 			<div class="w_tapArea">
+				<!-- <div class="tapAreaCommon">
+					<div class="tapCommon">입고 · 평택출고</div>
+					<div class="tapX">X</div>
+				</div>
+				<div class="tapAreaCommon">
+					<div class="tapCommon">입고 · LOCAL</div>
+					<div class="tapX">X</div>
+				</div>
+				<div class="tapAreaCommon">
+					<div class="tapCommon" style="color:white; font-weight:700">입고 · 평택입고</div>
+					<div class="tapX">X</div>
+				</div> -->
 			</div>
 			<div class="w_titleArea"></div>
+			<!-- <div class="w_ex_titleButtonArea">
+				<div class="w_ex_titleButtonBack">
+					<input type="button" class="w_ex_insertBtn" value="등록">
+				</div>
+			</div> -->
+
 			<div class="w_contentArea">
 				<div class="w_defaultArea">
 					<img alt="" src="../resources/images/woobo_wms_main_img.png">
 				</div>
 			</div>
+
+
+
 		</div>
 
 		<div class="loading-overlay hidden" id="loadingOverlay">
@@ -246,6 +293,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 		</div>
 
 		</div>
+		<!-- service -->
 
 		<div id="positionModal" class="modal">
 			<div class="modal-content">
@@ -272,6 +320,10 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 							<div class="info-label">Inbound Date</div>
 							<div class="info-value" id="modalInboundDate"></div>
 						</div>
+						<!-- <div class="modal-info">
+							<div class="info-label">Qty:</div>
+							<div class="info-value" id="modalQty"></div>
+						</div> -->
 						<div class="modal-info">
 							<div class="info-label">Storage Date</div>
 							<div class="info-value" id="modalStorageDate"></div>
@@ -654,6 +706,155 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 	        </div>
 	    </div>
 
+		
+		<%-- <!-- 공장 변경 -->
+		<div class="modal-overlay_department" id="factoryModal" >
+		    <div class="modal-container_department">
+		        <!-- Header -->
+		        <div class="modal-header_department">
+		            <h2><spring:message code ="title.factoryChange"/></h2>
+		            <button class="modal-close_department" id="factoryCloseModal">&times;</button>
+		        </div>		        
+                
+                <div class="modal-body_department">
+			        <!-- KS_FACTORY -->
+	                <div class="body_userDepartment_group">
+	                    <label class="body_userDepartment_label"><spring:message code ="modal.factory"/></label>
+	                    <select class="body_userDepartment_label" id="newUserfactory">
+	                    	<option value="default"><spring:message code ="modal.factory.select"/></option>
+	                    	<option value="SALTILLO">SALTILLO</option>
+	                    	<option value="PUEBLA">PUEBLA</option>
+	                    	
+	                    </select>
+	                </div>			
+                </div>
+                
+		        <!-- Footer -->
+		        <div class="modal-footer_department">
+		            <button class="btn-save_department" id="saveFactoryChange"><spring:message code ="btn.save"/></button>
+		        </div>
+		    </div>
+		</div>
+
+		<!-- 부서 변경 -->
+		<div class="modal-overlay_department" id="departmentModal" >
+		    <div class="modal-container_department">
+		        <!-- Header -->
+		        <div class="modal-header_department">
+		            <h2><spring:message code ="title.departmentChange"/></h2>
+		            <button class="modal-close_department" id="departmentCloseModal">&times;</button>
+		        </div>		        
+                
+                <div class="modal-body_department">
+	                <!-- KS_NAME -->
+	                <div class="body_userDepartment_group">
+	                    <label class="body_userDepartment_label"><spring:message code ="modal.department.current"/></label>
+	                    <input type="text" id="user_department" class="body_userDepartment" readonly>
+	                </div>
+	                
+			        <!-- KS_BUSOR -->
+	                <div class="body_userDepartment_group">
+	                    <label class="body_userDepartment_label"><spring:message code ="modal.department.new"/></label>
+	                    <select class="body_userDepartment_label" id="newUserDepartment">
+	                    	<option value="default"><spring:message code ="modal.department.select"/></option>
+	                    	<option value="000000">WooboTech</option>
+	                    	<option value="100000">Product Depat.</option>
+	                    	<option value="101000">Quality Depat.</option>
+	                    	<option value="102000">Logistic Depat.</option>
+	                    	<option value="103000">Purchase Depat.</option>
+	                    	<option value="104000">Operating Depat.</option>
+	                    	<option value="105000">Sales Depat.</option>
+	                    	<option value="others">Others</option>
+	                    </select>
+	                    <input type="text" id="body_userDepartment_others" class="others_departInput" placeholder="<spring:message code ="modal.enter.department"/>" style="display:none;">
+	                </div>			
+                </div>
+                
+		        <!-- Footer -->
+		        <div class="modal-footer_department">
+		            <button class="btn-save_department" id="saveDepartment"><spring:message code ="btn.save"/></button>
+		        </div>
+		    </div>
+		</div> --%>
+		
+		<%-- <!--modal_userUpdateForm 모달 -->
+		<div id="modal_userUpdateForm">
+		    <div class="modal_userUpdateForm_content">
+		        <div class="modal_userUpdateForm_header">
+		            <h2 style="font-size:21pt;"><spring:message code ="title.passwordChange"/></h2>
+		            <span class="inuserInfoTitle"><spring:message code ="modal.employeeId"/> : </span>
+		            <span class="inuserInfo" id="userUpdate_inuser"></span>
+		            <span class="modal_userUpdateForm_close" onclick="modal_userUpdateForm_close()">&times;</span>
+		        </div>
+		        
+		        <div class="modal_userUpdateForm_body">
+		            <form id="form_userUpdateForm" name="form_userUpdateForm" method="post">
+		                <div class="modal_userUpdateForm_grid">
+		                    <div class="modal_userUpdateForm_group">
+		                        <label class="modal_userUpdateForm_label"><spring:message code ="login.id"/><span class="modal_userUpdateForm_required">*</span></label>
+		                        <input type="text" name="KS_ID" id="userUpdate_id" class="modal_userUpdateForm_input" placeholder="Enter User ID" required readonly>
+		                    </div>
+		                    
+		                    <div class="modal_userUpdateForm_group">
+		                        <label class="modal_userUpdateForm_label"><spring:message code ="login.pw"/><span class="modal_userUpdateForm_required">*</span></label>
+		                        <input type="password" name="KS_PASSWD" id="userUpdate_pass" class="modal_userUpdateForm_input" placeholder="<spring:message code ="modal.enter.password"/>" required>
+		                    </div>
+		                    <div class="modal_userUpdateForm_group">
+		                        <label class="modal_userUpdateForm_label"><spring:message code ="login.name"/><span class="modal_userUpdateForm_required">*</span></label>
+		                        <input type="text" name="KS_NAME" id="userUpdate_name" class="modal_userUpdateForm_input" placeholder="<spring:message code ="modal.enter.name"/>" required>
+		                    </div>
+		                    
+		                    <!-- <div class="modal_userUpdateForm_group">
+		                        <label class="modal_userUpdateForm_label">Department<span class="modal_userUpdateForm_required">*</span></label>
+		                        <select class="modal_userUpdateForm_label" id="userUpdate_busor" >
+		                        	<option value="default">Select Department</option>
+		                        	<option value="000000">WooboTech</option>
+		                        	<option value="100000">Product Depat.</option>
+		                        	<option value="101000">Quality Depat.</option>
+		                        	<option value="102000">Logistic Depat.</option>
+		                        	<option value="103000">Purchase Depat.</option>
+		                        	<option value="104000">Operating Depat.</option>
+		                        	<option value="105000">Sales Depat.</option>
+		                        	<option value="others">Others</option>
+		                        </select>
+		                        <input type="text" class="others_depatInput" placeholder="Enter Department Code Manually..">
+		                        <input type="text" name="KS_BUSOR" class="modal_userUpdateForm_input" placeholder="부서코드를 입력하세요" required>
+		                    </div>
+		                    <div class="modal_userUpdateForm_group">
+		                        <label class="modal_userUpdateForm_label">NAME<span class="modal_userUpdateForm_required">*</span></label>
+		                        <input type="text" name="KS_NAME" id="userUpdate_name" class="modal_userUpdateForm_input" placeholder="Enter Username" required>
+		                    </div>
+		                    
+		                    <div class="modal_userUpdateForm_group">
+		                        <label class="modal_userUpdateForm_label">INDATE<span class="modal_userUpdateForm_required">*</span></label>
+		                        <input type="date" name="KS_INDATE" id="userUpdate_indate" class="modal_userUpdateForm_input" required>
+		                    </div>
+		                    
+		                    <div class="modal_userUpdateForm_group">
+		                        <label class="modal_userUpdateForm_label">등록자</label>
+		                        <input type="text" name="KS_INUSER" class="modal_userUpdateForm_input" placeholder="등록자를 입력하세요">
+		                    </div>
+		                    
+		                    <div class="modal_userUpdateForm_group">
+		                        <label class="modal_userUpdateForm_label">Employee ID</label>
+		                        <input type="text" name="KS_SABUN" id="userUpdate_sabun" class="modal_userUpdateForm_input" placeholder="Enter Employee ID">
+		                    </div>
+		                    
+		                    <div class="modal_userUpdateForm_group full-width">
+		                        <label class="modal_userUpdateForm_label">비고</label>
+		                        <textarea name="KS_REMARK" class="modal_userUpdateForm_textarea" placeholder="비고사항을 입력하세요"></textarea>
+		                    </div> -->
+		                </div>
+		            </form>
+		        </div>
+		        
+		        <div class="modal_userUpdateForm_footer">
+		            <button type="button" class="modal_userUpdateForm_btn modal_userUpdateForm_btn_primary" id="userUpdateConfirm"><spring:message code ="btn.change"/></button>
+		            <button type="button" class="modal_userUpdateForm_btn modal_userUpdateForm_btn_secondary modal_userUpdateForm_close"><spring:message code ="btn.cancel"/></button>
+		        </div>
+		    </div>
+		</div> --%>
+		
 		<div class="modal_stockInfoDetail_bg"></div>
 		<div class="modal_stockInfoDetail" id="modalContainer_stockInfoDetail">
 	        <div class="header_stockInfoDetail">
@@ -926,29 +1127,61 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     <div id="warehouseEditModal" style="display:none;"></div>
 </body>
 	<script type="text/javascript">
-        console.log("Button Click Prevention -- ON");
-
-        // 모든 버튼 클릭에 적용
-        $(document).on('click', 'button', function(e) {
-            const $btn = $(this);
-
-            // 이미 비활성화되어 있으면 클릭 무시
-            if ($btn.prop('disabled')) {
-                console.log("Already disabled - click ignored");
-                e.preventDefault();
-                e.stopImmediatePropagation();
-                return false;
-            }
-
-            // 버튼 즉시 비활성화
-            console.log("Button clicked - disabling...");
-            $btn.prop('disabled', true);
-
-            // 1초 후 자동 활성화 (안전장치)
-            setTimeout(() => {
-                $btn.prop('disabled', false);
-                console.log("Button re-enabled");
-            }, 1000);
-        });
+		/* $(document).ready(function() { */
+		   	console.log("Button Click Prevention -- ON");
+		    
+		    // 모든 버튼 클릭에 적용
+		    $(document).on('click', 'button', function(e) {
+		        const $btn = $(this);
+		        
+		        // 이미 비활성화되어 있으면 클릭 무시
+		        if ($btn.prop('disabled')) {
+		            console.log("Already disabled - click ignored");
+		            e.preventDefault();
+		            e.stopImmediatePropagation();
+		            return false;
+		        }
+		        
+		        // 버튼 즉시 비활성화
+		        console.log("Button clicked - disabling...");
+		        $btn.prop('disabled', true);
+		        
+		        // 1초 후 자동 활성화 (안전장치)
+		        setTimeout(() => {
+		            $btn.prop('disabled', false);
+		            console.log("Button re-enabled");
+		        }, 1000);
+	    	});
+	    /* }); */
+		//var mouseDownX, mouseDownY;
+		
+		/* $(document).ready(function() {
+		    console.log('📌 드래그 차단 시작')
+		    
+		    // mousedown 위치 저장
+		    document.addEventListener('mousedown', function(e) {
+		        mouseDownX = e.pageX;
+		        mouseDownY = e.pageY;
+		        //console.log('🖱️ 마우스 다운');
+		    }, true);
+		    
+		    // 캡처 단계에서 클릭 차단 (가장 먼저 실행됨)
+		    document.addEventListener('click', function(e) {
+		        var selectedText = window.getSelection().toString();
+		        var moved = Math.abs(e.pageX - mouseDownX) > 3 || Math.abs(e.pageY - mouseDownY) > 3;
+		        
+		        if (selectedText.length > 0 || moved) {
+		            //console.log('❌ 드래그 감지 - 클릭 차단!', '선택된 텍스트:', selectedText, '이동거리:', moved);
+		            e.stopPropagation();
+		            e.stopImmediatePropagation(); // 추가!
+		            e.preventDefault();
+		            return false;
+		        } else {
+		            //console.log('✔️ 클릭 허용');
+		        }
+		    }, true); // true = 캡처 단계
+		    
+		}); */
+		
 	</script>
 </html>
