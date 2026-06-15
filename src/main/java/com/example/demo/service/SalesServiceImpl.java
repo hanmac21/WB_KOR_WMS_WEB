@@ -13,16 +13,11 @@ import java.util.Map;
 
 import com.example.demo.vo.StockVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.mapper.wbusa.SalesMapper;
-import com.example.demo.mapper.wbusa.WbusaMapper;
-import com.example.demo.vo.ProductVO;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import com.example.demo.mapper.wbpt.WbptMapper;
 
 @Service
 public class SalesServiceImpl implements SalesService {
@@ -31,7 +26,7 @@ public class SalesServiceImpl implements SalesService {
 	private SalesMapper salesMapper;
 
 	@Autowired
-	private WbusaMapper wbusaMapper;
+	private WbptMapper wbptMapper;
 
 	@Override
 	public Map<String, Object> readTransferDetail(Map<String, Object> params) {
@@ -249,7 +244,7 @@ public class SalesServiceImpl implements SalesService {
 		String firstDate = ((String) iidList.get(iidList.size()-1)).split("\\|")[1].replace("-", "");
 		Map<String, Object> lockParam = new HashMap<>();
 		lockParam.put("condate", firstDate);
-		if (wbusaMapper.selectLockCnt(lockParam) > 0) {
+		if (wbptMapper.selectLockCnt(lockParam) > 0) {
 			result.put("locked", true);
 			return result;
 		}

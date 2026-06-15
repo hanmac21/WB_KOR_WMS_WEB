@@ -12,10 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.demo.mapper.wbusa.WbusaMapper;
+import com.example.demo.mapper.wbpt.WbptMapper;
 import com.example.demo.vo.BOMPageVO;
 import com.example.demo.vo.CustomerVO;
-import com.example.demo.vo.PalletVO;
 import com.example.demo.vo.ProductPageVO;
 import com.example.demo.vo.ProductVO;
 import com.example.demo.vo.StockVO;
@@ -26,7 +25,7 @@ import com.example.demo.vo.WarehouseVO;
 public class MasterDataServiceImpl implements MasterDataService {
 
 	@Autowired
-	WbusaMapper usaMapper;
+	WbptMapper usaMapper;
 
 	/*
 	 * public List<UserInfoVO> readUser() { return usaMapper.readUser();

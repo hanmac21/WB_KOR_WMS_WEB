@@ -16,22 +16,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.jfree.util.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.example.demo.mapper.wbusa.WbusaMapper;
 import com.example.demo.mapper.wbpt.WbptMapper;
 import com.example.demo.vo.ProductVO;
 
 @Service
 public class InterfaceServiceImpl implements InterfaceService {
-
-	@Autowired
-	private WbusaMapper wbusaMapper;
 
 	@Autowired
 	private WbptMapper wbptMapper;
@@ -83,7 +78,7 @@ public class InterfaceServiceImpl implements InterfaceService {
 			int insertResult = 0;
 			Map<String, Object> insertParam = new HashMap<String, Object>();
 
-			String maxIfno_if = wbusaMapper.selectIfno_loadSummary_if(today);
+			String maxIfno_if = wbptMapper.selectIfno_loadSummary_if(today);
 			String newIfno_if;
 
 			if (maxIfno_if == null) {
@@ -118,20 +113,20 @@ public class InterfaceServiceImpl implements InterfaceService {
 
 			// 검증 시작
 			// 1️⃣ 마감 여부
-			int magam = wbusaMapper.selectLoadCloseCnt(insertParam);
+			int magam = wbptMapper.selectLoadCloseCnt(insertParam);
 			if (magam > 0) {
 				magamCnt++;
 				continue; // 다음 데이터로 넘어감
 			}
 
 			// 락 여부
-			int lock = wbusaMapper.selectLockCnt(insertParam);
+			int lock = wbptMapper.selectLockCnt(insertParam);
 			if (lock > 0) {
 				lockCnt++;
 				continue;
 			}
-			insertResult += wbusaMapper.load_confirm_summary_if(insertParam);
-			insertResult += wbusaMapper.load_confirm_summary_updateYn(insertParam);
+			insertResult += wbptMapper.load_confirm_summary_if(insertParam);
+			insertResult += wbptMapper.load_confirm_summary_updateYn(insertParam);
 			System.out.println(insertResult);
 			if (insertResult < 2) {
 				throw new RuntimeException("Task Error : Count Miss");
@@ -206,35 +201,35 @@ public class InterfaceServiceImpl implements InterfaceService {
 
 			// 검증 시작
 			// 1️⃣ 마감 여부
-			int magam = wbusaMapper.selectLoadCloseCnt(map);
+			int magam = wbptMapper.selectLoadCloseCnt(map);
 			if (magam > 0) {
 				magamCnt++;
 				continue; // 다음 데이터로 넘어감
 			}
 
 			// 락 여부
-			int lock = wbusaMapper.selectLockCnt(map);
+			int lock = wbptMapper.selectLockCnt(map);
 			if (lock > 0) {
 				lockCnt++;
 				continue;
 			}
 
 			// 3️⃣ 후처리 여부
-			int later = wbusaMapper.selectLoadLaterCnt(map);
+			int later = wbptMapper.selectLoadLaterCnt(map);
 			if (later > 0) {
 				laterCnt++;
 				continue;
 			}
 
 			// 2️⃣ 삭제대상 존재 여부
-			int noExist = wbusaMapper.selectLoadDeleteTargetCnt(map);
+			int noExist = wbptMapper.selectLoadDeleteTargetCnt(map);
 			if (noExist == 0) {
 				noExistCnt++;
 				continue;
 			}
 
-			insertResult += wbusaMapper.load_confirm_summary_cancel_if(map);
-			insertResult += wbusaMapper.load_confirm_summary_cancel_updateYn(map);
+			insertResult += wbptMapper.load_confirm_summary_cancel_if(map);
+			insertResult += wbptMapper.load_confirm_summary_cancel_updateYn(map);
 
 			System.out.println(insertResult);
 			if (insertResult < 2) {
@@ -285,7 +280,7 @@ public class InterfaceServiceImpl implements InterfaceService {
 			int insertResult = 0;
 			Map<String, Object> insertParam = new HashMap<String, Object>();
 
-			String maxIfno_if = wbusaMapper.selectIfno_loadReturnSummary_if(today);
+			String maxIfno_if = wbptMapper.selectIfno_loadReturnSummary_if(today);
 			String newIfno_if;
 
 			if (maxIfno_if == null) {
@@ -315,8 +310,8 @@ public class InterfaceServiceImpl implements InterfaceService {
 			System.out.println(" -- LOAD SUMMARY PARAM --");
 			System.out.println(insertParam);
 
-			insertResult += wbusaMapper.loadReturn_confirm_summary_if(insertParam);
-			insertResult += wbusaMapper.loadReturn_confirm_summary_updateYn(insertParam);
+			insertResult += wbptMapper.loadReturn_confirm_summary_if(insertParam);
+			insertResult += wbptMapper.loadReturn_confirm_summary_updateYn(insertParam);
 
 			System.out.println(insertResult);
 			if (insertResult < 2) {
@@ -361,7 +356,7 @@ public class InterfaceServiceImpl implements InterfaceService {
 			int insertResult = 0;
 			Map<String, Object> insertParam = new HashMap<String, Object>();
 
-			String maxIfno_if = wbusaMapper.selectIfno_loadSummary_if(today);
+			String maxIfno_if = wbptMapper.selectIfno_loadSummary_if(today);
 			String newIfno_if;
 
 			if (maxIfno_if == null) {
@@ -389,7 +384,7 @@ public class InterfaceServiceImpl implements InterfaceService {
 			insertParam.put("condate", condate);
 
 			// WMS KEY 조회
-			String mes_key = wbusaMapper.selectWmskey_loadReturnSummary(insertParam);
+			String mes_key = wbptMapper.selectWmskey_loadReturnSummary(insertParam);
 
 			if (mes_key != null && !"none".equals(mes_key)) {
 				insertParam.put("mes_key", mes_key);
@@ -400,8 +395,8 @@ public class InterfaceServiceImpl implements InterfaceService {
 			System.out.println(" -- LODD PARAM --");
 			System.out.println(insertParam);
 
-			insertResult += wbusaMapper.loadReturn_confirm_summary_cancel_if(insertParam);
-			insertResult += wbusaMapper.loadReturn_confirm_summary_cancel_updateYn(insertParam);
+			insertResult += wbptMapper.loadReturn_confirm_summary_cancel_if(insertParam);
+			insertResult += wbptMapper.loadReturn_confirm_summary_cancel_updateYn(insertParam);
 
 			System.out.println(insertResult);
 			if (insertResult < 2) {
@@ -447,12 +442,12 @@ public class InterfaceServiceImpl implements InterfaceService {
 		map.put("factory", factory0);
 		map.put("roomcode", roomcode0);
 
-		if (wbusaMapper.selectLockCnt(map) > 0) {
+		if (wbptMapper.selectLockCnt(map) > 0) {
 			return 12;
 		}
 
-		wbusaMapper.erpInterface_confirm_summary_st_if_delete(map);
-		wbusaMapper.erpInterface_confirm_summary_st_if(map);
+		wbptMapper.erpInterface_confirm_summary_st_if_delete(map);
+		wbptMapper.erpInterface_confirm_summary_st_if(map);
 		for (int i = 0; i < list.size(); i++) {
 
 			String uniqueValue = (String) list.get(i);
@@ -501,7 +496,7 @@ public class InterfaceServiceImpl implements InterfaceService {
 			System.out.println(insertParam);
 			
 			// 재고실사 인터페이스
-			insertResult += wbusaMapper.erpInterface_confirm_summary_if(insertParam);
+			insertResult += wbptMapper.erpInterface_confirm_summary_if(insertParam);
 			
 			
 			System.out.println(insertResult);
@@ -524,7 +519,7 @@ public class InterfaceServiceImpl implements InterfaceService {
 		//260430 후처리임시 주석하고 프로세스로 대체
 		Map<String, Object> closeMap = new HashMap<>();
 		closeMap.put("condate", erpDate);
-		wbusaMapper.stockClosePro(closeMap);
+		wbptMapper.stockClosePro(closeMap);
 //		wbusaMapper.stockClosePro(closeMap);
 //		wbusaMapper.mergeStockChangeSub(stockParam);
 //		wbusaMapper.updateStockChangeSubInit(stockParam);
@@ -568,13 +563,13 @@ public class InterfaceServiceImpl implements InterfaceService {
 		param.put("condate", condate);
 		param.put("roomcode", roomcode);
 
-		if (wbusaMapper.selectLockCnt(param) > 0) {
+		if (wbptMapper.selectLockCnt(param) > 0) {
 			return 12;
 		}
 
 		/*if ("AUNDE".equals(wc) || "REDCAGE".equals(wc) || "TQ1".equals(wc)) {
 			System.out.println("AUNDE storage : " + wc);*/
-			deleteCount = wbusaMapper.stockCountPurWIPListIntf_if_storage_delete(param);
+			deleteCount = wbptMapper.stockCountPurWIPListIntf_if_storage_delete(param);
 			System.out.println("DELETE COUNT 1");
 			System.out.println(deleteCount);
 		/*} else { // 재공재고실사 인터페이스
@@ -604,14 +599,14 @@ public class InterfaceServiceImpl implements InterfaceService {
 		String[] dayparts = intfDate.split("-");
 		String yearMonth = dayparts[0] + dayparts[1];
 
-		if (wbusaMapper.isStorageClosed(yearMonth) > 0) {
+		if (wbptMapper.isStorageClosed(yearMonth) > 0) {
 			return 10;
 		}
 
 
 		Map<String, Object> lockParam = new HashMap<String, Object>();
 		lockParam.put("condate", intfDate.replace("-", ""));
-		if (wbusaMapper.selectLockCnt(lockParam) > 0) {
+		if (wbptMapper.selectLockCnt(lockParam) > 0) {
 			return 12;
 		}
 
@@ -646,9 +641,9 @@ public class InterfaceServiceImpl implements InterfaceService {
 		deleteParam.put("roomcode", roomcode);
 
 		System.out.println("storage :" + storage);
-		wbusaMapper.stockCountPurWIPListIntf_if_storage_delete(deleteParam);	// 창고 기존데이터 삭제
-		wbusaMapper.erpInterface_confirm_summary_st_if_delete(deleteParam);		// 창고 재고실사 작업전 쿼리 삭제
-		wbusaMapper.erpInterface_confirm_summary_st_if(deleteParam);			// 창고 재고실사 작업전 쿼리 등록
+		wbptMapper.stockCountPurWIPListIntf_if_storage_delete(deleteParam);	// 창고 기존데이터 삭제
+		wbptMapper.erpInterface_confirm_summary_st_if_delete(deleteParam);		// 창고 재고실사 작업전 쿼리 삭제
+		wbptMapper.erpInterface_confirm_summary_st_if(deleteParam);			// 창고 재고실사 작업전 쿼리 등록
 
 		for (int i = 0; i < param.size(); i++) {
 
@@ -676,7 +671,7 @@ public class InterfaceServiceImpl implements InterfaceService {
 			Map<String, Object> insertParam = new HashMap<String, Object>();
 
 			// 고객사 품번 ERP품번으로 바꿔주기
-			String erpItemcode = wbusaMapper.getErpItemcode(oitemcode);
+			String erpItemcode = wbptMapper.getErpItemcode(oitemcode);
 			if (erpItemcode == null) {
 				System.out.println("ERP 품번 조회 없음 skip: " + oitemcode);
 				continue;
@@ -699,7 +694,7 @@ public class InterfaceServiceImpl implements InterfaceService {
 			// 창고재고실사 인터페이스 재고실사확정 인터페이스랑 동일
 			//if ("AUNDE".equalsIgnoreCase(storage.trim()) || "REDCAGE".equalsIgnoreCase(storage.trim()) || "TQ1".equalsIgnoreCase(storage.trim())) {
 				System.out.println("AUNDE storage :" + storage);
-				insertResult += wbusaMapper.stockCountSorage_if(insertParam);
+				insertResult += wbptMapper.stockCountSorage_if(insertParam);
 			/*} else { // 재공재고실사 인터페이스
 				System.out.println(" storage 22:" + storage);
 				insertResult += wbusaMapper.stockCountPurWIPListIntf_if(insertParam);
@@ -723,7 +718,7 @@ public class InterfaceServiceImpl implements InterfaceService {
 		//260430 후처리임시 주석하고 프로세스로 대체
 		Map<String, Object> closeMap = new HashMap<>();
 		closeMap.put("condate", condate);
-		wbusaMapper.stockClosePro(closeMap);
+		wbptMapper.stockClosePro(closeMap);
 //		wbusaMapper.mergeStockChangeSub(wipStockParam);
 //		wbusaMapper.updateStockChangeSubInit(wipStockParam);
 //		wbusaMapper.mergeStockChangeSub(wipStockParam);
@@ -764,7 +759,7 @@ public class InterfaceServiceImpl implements InterfaceService {
 
 		Map<String, Object> lockParam = new HashMap<>();
 		lockParam.put("condate", erpDate.replace("-", ""));
-		if (wbusaMapper.selectLockCnt(lockParam) > 0) {
+		if (wbptMapper.selectLockCnt(lockParam) > 0) {
 			return 12;
 		}
 		Map<String, Object> insertParam = new HashMap<String, Object>();
@@ -801,7 +796,7 @@ public class InterfaceServiceImpl implements InterfaceService {
 		insertParam.put("roomcode", roomcode);
 		insertParam.put("condate", condate);
 
-		wbusaMapper.erpInterface_confirm_summary_if_delete(insertParam);
+		wbptMapper.erpInterface_confirm_summary_if_delete(insertParam);
 		/*for (int i = 0; i < list.size(); i++) {
 
 			String uniqueValue = (String) list.get(i);
@@ -906,7 +901,7 @@ public class InterfaceServiceImpl implements InterfaceService {
 			int insertResult = 0;
 			Map<String, Object> insertParam = new HashMap<String, Object>();
 
-			String maxIfno_if = wbusaMapper.selectIfno_transferSummary_if(today);
+			String maxIfno_if = wbptMapper.selectIfno_transferSummary_if(today);
 			String newIfno_if;
 
 			if (maxIfno_if == null) {
@@ -933,8 +928,8 @@ public class InterfaceServiceImpl implements InterfaceService {
 			System.out.println(" -- LOAD SUMMARY PARAM --");
 			System.out.println(insertParam);
 
-			insertResult += wbusaMapper.transfer_confirm_summary_if(insertParam);
-			insertResult += wbusaMapper.transfer_confirm_summary_updateYn(insertParam);
+			insertResult += wbptMapper.transfer_confirm_summary_if(insertParam);
+			insertResult += wbptMapper.transfer_confirm_summary_updateYn(insertParam);
 
 			System.out.println(insertResult);
 			if (insertResult < 2) {
@@ -976,7 +971,7 @@ public class InterfaceServiceImpl implements InterfaceService {
 			int insertResult = 0;
 			Map<String, Object> insertParam = new HashMap<String, Object>();
 
-			String maxIfno_if = wbusaMapper.selectIfno_transferSummary_if(today);
+			String maxIfno_if = wbptMapper.selectIfno_transferSummary_if(today);
 			String newIfno_if;
 
 			if (maxIfno_if == null) {
@@ -1001,7 +996,7 @@ public class InterfaceServiceImpl implements InterfaceService {
 			insertParam.put("qty", qty);
 
 			// WMS KEY 조회
-			String mes_key = wbusaMapper.selectWmskey_transferSummary(insertParam);
+			String mes_key = wbptMapper.selectWmskey_transferSummary(insertParam);
 
 			if (mes_key != null && !"none".equals(mes_key)) {
 				insertParam.put("mes_key", mes_key);
@@ -1012,8 +1007,8 @@ public class InterfaceServiceImpl implements InterfaceService {
 			System.out.println(" -- LODD PARAM --");
 			System.out.println(insertParam);
 
-			insertResult += wbusaMapper.transfer_confirm_summary_cancel_if(insertParam);
-			insertResult += wbusaMapper.transfer_confirm_summary_cancel_updateYn(insertParam);
+			insertResult += wbptMapper.transfer_confirm_summary_cancel_if(insertParam);
+			insertResult += wbptMapper.transfer_confirm_summary_cancel_updateYn(insertParam);
 
 			System.out.println(insertResult);
 			if (insertResult < 2) {
@@ -1078,35 +1073,35 @@ public class InterfaceServiceImpl implements InterfaceService {
 
 			// 검증 시작
 			// 1️⃣ 입고마감 여부
-			int magam = wbusaMapper.selectIncomingCloseCnt(map);
+			int magam = wbptMapper.selectIncomingCloseCnt(map);
 			if (magam > 0) {
 				magamCnt++;
 				continue; // 다음 데이터로 넘어감
 			}
 
 			// 락 여부
-			int lock = wbusaMapper.selectLockCnt(map);
+			int lock = wbptMapper.selectLockCnt(map);
 			if (lock > 0) {
 				lockCnt++;
 				continue;
 			}
 
 			// 2️⃣ 매입처리 여부
-			int buy = wbusaMapper.selectIncomingBuyCnt(map);
+			int buy = wbptMapper.selectIncomingBuyCnt(map);
 			if (buy > 0) {
 				buyCnt++;
 				continue;
 			}
 
 			// 3️⃣ 후처리 여부
-			int later = wbusaMapper.selectIncomingLaterCnt(map);
+			int later = wbptMapper.selectIncomingLaterCnt(map);
 			if (later > 0) {
 				laterCnt++;
 				continue;
 			}
 
 			// 4️⃣ 삭제 대상 여부
-			int noExist = wbusaMapper.selectIncomingDeleteTargetCnt(map);
+			int noExist = wbptMapper.selectIncomingDeleteTargetCnt(map);
 			if (noExist == 0) {
 				noExistCnt++;
 				continue;
@@ -1114,9 +1109,9 @@ public class InterfaceServiceImpl implements InterfaceService {
 			// wbmexMapper.inbound_confirm(map); // 입고내역에 인터페이스 정보 업데이트
 			map.put("factory", factory);
 			map.put("storage", storage);
-			wbusaMapper.inbound_intf_pm_delete(map);
-			wbusaMapper.inbound_intf_qc_delete(map);
-			wbusaMapper.inbound_confirm_delete(map); // 입고내역에 인터페이스 정보 업데이트
+			wbptMapper.inbound_intf_pm_delete(map);
+			wbptMapper.inbound_intf_qc_delete(map);
+			wbptMapper.inbound_confirm_delete(map); // 입고내역에 인터페이스 정보 업데이트
 		}
 
 		Map<String, Object> result = new HashMap<>();
@@ -1168,7 +1163,7 @@ public class InterfaceServiceImpl implements InterfaceService {
 			Map<String, Object> map = new HashMap<String, Object>();
 			LocalDate today = LocalDate.now();
 			String date8 = today.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-			String maxIfno = wbusaMapper.selectIfnoIn(date8); // 오늘날짜 기준 가장큰 ifno값 가져오기
+			String maxIfno = wbptMapper.selectIfnoIn(date8); // 오늘날짜 기준 가장큰 ifno값 가져오기
 			String nextIfno = "";
 			if (maxIfno == null) {
 				maxIfno = date8 + "0001"; // 기본값
@@ -1212,29 +1207,29 @@ public class InterfaceServiceImpl implements InterfaceService {
 
 			// 검증 시작
 			// 1️⃣ 입고마감 여부
-			int magam = wbusaMapper.selectIncomingCloseCnt(map);
+			int magam = wbptMapper.selectIncomingCloseCnt(map);
 			if (magam > 0) {
 				magamCnt++;
 				continue; // 다음 데이터로 넘어감
 			}
 
 			// 락 여부
-			int lock = wbusaMapper.selectLockCnt(map);
+			int lock = wbptMapper.selectLockCnt(map);
 			if (lock > 0) {
 				lockCnt++;
 				continue;
 			}
 			
 			// 단가 확인
-			int price = wbusaMapper.selectUnitPrice(map);
+			int price = wbptMapper.selectUnitPrice(map);
 			if (price > 0) {
 				priceCnt++;
 				continue;
 			}
 
-			wbusaMapper.inbound_confirm_summary(map); // 입고내역에 인터페이스 정보 업데이트
-			wbusaMapper.inbound_intf_pm(map);
-			wbusaMapper.inbound_intf_qc(map);
+			wbptMapper.inbound_confirm_summary(map); // 입고내역에 인터페이스 정보 업데이트
+			wbptMapper.inbound_intf_pm(map);
+			wbptMapper.inbound_intf_qc(map);
 
 		}
 		Map<String, Object> result = new HashMap<>();
@@ -1249,13 +1244,13 @@ public class InterfaceServiceImpl implements InterfaceService {
 	@Transactional(transactionManager = "usaTransactionManager", rollbackFor = Exception.class)
 	public int inbound_confirm(List<String> list) {
 		// 날짜, 거래처, 아이템코드 여부로 그룹
-		List<ProductVO> group = wbusaMapper.groupInbound(list);
+		List<ProductVO> group = wbptMapper.groupInbound(list);
 
 		for (int i = 0; i < group.size(); i++) {
 			Map<String, Object> map = new HashMap<String, Object>();
 			LocalDate today = LocalDate.now();
 			String date8 = today.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-			String maxIfno = wbusaMapper.selectIfnoIn(date8); // 오늘날짜 기준 가장큰 ifno값 가져오기
+			String maxIfno = wbptMapper.selectIfnoIn(date8); // 오늘날짜 기준 가장큰 ifno값 가져오기
 			String nextIfno = "";
 			if (maxIfno == null) {
 				maxIfno = date8 + "0001"; // 기본값
@@ -1281,9 +1276,9 @@ public class InterfaceServiceImpl implements InterfaceService {
 			map.put("custcode", group.get(i).getCucode());
 			map.put("qty", group.get(i).getQty());
 
-			wbusaMapper.inbound_intf_pm(map);
-			wbusaMapper.inbound_confirm(map); // 입고내역에 인터페이스 정보 업데이트
-			wbusaMapper.inbound_intf_qc(map);
+			wbptMapper.inbound_intf_pm(map);
+			wbptMapper.inbound_confirm(map); // 입고내역에 인터페이스 정보 업데이트
+			wbptMapper.inbound_intf_qc(map);
 		}
 
 		//
@@ -1299,7 +1294,7 @@ public class InterfaceServiceImpl implements InterfaceService {
 			Map<String, Object> map = new HashMap<String, Object>();
 			LocalDate today = LocalDate.now();
 			String date8 = today.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-			String maxIfno = wbusaMapper.selectIfnoIn(date8); // 오늘날짜 기준 가장큰 ifno값 가져오기
+			String maxIfno = wbptMapper.selectIfnoIn(date8); // 오늘날짜 기준 가장큰 ifno값 가져오기
 			String nextIfno = "";
 			if (maxIfno == null) {
 				maxIfno = date8 + "0001"; // 기본값
@@ -1316,9 +1311,9 @@ public class InterfaceServiceImpl implements InterfaceService {
 
 			map.put("cuddiv", "D");
 
-			wbusaMapper.inbound_confirm_cancel(map);
-			wbusaMapper.inbound_intf_pm_cancel(map);
-			wbusaMapper.inbound_intf_qc_cancel(map);
+			wbptMapper.inbound_confirm_cancel(map);
+			wbptMapper.inbound_intf_pm_cancel(map);
+			wbptMapper.inbound_intf_qc_cancel(map);
 		}
 
 		//
@@ -1341,8 +1336,8 @@ public class InterfaceServiceImpl implements InterfaceService {
 			Map<String, Object> row = param.get(i);
 			Map<String, Object> insertParam = new HashMap<String, Object>();
 
-			String maxIfno_if = wbusaMapper.selectIfno_workMove_if(today);
-			String maxIfno_real_if = wbusaMapper.selectIfno_workMove_real_if(today);
+			String maxIfno_if = wbptMapper.selectIfno_workMove_if(today);
+			String maxIfno_real_if = wbptMapper.selectIfno_workMove_real_if(today);
 			String newIfno_if;
 			String newIfno_real_if;
 
@@ -1386,9 +1381,9 @@ public class InterfaceServiceImpl implements InterfaceService {
 			System.out.println(" -- WORK MOVE PARAM --");
 			System.out.println(insertParam);
 
-			insertResult += wbusaMapper.workMove_confirm_if(insertParam);
+			insertResult += wbptMapper.workMove_confirm_if(insertParam);
 			// insertResult += wbmexMapper.workMove_confirm_real_if(insertParam);
-			insertResult += wbusaMapper.workMove_confirm_updateWorkMove(insertParam);
+			insertResult += wbptMapper.workMove_confirm_updateWorkMove(insertParam);
 
 			if (insertResult != 3) {
 				throw new RuntimeException("Task Error : Count Miss");
@@ -1443,7 +1438,7 @@ public class InterfaceServiceImpl implements InterfaceService {
 			int insertResult = 0;
 			Map<String, Object> insertParam = new HashMap<String, Object>();
 
-			String maxIfno_if = wbusaMapper.selectIfno_workMove_if(today);
+			String maxIfno_if = wbptMapper.selectIfno_workMove_if(today);
 			// String maxIfno_real_if = wbmexMapper.selectIfno_workMove_real_if(today);
 			String newIfno_if;
 			// String newIfno_real_if;
@@ -1485,9 +1480,9 @@ public class InterfaceServiceImpl implements InterfaceService {
 			System.out.println(" -- WORK MOVE PARAM --");
 			System.out.println(insertParam);
 
-			insertResult += wbusaMapper.workMove_confirm_if(insertParam);
+			insertResult += wbptMapper.workMove_confirm_if(insertParam);
 			// insertResult += wbmexMapper.workMove_confirm_real_if(insertParam);
-			insertResult += wbusaMapper.workMove_confirm_updateWorkMove_summary(insertParam);
+			insertResult += wbptMapper.workMove_confirm_updateWorkMove_summary(insertParam);
 
 			System.out.println(insertResult);
 			if (insertResult < 2) {
@@ -1544,7 +1539,7 @@ public class InterfaceServiceImpl implements InterfaceService {
 			int insertResult = 0;
 			Map<String, Object> insertParam = new HashMap<String, Object>();
 
-			String maxIfno_if = wbusaMapper.selectIfno_workMove_if(today);
+			String maxIfno_if = wbptMapper.selectIfno_workMove_if(today);
 			// String maxIfno_real_if = wbmexMapper.selectIfno_workMove_real_if(today);
 			String newIfno_if;
 			String newIfno_real_if;
@@ -1593,10 +1588,10 @@ public class InterfaceServiceImpl implements InterfaceService {
 			System.out.println(" -- WORK MOVE PARAM --");
 			System.out.println(insertParam);
 
-			insertResult += wbusaMapper.workMove_confirm_summary_cancel_if(insertParam);
+			insertResult += wbptMapper.workMove_confirm_summary_cancel_if(insertParam);
 			// insertResult +=
 			// wbmexMapper.workMove_confirm_summary_cancel_real_if(insertParam);
-			insertResult += wbusaMapper.workMove_confirm_cancel_updateWorkMove_summary(insertParam);
+			insertResult += wbptMapper.workMove_confirm_cancel_updateWorkMove_summary(insertParam);
 
 			System.out.println(insertResult);
 			if (insertResult < 2) {
@@ -1651,7 +1646,7 @@ public class InterfaceServiceImpl implements InterfaceService {
 			int insertResult = 0;
 			Map<String, Object> insertParam = new HashMap<String, Object>();
 
-			String maxIfno_if = wbusaMapper.selectIfno_exceptionInput_if(today);
+			String maxIfno_if = wbptMapper.selectIfno_exceptionInput_if(today);
 			String newIfno_if;
 
 			if (maxIfno_if == null) {
@@ -1683,8 +1678,8 @@ public class InterfaceServiceImpl implements InterfaceService {
 			System.out.println(" -- EXCEPTION INPUT PARAM --");
 			System.out.println(insertParam);
 
-			insertResult += wbusaMapper.exceptionInput_confirm_summary_if(insertParam);
-			insertResult += wbusaMapper.exceptionInput_confirm_summary_updateYn(insertParam);
+			insertResult += wbptMapper.exceptionInput_confirm_summary_if(insertParam);
+			insertResult += wbptMapper.exceptionInput_confirm_summary_updateYn(insertParam);
 
 			System.out.println(insertResult);
 			if (insertResult < 2) {
@@ -1740,7 +1735,7 @@ public class InterfaceServiceImpl implements InterfaceService {
 			int insertResult = 0;
 			Map<String, Object> insertParam = new HashMap<String, Object>();
 
-			String maxIfno_if = wbusaMapper.selectIfno_exceptionInput_if(today);
+			String maxIfno_if = wbptMapper.selectIfno_exceptionInput_if(today);
 			String newIfno_if;
 
 			if (maxIfno_if == null) {
@@ -1783,8 +1778,8 @@ public class InterfaceServiceImpl implements InterfaceService {
 			System.out.println(" -- EXCEPTION INPUT PARAM --");
 			System.out.println(insertParam);
 
-			insertResult += wbusaMapper.exceptionInput_confirm_summary_cancel_if(insertParam);
-			insertResult += wbusaMapper.exceptionInput_confirm_summary_cancel_updateYn(insertParam);
+			insertResult += wbptMapper.exceptionInput_confirm_summary_cancel_if(insertParam);
+			insertResult += wbptMapper.exceptionInput_confirm_summary_cancel_updateYn(insertParam);
 
 			System.out.println(insertResult);
 			if (insertResult < 2) {
@@ -1831,7 +1826,7 @@ public class InterfaceServiceImpl implements InterfaceService {
 			int insertResult = 0;
 			Map<String, Object> insertParam = new HashMap<String, Object>();
 
-			String maxIfno_if = wbusaMapper.selectIfno_exceptionOutput_if(today);
+			String maxIfno_if = wbptMapper.selectIfno_exceptionOutput_if(today);
 			String newIfno_if;
 
 			if (maxIfno_if == null) {
@@ -1861,8 +1856,8 @@ public class InterfaceServiceImpl implements InterfaceService {
 			System.out.println(" -- EXCEPTION OUTPUT PARAM --");
 			System.out.println(insertParam);
 
-			insertResult += wbusaMapper.exceptionOutput_confirm_summary_if(insertParam);
-			insertResult += wbusaMapper.exceptionOutput_confirm_summary_updateYn(insertParam);
+			insertResult += wbptMapper.exceptionOutput_confirm_summary_if(insertParam);
+			insertResult += wbptMapper.exceptionOutput_confirm_summary_updateYn(insertParam);
 
 			System.out.println(insertResult);
 			if (insertResult < 2) {
@@ -1911,7 +1906,7 @@ public class InterfaceServiceImpl implements InterfaceService {
 			int insertResult = 0;
 			Map<String, Object> insertParam = new HashMap<String, Object>();
 
-			String maxIfno_if = wbusaMapper.selectIfno_exceptionOutput_if(today);
+			String maxIfno_if = wbptMapper.selectIfno_exceptionOutput_if(today);
 			String newIfno_if;
 
 			if (maxIfno_if == null) {
@@ -1953,8 +1948,8 @@ public class InterfaceServiceImpl implements InterfaceService {
 			System.out.println(" -- EXCEPTION OUTPUT PARAM --");
 			System.out.println(insertParam);
 
-			insertResult += wbusaMapper.exceptionOutput_confirm_summary_cancel_if(insertParam);
-			insertResult += wbusaMapper.exceptionOutput_confirm_summary_cancel_updateYn(insertParam);
+			insertResult += wbptMapper.exceptionOutput_confirm_summary_cancel_if(insertParam);
+			insertResult += wbptMapper.exceptionOutput_confirm_summary_cancel_updateYn(insertParam);
 
 			System.out.println(insertResult);
 			if (insertResult < 2) {
@@ -2023,7 +2018,7 @@ public class InterfaceServiceImpl implements InterfaceService {
 			int insertResult = 0;
 			Map<String, Object> insertParam = new HashMap<String, Object>();
 
-			String maxIfno_if = wbusaMapper.selectIfno_storage_if(today);
+			String maxIfno_if = wbptMapper.selectIfno_storage_if(today);
 			String newIfno_if;
 
 			if (maxIfno_if == null) {
@@ -2056,8 +2051,8 @@ public class InterfaceServiceImpl implements InterfaceService {
 			System.out.println(" -- MOVEMENT STORAGE PARAM --");
 			System.out.println(insertParam);
 
-			insertResult += wbusaMapper.storage_confirm_summary_if(insertParam);
-			insertResult += wbusaMapper.storage_confirm_summary_updateYn(insertParam);
+			insertResult += wbptMapper.storage_confirm_summary_if(insertParam);
+			insertResult += wbptMapper.storage_confirm_summary_updateYn(insertParam);
 
 			System.out.println(insertResult);
 			if (insertResult < 2) {
@@ -2131,7 +2126,7 @@ public class InterfaceServiceImpl implements InterfaceService {
 			int insertResult = 0;
 			Map<String, Object> insertParam = new HashMap<String, Object>();
 
-			String maxIfno_if = wbusaMapper.selectIfno_storage_if(today);
+			String maxIfno_if = wbptMapper.selectIfno_storage_if(today);
 			String newIfno_if;
 
 			if (maxIfno_if == null) {
@@ -2174,8 +2169,8 @@ public class InterfaceServiceImpl implements InterfaceService {
 			System.out.println(" -- EXCEPTION OUTPUT PARAM --");
 			System.out.println(insertParam);
 
-			insertResult += wbusaMapper.storage_confirm_summary_cancel_if(insertParam);
-			insertResult += wbusaMapper.storage_confirm_summary_cancel_updateYn(insertParam);
+			insertResult += wbptMapper.storage_confirm_summary_cancel_if(insertParam);
+			insertResult += wbptMapper.storage_confirm_summary_cancel_updateYn(insertParam);
 
 			System.out.println(insertResult);
 			if (insertResult < 2) {
@@ -2222,8 +2217,8 @@ public class InterfaceServiceImpl implements InterfaceService {
 			int insertResult = 0;
 			Map<String, Object> insertParam = new HashMap<String, Object>();
 
-			String maxIfno_if = wbusaMapper.selectIfno_semiProduction_sub_if(today);
-			String maxIfno_real_if = wbusaMapper.selectIfno_semiProduction_input_if(today);
+			String maxIfno_if = wbptMapper.selectIfno_semiProduction_sub_if(today);
+			String maxIfno_real_if = wbptMapper.selectIfno_semiProduction_input_if(today);
 			String newIfno_if;
 			String newIfno_real_if;
 
@@ -2283,10 +2278,10 @@ public class InterfaceServiceImpl implements InterfaceService {
 			System.out.println(" -- WORK MOVE PARAM --");
 			System.out.println(insertParam);
 
-			insertResult += wbusaMapper.semiProduction_confirm_summary_updateYn(insertParam);
-			insertResult += wbusaMapper.semiProduction_confirm_summary_sub_if(insertParam);
-			wbusaMapper.transfer_confirm_summary_if(insertParam); // 영업이송
-			List<Map<String, Object>> list = wbusaMapper.semiProduction_confirm_count(insertParam);
+			insertResult += wbptMapper.semiProduction_confirm_summary_updateYn(insertParam);
+			insertResult += wbptMapper.semiProduction_confirm_summary_sub_if(insertParam);
+			wbptMapper.transfer_confirm_summary_if(insertParam); // 영업이송
+			List<Map<String, Object>> list = wbptMapper.semiProduction_confirm_count(insertParam);
 			int seqRealIf = Integer.parseInt(newIfno_real_if.substring(8));
 			for (int k = 0; k < list.size(); k++) {
 				String loopIfno_real_if = today + String.format("%04d", seqRealIf++);
@@ -2301,7 +2296,7 @@ public class InterfaceServiceImpl implements InterfaceService {
 				insertParam.put("inqty", result);
 				insertParam.put("messeq", k + 1);
 
-				insertResult += wbusaMapper.semiProduction_confirm_summary_input_if(insertParam);
+				insertResult += wbptMapper.semiProduction_confirm_summary_input_if(insertParam);
 			}
 
 			System.out.println(insertResult);
@@ -2350,8 +2345,8 @@ public class InterfaceServiceImpl implements InterfaceService {
 			int insertResult = 0;
 			Map<String, Object> insertParam = new HashMap<String, Object>();
 
-			String maxIfno_if = wbusaMapper.selectIfno_semiProduction_sub_if(today);
-			String maxIfno_real_if = wbusaMapper.selectIfno_semiProduction_input_if(today);
+			String maxIfno_if = wbptMapper.selectIfno_semiProduction_sub_if(today);
+			String maxIfno_real_if = wbptMapper.selectIfno_semiProduction_input_if(today);
 			String newIfno_if;
 			String newIfno_real_if;
 
@@ -2417,10 +2412,10 @@ public class InterfaceServiceImpl implements InterfaceService {
 			System.out.println(" -- WORK MOVE PARAM --");
 			System.out.println(insertParam);
 
-			insertResult += wbusaMapper.semiProduction_confirm_summary_cancel_updateYn(insertParam);
-			insertResult += wbusaMapper.semiProduction_confirm_summary_cancel_sub_if(insertParam);
-			wbusaMapper.transfer_confirm_summary_cancel_if(insertParam); // 영업이송
-			List<Map<String, Object>> list = wbusaMapper.semiProduction_confirm_count(insertParam);
+			insertResult += wbptMapper.semiProduction_confirm_summary_cancel_updateYn(insertParam);
+			insertResult += wbptMapper.semiProduction_confirm_summary_cancel_sub_if(insertParam);
+			wbptMapper.transfer_confirm_summary_cancel_if(insertParam); // 영업이송
+			List<Map<String, Object>> list = wbptMapper.semiProduction_confirm_count(insertParam);
 
 			if (list.size() > 0) {
 				insertParam.put("childcode", list.get(1).get("CHILDCODE"));
@@ -2430,7 +2425,7 @@ public class InterfaceServiceImpl implements InterfaceService {
 				// 곱셈 후 소수점 4자리까지 반올림
 				BigDecimal result = qtyper.multiply(qtyVal).setScale(4, RoundingMode.HALF_UP);
 				insertParam.put("inqty", result);
-				insertResult += wbusaMapper.semiProduction_confirm_summary_cancel_input_if(insertParam);
+				insertResult += wbptMapper.semiProduction_confirm_summary_cancel_input_if(insertParam);
 			}
 
 			System.out.println(insertResult);
@@ -2492,7 +2487,7 @@ public class InterfaceServiceImpl implements InterfaceService {
 			int insertResult = 0;
 			Map<String, Object> insertParam = new HashMap<String, Object>();
 
-			String maxIfno_if = wbusaMapper.selectIfno_wipReturn_if(today);
+			String maxIfno_if = wbptMapper.selectIfno_wipReturn_if(today);
 			String newIfno_if;
 
 			if (maxIfno_if == null) {
@@ -2525,8 +2520,8 @@ public class InterfaceServiceImpl implements InterfaceService {
 			System.out.println(" -- WIP RETURN PARAM --");
 			System.out.println(insertParam);
 
-			insertResult += wbusaMapper.wipReturn_confirm_summary_if(insertParam);
-			insertResult += wbusaMapper.wipReturn_confirm_summary_updateYn(insertParam);
+			insertResult += wbptMapper.wipReturn_confirm_summary_if(insertParam);
+			insertResult += wbptMapper.wipReturn_confirm_summary_updateYn(insertParam);
 
 			System.out.println(insertResult);
 			if (insertResult < 2) {
@@ -2584,7 +2579,7 @@ public class InterfaceServiceImpl implements InterfaceService {
 			int insertResult = 0;
 			Map<String, Object> insertParam = new HashMap<String, Object>();
 
-			String maxIfno_if = wbusaMapper.selectIfno_wipReturn_if(today);
+			String maxIfno_if = wbptMapper.selectIfno_wipReturn_if(today);
 			String newIfno_if;
 
 			if (maxIfno_if == null) {
@@ -2626,8 +2621,8 @@ public class InterfaceServiceImpl implements InterfaceService {
 			System.out.println(" -- WIP RETURN PARAM --");
 			System.out.println(insertParam);
 
-			insertResult += wbusaMapper.wipReturn_confirm_summary_cancel_if(insertParam);
-			insertResult += wbusaMapper.wipReturn_confirm_summary_cancel_updateYn(insertParam);
+			insertResult += wbptMapper.wipReturn_confirm_summary_cancel_if(insertParam);
+			insertResult += wbptMapper.wipReturn_confirm_summary_cancel_updateYn(insertParam);
 
 			System.out.println(insertResult);
 			if (insertResult < 2) {
@@ -2673,7 +2668,7 @@ public class InterfaceServiceImpl implements InterfaceService {
 			int insertResult = 0;
 			Map<String, Object> insertParam = new HashMap<String, Object>();
 
-			String maxIfno_if = wbusaMapper.selectIfno_incomingReturn_if(today);
+			String maxIfno_if = wbptMapper.selectIfno_incomingReturn_if(today);
 			String newIfno_if;
 
 			if (maxIfno_if == null) {
@@ -2704,8 +2699,8 @@ public class InterfaceServiceImpl implements InterfaceService {
 			System.out.println(" -- WIP RETURN PARAM --");
 			System.out.println(insertParam);
 
-			insertResult += wbusaMapper.incomingReturn_confirm_summary_if(insertParam);
-			insertResult += wbusaMapper.incomingReturn_confirm_summary_updateYn(insertParam);
+			insertResult += wbptMapper.incomingReturn_confirm_summary_if(insertParam);
+			insertResult += wbptMapper.incomingReturn_confirm_summary_updateYn(insertParam);
 
 			System.out.println(insertResult);
 			if (insertResult < 2) {
@@ -2752,7 +2747,7 @@ public class InterfaceServiceImpl implements InterfaceService {
 			int insertResult = 0;
 			Map<String, Object> insertParam = new HashMap<String, Object>();
 
-			String maxIfno_if = wbusaMapper.selectIfno_incomingReturn_if(today);
+			String maxIfno_if = wbptMapper.selectIfno_incomingReturn_if(today);
 			String newIfno_if;
 
 			if (maxIfno_if == null) {
@@ -2794,8 +2789,8 @@ public class InterfaceServiceImpl implements InterfaceService {
 			System.out.println(" -- WIP RETURN PARAM --");
 			System.out.println(insertParam);
 
-			insertResult += wbusaMapper.incomingReturn_confirm_summary_cancel_if(insertParam);
-			insertResult += wbusaMapper.incomingReturn_confirm_summary_cancel_updateYn(insertParam);
+			insertResult += wbptMapper.incomingReturn_confirm_summary_cancel_if(insertParam);
+			insertResult += wbptMapper.incomingReturn_confirm_summary_cancel_updateYn(insertParam);
 
 			System.out.println(insertResult);
 			if (insertResult < 2) {
@@ -2868,8 +2863,8 @@ public class InterfaceServiceImpl implements InterfaceService {
 			System.out.println(" -- LOAD RETURN INTF CANCEL PARAM --");
 			System.out.println(insertParam);
 			
-			insertResult += wbusaMapper.loadReturn_confirm_detail_cancel_if(insertParam);
-			insertResult += wbusaMapper.loadReturn_confirm_detail_cancel_updateYn(insertParam);
+			insertResult += wbptMapper.loadReturn_confirm_detail_cancel_if(insertParam);
+			insertResult += wbptMapper.loadReturn_confirm_detail_cancel_updateYn(insertParam);
 			
 			System.out.println(insertResult);
 			if (insertResult < 2) {
@@ -2937,7 +2932,7 @@ public class InterfaceServiceImpl implements InterfaceService {
 			int insertResult = 0;
 			Map<String, Object> insertParam = new HashMap<String, Object>();
 
-			String maxIfno_if = wbusaMapper.selectIfno_factoryReceiving_if(today);
+			String maxIfno_if = wbptMapper.selectIfno_factoryReceiving_if(today);
 			String newIfno_if;
 
 			if (maxIfno_if == null) {
@@ -2970,8 +2965,8 @@ public class InterfaceServiceImpl implements InterfaceService {
 			System.out.println(" -- MOVEMENT STORAGE PARAM --");
 			System.out.println(insertParam);
 
-			insertResult += wbusaMapper.factoryReceiving_confirm_summary_if(insertParam);
-			insertResult += wbusaMapper.factoryReceiving_confirm_summary_updateYn(insertParam);
+			insertResult += wbptMapper.factoryReceiving_confirm_summary_if(insertParam);
+			insertResult += wbptMapper.factoryReceiving_confirm_summary_updateYn(insertParam);
 
 			System.out.println(insertResult);
 			if (insertResult < 2) {
@@ -3039,7 +3034,7 @@ public class InterfaceServiceImpl implements InterfaceService {
 			int insertResult = 0;
 			Map<String, Object> insertParam = new HashMap<String, Object>();
 
-			String maxIfno_if = wbusaMapper.selectIfno_factoryReceiving_if(today);
+			String maxIfno_if = wbptMapper.selectIfno_factoryReceiving_if(today);
 			String newIfno_if;
 
 			if (maxIfno_if == null) {
@@ -3070,7 +3065,7 @@ public class InterfaceServiceImpl implements InterfaceService {
 			insertParam.put("outroom", outroom);
 
 			// WMS KEY 조회
-			String mes_key = wbusaMapper.selectWmskey_factoryReceiving(insertParam);
+			String mes_key = wbptMapper.selectWmskey_factoryReceiving(insertParam);
 
 			if (mes_key != null && !"none".equals(mes_key)) {
 				insertParam.put("mes_key", mes_key);
@@ -3081,8 +3076,8 @@ public class InterfaceServiceImpl implements InterfaceService {
 			System.out.println(" -- EXCEPTION OUTPUT PARAM --");
 			System.out.println(insertParam);
 
-			insertResult += wbusaMapper.factoryReceiving_confirm_summary_cancel_if(insertParam);
-			insertResult += wbusaMapper.factoryReceiving_confirm_summary_cancel_updateYn(insertParam);
+			insertResult += wbptMapper.factoryReceiving_confirm_summary_cancel_if(insertParam);
+			insertResult += wbptMapper.factoryReceiving_confirm_summary_cancel_updateYn(insertParam);
 
 			System.out.println(insertResult);
 			if (insertResult < 2) {
@@ -3155,7 +3150,7 @@ public class InterfaceServiceImpl implements InterfaceService {
 //			}
 //			insertResult += wbusaMapper.unreceivedItemDeliveryConfirm(iParam);
 //			wbptMapper.removeInvoiceWmskey(iParam);
-			insertResult += wbusaMapper.unreceivedItemDeliveryComplete(iParam);
+			insertResult += wbptMapper.unreceivedItemDeliveryComplete(iParam);
 
 		}
 		return insertResult;
@@ -3292,7 +3287,7 @@ public class InterfaceServiceImpl implements InterfaceService {
 //			System.out.println(removeCount);
 //
 //			// removeCount = wbptMapper.removeInvoiceWmskey(iParam);
-			removeCount +=  wbusaMapper.unreceivedItemDeliveryCompleteCancel(iParam);
+			removeCount +=  wbptMapper.unreceivedItemDeliveryCompleteCancel(iParam);
 
 		}
 		return removeCount;
@@ -3353,10 +3348,10 @@ public class InterfaceServiceImpl implements InterfaceService {
 			System.out.println(" -- SEMI PRODUCTION PARAM --");
 			System.out.println(insertParam);
 
-			insertResult += wbusaMapper.deleteWorksub(insertParam);
-			insertResult += wbusaMapper.deleteWorkInput(insertParam);
-			insertResult += wbusaMapper.deleteEntersub(insertParam);
-			insertResult += wbusaMapper.semiProduction_confirm_summary_cancel_updateYn(insertParam);
+			insertResult += wbptMapper.deleteWorksub(insertParam);
+			insertResult += wbptMapper.deleteWorkInput(insertParam);
+			insertResult += wbptMapper.deleteEntersub(insertParam);
+			insertResult += wbptMapper.semiProduction_confirm_summary_cancel_updateYn(insertParam);
 
 			System.out.println(insertResult);
 			if (insertResult < 4) {
@@ -3424,9 +3419,9 @@ public class InterfaceServiceImpl implements InterfaceService {
 			System.out.println(" -- PRODUCTION PARAM --");
 			System.out.println(insertParam);
 
-			insertResult += wbusaMapper.deleteWorksub(insertParam);
-			insertResult += wbusaMapper.deleteWorkInput(insertParam);
-			insertResult += wbusaMapper.production_confirm_cancel_updateYn(insertParam);
+			insertResult += wbptMapper.deleteWorksub(insertParam);
+			insertResult += wbptMapper.deleteWorkInput(insertParam);
+			insertResult += wbptMapper.production_confirm_cancel_updateYn(insertParam);
 
 			System.out.println(insertResult);
 			if (insertResult < 3) {
@@ -3486,8 +3481,8 @@ public class InterfaceServiceImpl implements InterfaceService {
 			System.out.println(" -- PRODUCTION PARAM --");
 			System.out.println(insertParam);
 
-			insertResult += wbusaMapper.deleteEntersub(insertParam);
-			insertResult += wbusaMapper.salesTransfer_confirm_cancel_updateYn(insertParam);
+			insertResult += wbptMapper.deleteEntersub(insertParam);
+			insertResult += wbptMapper.salesTransfer_confirm_cancel_updateYn(insertParam);
 
 			System.out.println(insertResult);
 			if (insertResult < 2) {
@@ -3554,7 +3549,7 @@ public class InterfaceServiceImpl implements InterfaceService {
 
 			// 검증 시작
 			// 1️⃣ 마감 여부
-			int magam = wbusaMapper.selectIncomingCloseCnt(map);
+			int magam = wbptMapper.selectIncomingCloseCnt(map);
 			if (magam > 0) {
 				magamCnt++;
 				continue; // 다음 데이터로 넘어감
@@ -3563,9 +3558,9 @@ public class InterfaceServiceImpl implements InterfaceService {
 			// wbmexMapper.inbound_confirm(map); // 입고내역에 인터페이스 정보 업데이트
 			map.put("factory", factory);
 			map.put("storage", storage);
-			wbusaMapper.returnInspection_intf_delete1(map);
-			wbusaMapper.returnInspection_intf_delete2(map);
-			wbusaMapper.returnInspection_intf_wms_delete(map);
+			wbptMapper.returnInspection_intf_delete1(map);
+			wbptMapper.returnInspection_intf_delete2(map);
+			wbptMapper.returnInspection_intf_wms_delete(map);
 
 		}
 
@@ -3630,7 +3625,7 @@ public class InterfaceServiceImpl implements InterfaceService {
 
 			// 검증 시작
 			// 1️⃣ 마감 여부
-			int magam = wbusaMapper.selectIncomingCloseCnt(map);
+			int magam = wbptMapper.selectIncomingCloseCnt(map);
 			if (magam > 0) {
 				magamCnt++;
 				continue; // 다음 데이터로 넘어감
@@ -3638,8 +3633,8 @@ public class InterfaceServiceImpl implements InterfaceService {
 
 			map.put("factory", factory);
 			map.put("storage", storage);
-			wbusaMapper.storageInspection_intf_delete(map);
-			wbusaMapper.storageInspection_intf_wms_delete(map);
+			wbptMapper.storageInspection_intf_delete(map);
+			wbptMapper.storageInspection_intf_wms_delete(map);
 
 		}
 
@@ -3703,7 +3698,7 @@ public class InterfaceServiceImpl implements InterfaceService {
 
 			// 검증 시작
 			// 1️⃣ 마감 여부
-			int magam = wbusaMapper.selectIncomingCloseCnt(map);
+			int magam = wbptMapper.selectIncomingCloseCnt(map);
 			if (magam > 0) {
 				magamCnt++;
 				continue; // 다음 데이터로 넘어감
@@ -3711,8 +3706,8 @@ public class InterfaceServiceImpl implements InterfaceService {
 
 			map.put("factory", factory);
 			map.put("storage", storage);
-			wbusaMapper.scrap_intf_delete(map);
-			wbusaMapper.scrap_intf_wms_delete(map);
+			wbptMapper.scrap_intf_delete(map);
+			wbptMapper.scrap_intf_wms_delete(map);
 
 		}
 

@@ -11,8 +11,8 @@ final long v = System.currentTimeMillis();
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="EUC-KR">
-<title>Woobotech USA WMS</title>
+<meta charset="UTF-8">
+<title>WOOBOTECH KOR WMS</title>
 <link rel="shortcut icon"
 	href="https://www.hanmacsystem.com/web/upload/atom.ico">
 <link
@@ -21,184 +21,6 @@ final long v = System.currentTimeMillis();
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link rel="stylesheet"
 	href="<c:url value='/resources/css/w_login.css'/>?v=<%=v%>">
-	
-<!-- 다국어 jsp -->
-<jsp:include page="/WEB-INF/views/include/i18n-str.jsp" />
-<jsp:include page="/WEB-INF/views/include/i18n-text.jsp" />
-<jsp:include page="/WEB-INF/views/include/i18n-btn.jsp" />
-
-<style>
-body {
-/* 	margin: 0;
-	height: 917px;
-	width: 1918px;
-	max-height: 917px;
-	max-width: 1918px;
-	background: #F5F5F5;
-	height:100%;
-	width:100%; */
-	margin: 0;
-    height: 100vh;
-    width: 100vw;
-    background: #F5F5F5;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.login-box {
-	border: 1px solid black;
-	width: 300px;
-	height: 300px;
-	margin: 0 auto;
-}
-
-h1 {
-	text-align: center;
-}
-
-.button-box {
-    height: 17%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-top: 19px;
-}
-
-.form-group {
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-}
-
-.form-group input.btn_storage,
-.form-group input.btn_factorySelect {
-    display: none;
-}
-
-.form-group .storage-label {
-    display: inline-block;
-    width: 100%;
-    background: white;
-    font-weight: 700;
-    font-size: 10pt;
-    padding: 9px 0px;
-    border: 1px solid lightgray;
-    border-radius: 5px;
-    color: #777777;
-    cursor: pointer;
-    text-align: center;
-    margin-top: 5px;
-    transition: all 0.2s ease;
-    box-sizing: border-box;
-}
-
-.form-group .storage-label:hover {
-    border-color: #999;
-    color: white;
-    background-color: #007bff;
-}
-
-.form-group input.btn_storage:checked + .storage-label,
-.form-group input.btn_factorySelect:checked + .storage-label {
-    background: #007bff;
-    color: white;
-    border-color: #007bff;
-}
-
-label {
-	display: block;
-	font-size: 14px;
-	font-weight: bolder;
-	color: #333;
-}
-
-.idCookie {
-	width: 17px;
-	height: 17px;
-	border: 1px solid gray;
-	float: right;
-	margin-right: 46px;
-	margin-bottom: 9px;
-}
-
-input[type="text"], input[type="password"] {
-	margin: 5px 0;
-	width: 91%;
-	height: 18%;
-	/* border: 1px solid #ccc; */
-	border-radius: 4px;
-}
-
-.btn-box {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 10%;
-}
-
-button {
-	display: block;
-	margin: 0 auto;
-	margin-top: 5px;
-	width: 183px;
-	height: 30px;
-}
-
-.setLang {
-    display: inline-flex;
-    gap: 8px;
-    align-items: center;
-    font-family: Arial, sans-serif;
-    font-size: 14px;
-    justify-content: space-between;
-    padding-top: 16px;
-}
-.setLang {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-.setLang a {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 6px 12px;
-    text-decoration: none;
-    color: #666;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    transition: all 0.2s;
-    width: 100%;
-    justify-content: space-around;
-    background: white;
-    max-height: 47%;
-    mix-width: 21%;
-}
-
-.setLang a:hover {
-	background: #f5f5f5;
-	border-color: #999;
-}
-
-.setLang a.active {
-	background: #007bff;
-	color: white;
-	border-color: #007bff;
-}
-
-.flag-icon {
-	width: 30px;
-	height: 20px;
-	border-radius: 1px;
-	display: inline-block;
-}
-</style>
 </head>
 <body class="body">
 	<div class="loginBox">
@@ -207,49 +29,36 @@ button {
 		</div>
 		<div class="content-wrap">
 			<div class="loginBox">
-				<!-- <div class="loginBoxImg">
-				</div> -->
 				<div class="loginForm">
 					<div class="loginFormTitle">
 						<!-- 로그인 -->
-						<!-- <div class="w_mainTitle_1">WOOBOTECH</div>
-						<div class="w_mainTitle_2">WMS</div> -->
 						<img src="/resources/images/wmsMain_rightLogo.png">
 					</div>
 					<div class="button-box">
+                        <!-- 울산: 현재 선택 가능 -->
                         <div class="form-group">
-                            <input type="radio" name="factorySelect" class="btn_factorySelect" id="select_wbta" value="WBTA" checked>
-                            <label for="select_wbta" class="storage-label">WBTA</label>
+                            <input type="radio" name="factorySelect" class="btn_factorySelect" id="select_ulsan" value="ULSAN" checked>
+                            <label for="select_ulsan" class="storage-label">울산</label>
                         </div>
                         <div class="form-group">
-                            <input type="radio" name="factorySelect" class="btn_factorySelect" id="select_illinois" value="ILLINOIS">
-                            <label for="select_illinois" class="storage-label">ILLINOIS</label>
+                            <input type="radio" name="factorySelect" class="btn_factorySelect" id="select_pt" value="PT">
+                            <label for="select_pt" class="storage-label">평택</label>
                         </div>
                     </div>
-						<div class="setLang">
-							<a href="?lang=ko" class="active"> 
-							<!-- <img src="https://flagcdn.com/w40/kr.png" alt="Korean Flag" class="flag-icon"> -->
-							<span class="flag kr">한국어</span>
-							</a>
-							<a href="?lang=en">
-							<!-- <img src="https://flagcdn.com/w40/us.png" alt="US Flag" class="flag-icon"> -->
-							<span class="flag en">English</span>
-							</a>
-						</div>
 						<div class="input-box">
 							<span class="titleArea">ID</span>
-							<input type="text" name="userId" id="userId" placeholder="<spring:message code='login.id'/>">
+							<input type="text" name="userId" id="userId" placeholder="아이디">
 							<span class="titleArea">PW</span>
 							<input type="password" name="userPw" id="userPw" value=""
-								placeholder="<spring:message code='login.pw'/>">
+								placeholder="패스워드">
 						</div>
 
 					<div class="idCookieDiv">
-						<input type="checkbox" id="saveid">
-						<span class="idCookieText"><spring:message code='login.remember'/></span>
-					</div>
+                        <input type="checkbox" id="saveid">
+                        <label for="saveid" class="idCookieText">아이디 기억하기</label>
+                    </div>
 					<div class="btn-box">
-						<button id="rpaCookieTask"><spring:message code='login.login'/></button>
+						<button id="rpaCookieTask">로그인</button>
 					</div>
 
 				</div>
@@ -263,28 +72,17 @@ button {
 $(document).ready(function() {
     var savedStorage = getCookie('selectedStorage');
 
-    if (savedStorage === 'ILLINOIS') {
-        $('#select_illinois').prop('checked', true);
+    if (savedStorage === "PT") {
+        $('#select_pt').prop('checked', true);
     } else {
-        $('#select_wbta').prop('checked', true);
+        $('#select_ulsan').prop('checked', true);
     }
-
-    // 공장은 무조건 WBTA 고정 저장
-    setCookie("selectedFactory", "WBTA", 30);
 
     // 라디오 변경 시 쿠키 처리
     $('.btn_factorySelect').on('change', function() {
         var selectedValue = $(this).val();
-
-        // 공장은 항상 WBTA 고정
-        setCookie("selectedFactory", "WBTA", 30);
-
-        if (selectedValue === 'ILLINOIS') {
-            setCookie("selectedStorage", "ILLINOIS", 30);
-        } else {
-            deleteCookie("selectedStorage");
-        }
-        console.log("Selection changed -> factory: WBTA, storage: " + (selectedValue === 'ILLINOIS' ? 'ILLINOIS' : '(none)'));
+        setCookie("selectedFactory", selectedValue, 30);
+        console.log("Selection changed -> factory: " + selectedValue);
     });
 			
 	$("#rpaCookieTask").click(
@@ -293,40 +91,28 @@ $(document).ready(function() {
             let userId = $("#userId").val().trim();
             let userPw = $("#userPw").val().trim();
 
-            // 공장은 무조건 WBTA
-            let selectedFactory = "WBTA";
+            // 선택된 사업장 (울산 / 평택)
+            let selectedFactory = $(".btn_factorySelect:checked").val();
+            var checkFactoryAccess = selectedFactory;
 
-            // 라디오에서 선택된 값으로 storage 결정
-            let selectedRadio = $(".btn_factorySelect:checked").val();
-            let selectedStorage = (selectedRadio === 'ILLINOIS') ? 'ILLINOIS' : '';
-
-            var checkFactoryAccess = selectedFactory; // 항상 WBTA
-
-            // 공장 선택 누락 검증은 더 이상 필요 없음 (항상 WBTA 고정)
             // 필요 시 라디오 미선택 방어:
-            if (!selectedRadio) {
-                alert(i18n.t('validation.required.factory'));
+            if (!selectedFactory) {
+                alert("공장을 선택해 주세요.");
                 return false;
             }
 
-            setCookie("selectedFactory", "WBTA", 30);
-            if (selectedStorage) {
-                setCookie("selectedStorage", selectedStorage, 30);
-            } else {
-                deleteCookie("selectedStorage");
-            }
+            setCookie("selectedFactory", selectedFactory, 30);
 
             console.log("USERID -- " + userId + " // PW -- " + userPw);
-            console.log("selectedFactory -- WBTA (fixed)");
-            console.log("selectedStorage -- " + (selectedStorage || '(none)'));
+            console.log("selectedFactory -- " + selectedFactory);
 
             if (!userId || !userId.trim()) {
-                alert("Please enter your ID");
+                alert("아이디를 입력해 주세요.");
                 $("#userId").focus();
                 return false;
             }
             if (!userPw || !userPw.trim()) {
-                alert(i18n.t('validation.enter.password'));
+                alert("비밀번호를 입력해 주세요.");
                 $("#userPw").focus();
                 return false;
             }
@@ -338,7 +124,6 @@ $(document).ready(function() {
                     setCookie("userLoginId", $('#userId').val(), 30);
                     setCookie("userLoginPw", $('#userPw').val(), 30);
                 }
-                // location.href = '/wwms.do';
             } else {
                 $.ajax({
                     url: "/loginCheck",
@@ -346,7 +131,7 @@ $(document).ready(function() {
                     data: JSON.stringify({
                         userId: userId,
                         userPw: userPw,
-                        factory: checkFactoryAccess  // 항상 WBTA
+                        factory: checkFactoryAccess
                     }),
                     contentType: "application/json",
                     success: function(data) {
@@ -356,26 +141,20 @@ $(document).ready(function() {
                         sessionStorage.setItem("factoryAccess", data.factoryAccess);
 
                         if (data.code === "loginFail") {
-                            alert(i18n.t('validation.login'));
+                            alert("아이디 또는 비밀번호가 잘못되었습니다. 다시 시도해 주세요.");
                         } else if (data.code === 'factoryFail') {
-                            alert(i18n.t('validation.access.factory'));
+                            alert("공장 접근 권한이 없습니다.");
                         } else if (data.code == 'ok') {
-                            setCookie("selectedFactory", "WBTA", 30); // 고정
-                            if (selectedStorage) {
-                                setCookie("selectedStorage", selectedStorage, 30);
-                            } else {
-                                deleteCookie("selectedStorage");
-                            }
+                            setCookie("selectedFactory", selectedFactory, 30);
                             if (saveCheck.checked) {
                                 setCookie("userLoginId", $('#userId').val(), 30);
                                 setCookie("userLoginPw", $('#userPw').val(), 30);
                             }
                             setCookie("userName", encodeURIComponent(data.name));
                             console.log("NAME COOKIE SET : " + getCookie("userName"));
-                            setCookie("sabun", data.sabun);
                             location.href = '/wwms.do';
                         } else {
-                            alert(i18n.t('validation.login'));
+                            alert("아이디 또는 비밀번호가 잘못되었습니다. 다시 시도해 주세요.");
                             $("#userId").focus();
                             $("#userPw").val("");
                         }
@@ -395,8 +174,6 @@ $(document).ready(function() {
                 } else {
                     deleteCookie("userLoginId");
                     deleteCookie("userLoginPw");
-                    // selectedFactory는 WBTA 고정이므로 삭제하지 않음
-                    deleteCookie("selectedStorage");
                 }
 
                 sessionStorage.setItem("userId", userId);
@@ -407,7 +184,7 @@ $(document).ready(function() {
 	$("#userId").keydown(function(key) {
 		if (key.keyCode == 13) {
 			if ($("#userPw").val() == '') {
-				alert(i18n.t('validation.enter.idPassword'));
+				alert("아이디, 비밀번호를 확인해 주세요.");
 				$("#userPw").focus();
 				return false;
 			} else {
@@ -419,7 +196,7 @@ $(document).ready(function() {
 	$("#userPw").keydown(function(key) {
 		if (key.keyCode == 13) {
 			if ($("#userId").val() == '') {
-				alert(i18n.t('validation.enter.idPassword'));
+				alert("아이디, 비밀번호를 확인해 주세요.");
 				$("#userId").focus();
 				return false;
 			} else {
@@ -479,7 +256,7 @@ $(document).ready(function() {
 		return a.split('_')[0] === b.split('_')[0];
 	}
 
-	var lang = getCookie('lang') || 'en';
+	var lang = getCookie('lang') || 'ko';
 
 	$('.setLang a').each(function() {
 		var $a = $(this);

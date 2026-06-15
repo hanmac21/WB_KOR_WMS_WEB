@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.mapper.wbusa.QualityMapper;
-import com.example.demo.mapper.wbusa.WbusaMapper;
+import com.example.demo.mapper.wbpt.WbptMapper;
 import com.example.demo.vo.BomDecompositionVO;
 import com.example.demo.vo.DefectiveVO;
 
@@ -29,7 +29,7 @@ public class QualityServiceImpl implements QualityService {
 	@Autowired
 	private QualityMapper qualityMapper;
 	@Autowired
-	private WbusaMapper purchaseMapper;
+	private WbptMapper purchaseMapper;
 
 	// 품질 불량 - detail
 	@Override
