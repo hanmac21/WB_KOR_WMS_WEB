@@ -1,0 +1,11 @@
+<fontFamilies>
+  <fontFamily name="nanum">
+    <normal>fonts/NanumGothic.ttf</normal>
+    <bold>fonts/NanumGothicBold.ttf</bold>
+    <!-- 필요하면 -->
+    <!-- <italic>fonts/NanumGothic.ttf</italic> -->
+    <!-- <boldItalic>fonts/NanumGothicBold.ttf</boldItalic> -->
+    <pdfEncoding>Identity-H</pdfEncoding>
+    <pdfEmbedded>true</pdfEmbedded>
+  </fontFamily>
+</fontFamilies>

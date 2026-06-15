@@ -1,0 +1,3618 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.wbusa.WbusaMapper">
+	
+	<!-- 사용자 권한 조회 -->
+	<select id="read_modal_user_access" parameterType="map">
+		    SELECT
+				SABUN, ID, PASSWORD, NAME, INUSER, INDATE
+				
+				, NVL(BASICDATA, 'N') AS BASICDATA_STATUS
+				, NVL(PURCHASE,			'N') AS PURCHASE_STATUS
+				, NVL(FABRIC,			'N') AS FABRIC_STATUS
+				, NVL(PRODUCTION, 		'N') AS PRODUCTION_STATUS
+				, NVL(SALES, 			'N') AS SALES_STATUS
+				, NVL(QUALITY, 			'N') AS QUALITY_STATUS
+				, NVL(DASHBOARD, 		'N') AS DASHBOARD_STATUS
+				
+				, NVL(USERINFO, 		'N') AS BASICDATA_USERINFO 
+				, NVL(PRODUCTINFO, 		'N') AS BASICDATA_PRODUCTINFO 
+				, NVL(BOMINFO, 			'N') AS BASICDATA_BOMINFO
+				, NVL(CONSIGNEE, 		'N') AS BASICDATA_CONSIGNEE 
+				, NVL(WAREHOUSELAYOUT, 	'N') AS BASICDATA_WAREHOUSELAYOUT
+				 
+				, NVL(PALLETLABELLIST, 	'N') AS PURCHASE_PALLETLABELLIST
+				, NVL(INCOMING, 		'N') AS PURCHASE_INCOMING
+				, NVL(INCOMINGRETURN, 	'N') AS PURCHASE_INCOMINGRETURN
+				, NVL(WIP, 				'N') AS PURCHASE_WIP
+				, NVL(WIPRETURN, 		'N') AS PURCHASE_WIPRETURN
+				, NVL(LOAD, 			'N') AS PURCHASE_LOAD
+				, NVL(LOADRETURN, 		'N') AS PURCHASE_LOADRETURN
+				, NVL(LOCATIONSTATUS, 	'N') AS PURCHASE_LOCATIONSTATUS
+				, NVL(STOCK, 			'N') AS PURCHASE_STOCK
+				, NVL(STOCKCOUNT, 		'N') AS PURCHASE_STOCKCOUNT
+				, NVL(MOVEMENTSTORAGE, 	'N') AS PURCHASE_MOVEMENTSTORAGE
+				, NVL(MOVEMENTFACTORY, 	'N') AS PURCHASE_MOVEMENTFACTORY
+				, NVL(UNPACK, 			'N') AS PURCHASE_UNPACK
+				, NVL(EXCEPTIONINPUT, 	'N') AS PURCHASE_EXCEPTIONINPUT
+				, NVL(EXCEPTIONOUTPUT, 	'N') AS PURCHASE_EXCEPTIONOUTPUT
+				, NVL(PURCHASEFEEDING, 	'N') AS PURCHASE_FEEDING
+				, NVL(STOCKINFO, 		'N') AS PURCHASE_STOCKINFO
+				, NVL(LOTHISTORY, 		'N') AS PURCHASE_LOTHISTORY
+				, NVL(STOCKMOVEMENT, 	'N') AS PURCHASE_STOCKMOVEMENT
+				, NVL(STOCKCOMPARE, 	'N') AS PURCHASE_STOCKCOMPARE
+				
+				, NVL(SEMIPRODUCTION, 					'N') AS PRODUCTION_SEMIPRODUCTION
+				, NVL(TRANSFER, 						'N') AS PRODUCTION_TRANSFER
+				, NVL(PRODUCTIONPRODUCTIONPRODUCTION, 	'N') AS PRODUCTION_PRODUCTIONPRODUCTION
+				, NVL(PRODUCTIONWIPINPUT, 				'N') AS PRODUCTION_WIPINPUT
+				, NVL(PRODUCTIONWIPRETURN, 				'N') AS PRODUCTION_WIPRETURN
+				, NVL(PRODUCTIONMOVEMENTWORKSHOP, 		'N') AS PRODUCTION_MOVEMENTWORKSHOP
+				, NVL(PRODUCTIONEXCEPTIONINPUT, 		'N') AS PRODUCTION_EXCEPTIONINPUT
+				, NVL(PRODUCTIONEXCEPTIONOUTPUT, 		'N') AS PRODUCTION_EXCEPTIONOUTPUT
+				, NVL(PRODUCTIONSTOCK, 					'N') AS PRODUCTION_STOCK
+				, NVL(PRODUCTIONSTOCKINFO, 				'N') AS PRODUCTION_STOCKINFO
+				, NVL(PRODUCTIONSTOCKMOVEMENT, 			'N') AS PRODUCTION_STOCKMOVEMENT
+				, NVL(PRODUCTIONSTOCKCOUNT, 			'N') AS PRODUCTION_STOCKCOUNT
+				, NVL(PRODUCTIONSTOCKCOMPARE, 			'N') AS PRODUCTION_STOCKCOMPARE
+				, NVL(PRODUCTIONTRANSFER, 				'N') AS PRODUCTION_TRANSFER
+				, NVL(PRODUCTIONLOTHISTORY, 			'N') AS PRODUCTION_LOTHISTORY
+				
+				, NVL(QUALITYINCOMING, 			'N') AS QUALITY_INCOMING
+				, NVL(QUALITYPROCESS, 			'N') AS QUALITY_PROCESS
+				, NVL(QUALITYQUALITY, 			'N') AS QUALITY_QUALITY
+				, NVL(QUALITYSCRAP, 			'N') AS QUALITY_SCRAP
+				, NVL(QUALITYDEFEAT, 			'N') AS QUALITY_DEFEAT				
+				, NVL(QUALITYINSPECTION, 		'N') AS QUALITY_INSPECTION
+				, NVL(QUALITYJUDGMENT, 			'N') AS QUALITY_JUDGMENT
+				, NVL(QUALITYMOVEMENTFACTORY, 	'N') AS QUALITY_MOVEMENTFACTORY
+				, NVL(QUALITYMOVEMENTSTORAGE, 	'N') AS QUALITY_MOVEMENTSTORAGE
+				, NVL(QUALITYMOVEMENTWORKSHOP, 	'N') AS QUALITY_MOVEMENTWORKSHOP
+				, NVL(QUALITYEXCEPTIONINPUT, 	'N') AS QUALITY_EXCEPTIONINPUT
+				, NVL(QUALITYEXCEPTIONOUTPUT, 	'N') AS QUALITY_EXCEPTIONOUTPUT
+				, NVL(QUALITYSTOCK, 			'N') AS QUALITY_STOCK
+				, NVL(QUALITYSTOCKINFO, 		'N') AS QUALITY_STOCKINFO
+				, NVL(QUALITYLOTHISTORY, 		'N') AS QUALITY_LOTHISTORY
+				, NVL(QUALITYSTOCKMOVEMENT, 	'N') AS QUALITY_STOCKMOVEMENT
+				, NVL(QUALITYSTOCKCOUNT, 		'N') AS QUALITY_STOCKCOUNT
+				, NVL(QUALITYSTOCKCOMPARE, 		'N') AS QUALITY_STOCKCOMPARE
+				
+				, NVL(SALESWIP, 				'N') AS SALES_WIP
+				, NVL(SALESWIPRETURN, 			'N') AS SALES_WIPRETURN				
+				, NVL(SALESINCOMING, 			'N') AS SALES_INCOMING
+				, NVL(SALESINCOMINGRETURN, 		'N') AS SALES_INCOMINGRETURN
+				, NVL(SALESLOAD, 				'N') AS SALES_LOAD
+				, NVL(SALESLOADRETURN, 			'N') AS SALES_LOADRETURN
+				, NVL(SALESUNPACK, 				'N') AS SALES_UNPACK
+				, NVL(SALESMOVEMENTFACTORY, 	'N') AS SALES_MOVEMENTFACTORY
+				, NVL(SALESMOVEMENTSTORAGE, 	'N') as SALES_MOVEMENTSTORAGE
+				, NVL(SALESEXCEPTIONINPUT, 		'N') AS SALES_EXCEPTIONINPUT
+				, NVL(SALESEXCEPTIONOUTPUT, 	'N') AS SALES_EXCEPTIONOUTPUT
+				, NVL(SALESSTOCK, 				'N') AS SALES_STOCK
+				, NVL(SALESSTOCKINFO, 			'N') AS SALES_STOCKINFO
+				, NVL(SALESLOTHISTORY, 			'N') AS SALES_LOTHISTORY
+				, NVL(SALESSTOCKMOVEMENT, 		'N') AS SALES_STOCKMOVEMENT
+				, NVL(SALESSTOCKCOUNT, 			'N') AS SALES_STOCKCOUNT
+				, NVL(SALESSTOCKCOMPARE, 		'N') AS SALES_STOCKCOMPARE
+				, NVL(SALESTRANSFER, 			'N') AS SALES_TRANSFER
+				
+				, NVL(FABRICPALLETLABELLIST, 	'N') AS FABRIC_PALLETLABELLIST
+				, NVL(FABRICINCOMING, 			'N') AS FABRIC_INCOMING
+				, NVL(FABRICINCOMINGRETURN, 	'N') AS FABRIC_INCOMINGRETURN
+				, NVL(FABRICLOCATIONSTATUS, 	'N') AS FABRIC_LOCATIONSTATUS
+				, NVL(FABRICWIP, 				'N') AS FABRIC_WIP
+				, NVL(FABRICWIPRETURN, 			'N') AS FABRIC_WIPRETURN
+				, NVL(FABRICMOVEMENTFACTORY, 	'N') AS FABRIC_MOVEMENTFACTORY
+				, NVL(FABRICMOVEMENTSTORAGE, 	'N') AS FABRIC_MOVEMENTSTORAGE
+				, NVL(FABRICEXCEPTIONINPUT, 	'N') AS FABRIC_EXCEPTIONINPUT
+				, NVL(FABRICEXCEPTIONOUTPUT, 	'N') AS FABRIC_EXCEPTIONOUTPUT
+				, NVL(FABRICSTOCK, 				'N') AS FABRIC_STOCK
+				, NVL(FABRICSTOCKINFO, 			'N') AS FABRIC_STOCKINFO
+				, NVL(FABRICLOTHISTORY, 		'N') AS FABRIC_LOTHISTORY
+				, NVL(FABRICSTOCKCOUNT, 		'N') AS FABRIC_STOCKCOUNT
+				, NVL(FABRICSTOCKCOMPARE, 		'N') AS FABRIC_STOCKCOMPARE
+				
+				, NVL(DASHBOARDPARTREQUIREMENT, 'N') AS DASHBOARD_PARTREQUIREMENT
+				, NVL(DASHBOARDFABRICUSAGE, 	'N') AS DASHBOARD_FABRICUSAGE
+		FROM T_WMS_USER_MENU_ACCESS
+		WHERE
+			id = #{sabun}
+			AND NAME = #{name}
+	</select>
+	
+	<!-- 사용자 권한 조회 -->
+	<!-- <select id="read_users_access" resultType="map">		    
+		SELECT
+		       MIN(NVL(BASICDATA,        'N')) AS BASICDATA_STATUS
+		     , MIN(NVL(PURCHASE,         'N')) AS PURCHASE_STATUS
+		     , MIN(NVL(FABRIC,           'N')) AS FABRIC_STATUS
+		     , MIN(NVL(PRODUCTION,       'N')) AS PRODUCTION_STATUS
+		     , MIN(NVL(SALES,            'N')) AS SALES_STATUS
+		     , MIN(NVL(QUALITY,          'N')) AS QUALITY_STATUS
+		     , MIN(NVL(DASHBOARD,        'N')) AS DASHBOARD_STATUS
+		
+		     , MIN(NVL(USERINFO,         'N')) AS BASICDATA_USERINFO
+		     , MIN(NVL(PRODUCTINFO,      'N')) AS BASICDATA_PRODUCTINFO
+		     , MIN(NVL(BOMINFO,          'N')) AS BASICDATA_BOMINFO
+		     , MIN(NVL(WAREHOUSELAYOUT,  'N')) AS BASICDATA_WAREHOUSELAYOUT
+		     , MIN(NVL(CONSIGNEE,        'N')) AS BASICDATA_CONSIGNEE
+		
+		     , MIN(NVL(PALLETLABELLIST,  'N')) AS PURCHASE_PALLETLABELLIST
+		     , MIN(NVL(INCOMING,         'N')) AS PURCHASE_INCOMING
+		     , MIN(NVL(INCOMINGRETURN,   'N')) AS PURCHASE_INCOMINGRETURN
+		     , MIN(NVL(WIP,              'N')) AS PURCHASE_WIP
+		     , MIN(NVL(WIPRETURN,        'N')) AS PURCHASE_WIPRETURN
+		     , MIN(NVL(LOAD,             'N')) AS PURCHASE_LOAD
+		     , MIN(NVL(LOADRETURN,       'N')) AS PURCHASE_LOADRETURN
+		     , MIN(NVL(LOCATIONSTATUS,   'N')) AS PURCHASE_LOCATIONSTATUS
+		     , MIN(NVL(STOCK,            'N')) AS PURCHASE_STOCK
+		     , MIN(NVL(STOCKCOUNT,       'N')) AS PURCHASE_STOCKCOUNT
+		     , MIN(NVL(MOVEMENTSTORAGE,  'N')) AS PURCHASE_MOVEMENTSTORAGE
+		     , MIN(NVL(MOVEMENTFACTORY,  'N')) AS PURCHASE_MOVEMENTFACTORY
+		     , MIN(NVL(UNPACK,           'N')) AS PURCHASE_UNPACK
+		     , MIN(NVL(EXCEPTIONINPUT,   'N')) AS PURCHASE_EXCEPTIONINPUT
+		     , MIN(NVL(EXCEPTIONOUTPUT,  'N')) AS PURCHASE_EXCEPTIONOUTPUT
+		     , MIN(NVL(PURCHASEFEEDING,  'N')) AS PURCHASE_FEEDING
+		     , MIN(NVL(STOCKINFO,        'N')) AS PURCHASE_STOCKINFO
+		     , MIN(NVL(LOTHISTORY,       'N')) AS PURCHASE_LOTHISTORY
+		     , MIN(NVL(STOCKCOMPARE,     'N')) AS PURCHASE_STOCKCOMPARE
+		     , MIN(NVL(STOCKMOVEMENT,    'N')) AS PURCHASE_STOCKMOVEMENT
+		
+		     , MIN(NVL(SEMIPRODUCTION,           		'N')) AS PRODUCTION_SEMIPRODUCTION
+		     , MIN(NVL(TRANSFER,                 		'N')) AS PRODUCTION_TRANSFER
+		     , MIN(NVL(PRODUCTIONPRODUCTIONPRODUCTION, 	'N')) AS PRODUCTION_PRODUCTIONPRODUCTION
+		     , MIN(NVL(PRODUCTIONWIPINPUT,       		'N')) AS PRODUCTION_WIPINPUT
+		     , MIN(NVL(PRODUCTIONWIPRETURN,      		'N')) AS PRODUCTION_WIPRETURN
+		     , MIN(NVL(PRODUCTIONMOVEMENTWORKSHOP,		'N')) AS PRODUCTION_MOVEMENTWORKSHOP
+		     , MIN(NVL(PRODUCTIONEXCEPTIONINPUT, 		'N')) AS PRODUCTION_EXCEPTIONINPUT
+		     , MIN(NVL(PRODUCTIONEXCEPTIONOUTPUT, 		'N')) AS PRODUCTION_EXCEPTIONOUTPUT
+		     , MIN(NVL(PRODUCTIONSTOCK,          		'N')) AS PRODUCTION_STOCK
+		     , MIN(NVL(PRODUCTIONSTOCKINFO,      		'N')) AS PRODUCTION_STOCKINFO
+		     , MIN(NVL(PRODUCTIONSTOCKMOVEMENT,  		'N')) AS PRODUCTION_STOCKMOVEMENT
+		     , MIN(NVL(PRODUCTIONSTOCKCOUNT,     		'N')) AS PRODUCTION_STOCKCOUNT
+		     , MIN(NVL(PRODUCTIONSTOCKCOMPARE,   		'N')) AS PRODUCTION_STOCKCOMPARE
+		     , MIN(NVL(PRODUCTIONTRANSFER,       		'N')) AS PRODUCTION_TRANSFER
+		     , MIN(NVL(PRODUCTIONLOTHISTORY,     		'N')) AS PRODUCTION_LOTHISTORY
+		
+		     , MIN(NVL(QUALITYINCOMING,   		'N')) AS QUALITY_INCOMING
+		     , MIN(NVL(QUALITYPROCESS,    		'N')) AS QUALITY_PROCESS
+		     , MIN(NVL(QUALITYQUALITY,    		'N')) AS QUALITY_QUALITY
+		     , MIN(NVL(QUALITYSCRAP,      		'N')) AS QUALITY_SCRAP
+		     , MIN(NVL(QUALITYDEFEAT,     		'N')) AS QUALITY_DEFEAT
+		     , MIN(NVL(QUALITYINSPECTION, 		'N')) AS QUALITY_INSPECTION
+		     , MIN(NVL(QUALITYJUDGMENT, 		'N')) AS QUALITY_JUDGMENT
+		     , MIN(NVL(QUALITYMOVEMENTFACTORY, 	'N')) AS QUALITY_MOVEMENTFACTORY
+		     , MIN(NVL(QUALITYMOVEMENTSTORAGE, 	'N')) AS QUALITY_MOVEMENTSTORAGE
+		     , MIN(NVL(QUALITYMOVEMENTWORKSHOP, 'N')) AS QUALITY_MOVEMENTWORKSHOP
+		     , MIN(NVL(QUALITYEXCEPTIONINPUT, 	'N')) AS QUALITY_EXCEPTIONINPUT
+		     , MIN(NVL(QUALITYEXCEPTIONOUTPUT, 	'N')) AS QUALITY_EXCEPTIONOUTPUT
+		     , MIN(NVL(QUALITYSTOCK, 			'N')) AS QUALITY_STOCK
+		     , MIN(NVL(QUALITYSTOCKINFO, 		'N')) AS QUALITY_STOCKINFO
+		     , MIN(NVL(QUALITYLOTHISTORY, 		'N')) AS QUALITY_LOTHISTORY
+		     , MIN(NVL(QUALITYSTOCKMOVEMENT, 	'N')) AS QUALITY_STOCKMOVEMENT
+		     , MIN(NVL(QUALITYSTOCKCOUNT, 		'N')) AS QUALITY_STOCKCOUNT
+		     , MIN(NVL(QUALITYSTOCKCOMPARE, 	'N')) AS QUALITY_STOCKCOMPARE
+		
+		     , MIN(NVL(SALESWIP,          		'N')) AS SALES_WIP
+		     , MIN(NVL(SALESWIPRETURN,    		'N')) AS SALES_WIPRETURN
+		     , MIN(NVL(SALESINCOMING,     		'N')) AS SALES_INCOMING
+		     , MIN(NVL(SALESINCOMINGRETURN,		'N')) AS SALES_INCOMINGRETURN
+		     , MIN(NVL(SALESLOAD,         		'N')) AS SALES_LOAD
+		     , MIN(NVL(SALESLOADRETURN,   		'N')) AS SALES_LOADRETURN
+		     , MIN(NVL(SALESUNPACK,       		'N')) AS SALES_UNPACK
+		     , MIN(NVL(SALESMOVEMENTFACTORY,	'N')) AS SALES_MOVEMENTFACTORY
+		     , MIN(NVL(SALESMOVEMENTSTORAGE,	'N')) AS SALES_MOVEMENTSTORAGE
+		     , MIN(NVL(SALESEXCEPTIONINPUT,		'N')) AS SALES_EXCEPTIONINPUT
+		     , MIN(NVL(SALESEXCEPTIONOUTPUT,	'N')) AS SALES_EXCEPTIONOUTPUT
+		     , MIN(NVL(SALESSTOCK,        		'N')) AS SALES_STOCK
+		     , MIN(NVL(SALESSTOCKINFO,    		'N')) AS SALES_STOCKINFO
+		     , MIN(NVL(SALESLOTHISTORY,   		'N')) AS SALES_LOTHISTORY
+		     , MIN(NVL(SALESSTOCKMOVEMENT,		'N')) AS SALES_STOCKMOVEMENT
+		     , MIN(NVL(SALESSTOCKCOUNT,   		'N')) AS SALES_STOCKCOUNT
+		     , MIN(NVL(SALESSTOCKCOMPARE, 		'N')) AS SALES_STOCKCOMPARE
+		     , MIN(NVL(SALESTRANSFER, 			'N')) AS SALES_TRANSFER
+		
+		     , MIN(NVL(FABRICPALLETLABELLIST, 	'N')) AS FABRIC_PALLETLABELLIST
+		     , MIN(NVL(FABRICINCOMING,       	'N')) AS FABRIC_INCOMING
+		     , MIN(NVL(FABRICINCOMINGRETURN, 	'N')) AS FABRIC_INCOMINGRETURN
+		     , MIN(NVL(FABRICLOCATIONSTATUS, 	'N')) AS FABRIC_LOCATIONSTATUS
+		     , MIN(NVL(FABRICWIP,            	'N')) AS FABRIC_WIP
+		     , MIN(NVL(FABRICWIPRETURN,      	'N')) AS FABRIC_WIPRETURN
+		     , MIN(NVL(FABRICMOVEMENTFACTORY,	'N')) AS FABRIC_MOVEMENTFACTORY
+		     , MIN(NVL(FABRICMOVEMENTSTORAGE,	'N')) AS FABRIC_MOVEMENTSTORAGE
+		     , MIN(NVL(FABRICEXCEPTIONINPUT, 	'N')) AS FABRIC_EXCEPTIONINPUT
+		     , MIN(NVL(FABRICEXCEPTIONOUTPUT,	'N')) AS FABRIC_EXCEPTIONOUTPUT
+		     , MIN(NVL(FABRICSTOCK,          	'N')) AS FABRIC_STOCK
+		     , MIN(NVL(FABRICSTOCKINFO,      	'N')) AS FABRIC_STOCKINFO
+		     , MIN(NVL(FABRICLOTHISTORY,     	'N')) AS FABRIC_LOTHISTORY
+		     , MIN(NVL(FABRICSTOCKCOUNT,     	'N')) AS FABRIC_STOCKCOUNT
+		     , MIN(NVL(FABRICSTOCKCOMPARE,   	'N')) AS FABRIC_STOCKCOMPARE
+		
+		     , MIN(NVL(DASHBOARDPARTREQUIREMENT, 'N')) AS DASHBOARD_PARTREQUIREMENT
+		     , MIN(NVL(DASHBOARDFABRICUSAGE, 'N')) AS DASHBOARD_FABRICUSAGE
+		
+		FROM T_WMS_USER_MENU_ACCESS
+		WHERE UPPER(ID) IN
+	    <foreach item="id" collection="list" open="(" separator="," close=")">
+	       	UPPER(#{id})
+		</foreach>
+	</select> -->
+	
+	<select id="read_roles_for_users" parameterType="list" resultType="map">
+	    SELECT
+	        R.ROLE_ID,
+	        COUNT(UR.LOGINID) AS ASSIGNED_CNT,
+	        #{totalCnt} AS TOTAL_CNT
+	    FROM T_WMS_ROLE R
+	    LEFT JOIN T_WMS_USER_ROLE UR
+	        ON UR.ROLE_ID = R.ROLE_ID
+	       AND UR.USEYN = 'Y'		   
+	       AND UR.LOGINID IN
+	       <foreach collection="list" item="id" open="(" separator="," close=")">
+	           #{id}
+	       </foreach>
+	    WHERE R.USEYN = 'Y'
+	    <![CDATA[AND R.ROLE_ID <> 'ADMIN']]>
+	    GROUP BY R.ROLE_ID, R.SORTING
+	    ORDER BY R.SORTING
+	</select>
+
+	
+	<select id="read_role_menus" parameterType="list" resultType="map">
+	    SELECT
+	        ROLE_ID,
+	        MENU_CODE
+	    FROM T_WMS_ROLE_PERMISSION
+	    WHERE USEYN = 'Y'
+	      AND ROLE_ID IN
+	      <foreach collection="list" item="roleId" open="(" separator="," close=")">
+	          #{roleId}
+	      </foreach>
+	</select>
+	
+	<!-- 사용자 권한 조회 -->
+	<select id="read_users_effective_menu_state" parameterType="list" resultType="map">
+		WITH USER_LIST AS (
+		    SELECT COLUMN_VALUE AS USER_ID
+		    FROM TABLE(
+		        SYS.ODCIVARCHAR2LIST(
+		            <foreach collection="list" item="id" separator=",">
+		                #{id}
+		            </foreach>
+		        )
+		    )
+		),
+		ROLE_MENU AS (
+		    SELECT
+		        U.USER_ID,
+		        P.MENU_CODE
+		    FROM USER_LIST U
+		    JOIN T_WMS_USER_ROLE UR
+		      ON UPPER(UR.LOGINID) = UPPER(U.USER_ID)
+		     AND UR.USEYN = 'Y'
+		    JOIN T_WMS_ROLE_PERMISSION P
+		      ON P.ROLE_ID = UR.ROLE_ID
+		     AND P.USEYN = 'Y'
+		),
+		OVR AS (
+		    SELECT
+		        UPPER(LOGINID) AS USER_ID,
+		        MENU_CODE,
+		        USEYN
+		    FROM T_WMS_USER_PERMISSION_OVERRIDE
+		),
+		EFFECTIVE AS (
+		    SELECT
+		        U.USER_ID,
+		        M.MENU_CODE,
+		        CASE
+		            WHEN O.MENU_CODE IS NOT NULL THEN O.USEYN
+		            WHEN R.MENU_CODE IS NOT NULL THEN 'Y'
+		            ELSE 'N'
+		        END AS USEYN
+		    FROM USER_LIST U
+		    JOIN T_WMS_MENU M
+		      ON M.USEYN = 'Y'
+		    LEFT JOIN ROLE_MENU R
+		      ON UPPER(R.USER_ID) = UPPER(U.USER_ID)
+		     AND R.MENU_CODE = M.MENU_CODE
+		    LEFT JOIN OVR O
+		      ON O.USER_ID = UPPER(U.USER_ID)
+		     AND O.MENU_CODE = M.MENU_CODE
+		)
+		SELECT
+		    MENU_CODE,
+		    CASE
+		        WHEN SUM(CASE WHEN USEYN = 'Y' THEN 1 ELSE 0 END) = COUNT(*) THEN 'Y'
+		        WHEN SUM(CASE WHEN USEYN = 'Y' THEN 1 ELSE 0 END) = 0 THEN 'N'
+		        ELSE 'M'
+		    END AS STATE
+		FROM EFFECTIVE
+		GROUP BY MENU_CODE
+		ORDER BY MENU_CODE
+	</select>
+
+	
+<!-- 	<update id="update_user_menu_access" parameterType="map">
+		UPDATE T_WMS_USER_MENU_ACCESS
+		    SET
+		        BASICDATA = #{BASICDATA_STATUS}, PURCHASE = #{PURCHASE_STATUS}, PRODUCTION = #{PRODUCTION_STATUS},
+		        FABRIC = #{FABRIC_STATUS}, SALES = #{SALES_STATUS}, QUALITY = #{QUALITY_STATUS}
+		        
+		        , USERINFO = #{BASICDATA_USERINFO}, PRODUCTINFO = #{BASICDATA_PRODUCTINFO}, BOMINFO = #{BASICDATA_BOMINFO},
+		        WAREHOUSELAYOUT = #{BASICDATA_WAREHOUSELAYOUT},																				
+		        
+		        PALLETLABELLIST = #{PURCHASE_PALLETLABELLIST}, INCOMING = #{PURCHASE_INCOMING}, INCOMINGRETURN = #{PURCHASE_INCOMINGRETURN},
+		        WIP = #{PURCHASE_WIP}, WIPRETURN = #{PURCHASE_WIPRETURN}, LOAD = #{PURCHASE_LOAD}, LOADRETURN = #{PURCHASE_LOADRETURN},
+		        LOCATIONSTATUS = #{PURCHASE_LOCATIONSTATUS}, STOCK = #{PURCHASE_STOCK}, STOCKCOUNT = #{PURCHASE_STOCKCOUNT},				
+		        MOVEMENTSTORAGE = #{PURCHASE_MOVEMENTSTORAGE}, MOVEMENTFACTORY = #{PURCHASE_MOVEMENTFACTORY}, UNPACK = #{PURCHASE_UNPACK},
+		        EXCEPTIONINPUT = #{PURCHASE_EXCEPTIONINPUT}, EXCEPTIONOUTPUT = #{PURCHASE_EXCEPTIONOUTPUT}, PURCHASEFEEDING = #{PURCHASE_FEEDING}
+		        
+		        , SEMIPRODUCTION = #{PRODUCTION_SEMIPRODUCTION}, TRANSFER = #{PRODUCTION_TRANSFER} 
+				, PRODUCTIONPRODUCTIONPRODUCTION = #{PRODUCTION_PRODUCTIONPRODUCTION}, PRODUCTIONWIPINPUT = #{PRODUCTION_WIPINPUT}, PRODUCTIONWIPRETURN = #{PRODUCTION_WIPRETURN}, PRODUCTIONMOVEMENTWORKSHOP = #{PRODUCTION_MOVEMENTWORKSHOP}
+				, PRODUCTIONSTOCK = #{PRODUCTION_STOCK}, PRODUCTIONSTOCKINFO = #{PRODUCTION_STOCKINFO}, PRODUCTIONSTOCKMOVEMENT = #{PRODUCTION_STOCKMOVEMENT}
+				, PRODUCTIONSTOCKCOUNT = #{PRODUCTION_STOCKCOUNT}, PRODUCTIONSTOCKCOMPARE = #{PRODUCTION_STOCKCOMPARE}, PRODUCTIONTRANSFER = #{PRODUCTION_TRANSFER}
+				, PRODUCTIONLOTHISTORY = #{PRODUCTION_LOTHISTORY}
+		        
+		        QUALITYINCOMING = #{QUALITY_INCOMING}, QUALITYPROCESS = #{QUALITY_PROCESS},
+		        QUALITYQUALITY = #{QUALITY_QUALITY}, QUALITYSCRAP = #{QUALITY_SCRAP}  251011 오류나서 일단 주석
+		        
+		        새로 추가됨
+		    	, STOCKINFO = #{PURCHASE_STOCKINFO}, LOTHISTORY = #{PURCHASE_LOTHISTORY}, STOCKCOMPARE = #{PURCHASE_STOCKCOMPARE}, QUALITYDEFEAT = #{QUALITY_DEFEAT}
+		    	, STOCKMOVEMENT = #{PURCHASE_STOCKMOVEMENT}
+		    	
+		    	원단
+				, FABRICPALLETLABELLIST = #{FABRIC_PALLETLABELLIST}, FABRICINCOMING = #{FABRIC_INCOMING}, FABRICINCOMINGRETURN = #{FABRIC_INCOMINGRETURN}
+				, FABRICLOCATIONSTATUS = #{FABRIC_LOCATIONSTATUS}, FABRICWIP = #{FABRIC_WIP}, FABRICWIPRETURN = #{FABRIC_WIPRETURN}
+				, FABRICMOVEMENTFACTORY = #{FABRIC_MOVEMENTFACTORY}, FABRICMOVEMENTSTORAGE = #{FABRIC_MOVEMENTSTORAGE}, FABRICEXCEPTIONINPUT = #{FABRIC_EXCEPTIONINPUT}
+				, FABRICEXCEPTIONOUTPUT = #{FABRIC_EXCEPTIONOUTPUT}, FABRICSTOCK = #{FABRIC_STOCK}, FABRICSTOCKINFO = #{FABRIC_STOCKINFO}
+				, FABRICLOTHISTORY = #{FABRIC_LOTHISTORY}, FABRICSTOCKCOUNT = #{FABRIC_STOCKCOUNT}, FABRICSTOCKCOMPARE = #{FABRIC_STOCKCOMPARE}
+				
+				영업
+				, SALESINCOMING = #{SALES_INCOMING}, SALESINCOMINGRETURN = #{SALES_INCOMINGRETURN}
+				, SALESLOAD = #{SALES_LOAD} , SALESLOADRETURN = #{SALES_LOADRETURN}
+				, SALESUNPACK = #{SALES_UNPACK}, SALESMOVEMENTFACTORY = #{SALES_MOVEMENTFACTORY}
+				, SALESEXCEPTIONINPUT = #{SALES_EXCEPTIONINPUT}, SALESEXCEPTIONOUTPUT = #{SALES_EXCEPTIONOUTPUT}, SALESSTOCK = #{SALES_STOCK}
+				, SALESSTOCKINFO = #{SALES_STOCKINFO}, SALESLOTHISTORY = #{SALES_LOTHISTORY}, SALESSTOCKMOVEMENT = #{SALES_STOCKMOVEMENT}
+				, SALESSTOCKCOUNT = #{SALES_STOCKCOUNT}, SALESSTOCKCOMPARE = #{SALES_STOCKCOMPARE}
+				, DASHBOARDPARTREQUIREMENT = #{DASHBOARD_PARTREQUIREMENT}
+		    	, QUALITYINSPECTION = #{QUALITY_INSPECTION}
+		   		, SALESWIP = #{SALES_WIP}, SALESWIPRETURN = #{SALES_WIPRETURN} 임시로 주석 오류남 251005
+		        
+		    WHERE UPPER(ID) IN
+		    <foreach item="id" collection="ids" open="(" separator="," close=")">
+		       	UPPER(#{id})
+			</foreach>
+			
+	</update> -->
+	
+	<update id="update_user_menu_access" parameterType="map">
+		UPDATE T_WMS_USER_MENU_ACCESS
+			SET
+			<!-- ===== BASICDATA 메인 카테고리 ===== -->
+			BASICDATA = <choose><when test="BASICDATA_STATUS != null">#{BASICDATA_STATUS}</when><otherwise>'N'</otherwise></choose>,
+			PURCHASE = <choose><when test="PURCHASE_STATUS != null">#{PURCHASE_STATUS}</when><otherwise>'N'</otherwise></choose>,
+			FABRIC = <choose><when test="FABRIC_STATUS != null">#{FABRIC_STATUS}</when><otherwise>'N'</otherwise></choose>,
+			PRODUCTION = <choose><when test="PRODUCTION_STATUS != null">#{PRODUCTION_STATUS}</when><otherwise>'N'</otherwise></choose>,
+			SALES = <choose><when test="SALES_STATUS != null">#{SALES_STATUS}</when><otherwise>'N'</otherwise></choose>,
+			QUALITY = <choose><when test="QUALITY_STATUS != null">#{QUALITY_STATUS}</when><otherwise>'N'</otherwise></choose>,
+			
+			<!-- ===== BASICDATA 서브메뉴 ===== -->
+			USERINFO = <choose><when test="BASICDATA_USERINFO != null">#{BASICDATA_USERINFO}</when><otherwise>'N'</otherwise></choose>,
+			PRODUCTINFO = <choose><when test="BASICDATA_PRODUCTINFO != null">#{BASICDATA_PRODUCTINFO}</when><otherwise>'N'</otherwise></choose>,
+			BOMINFO = <choose><when test="BASICDATA_BOMINFO != null">#{BASICDATA_BOMINFO}</when><otherwise>'N'</otherwise></choose>,
+			WAREHOUSELAYOUT = <choose><when test="BASICDATA_WAREHOUSELAYOUT != null">#{BASICDATA_WAREHOUSELAYOUT}</when><otherwise>'N'</otherwise></choose>,
+			CONSIGNEE = <choose><when test="BASICDATA_CONSIGNEE != null">#{BASICDATA_CONSIGNEE}</when><otherwise>'N'</otherwise></choose>,
+			
+			<!-- ===== PURCHASE 서브메뉴 ===== -->
+			PALLETLABELLIST = <choose><when test="PURCHASE_PALLETLABELLIST != null">#{PURCHASE_PALLETLABELLIST}</when><otherwise>'N'</otherwise></choose>,
+			INCOMING = <choose><when test="PURCHASE_INCOMING != null">#{PURCHASE_INCOMING}</when><otherwise>'N'</otherwise></choose>,
+			INCOMINGRETURN = <choose><when test="PURCHASE_INCOMINGRETURN != null">#{PURCHASE_INCOMINGRETURN}</when><otherwise>'N'</otherwise></choose>,			
+			WIP = <choose><when test="PURCHASE_WIP != null">#{PURCHASE_WIP}</when><otherwise>'N'</otherwise></choose>,
+			WIPRETURN = <choose><when test="PURCHASE_WIPRETURN != null">#{PURCHASE_WIPRETURN}</when><otherwise>'N'</otherwise></choose>,
+			LOAD = <choose><when test="PURCHASE_LOAD != null">#{PURCHASE_LOAD}</when><otherwise>'N'</otherwise></choose>,			
+			LOADRETURN = <choose><when test="PURCHASE_LOADRETURN != null">#{PURCHASE_LOADRETURN}</when><otherwise>'N'</otherwise></choose>,
+			LOCATIONSTATUS = <choose><when test="PURCHASE_LOCATIONSTATUS != null">#{PURCHASE_LOCATIONSTATUS}</when><otherwise>'N'</otherwise></choose>,
+			STOCK = <choose><when test="PURCHASE_STOCK != null">#{PURCHASE_STOCK}</when><otherwise>'N'</otherwise></choose>,			
+			STOCKCOUNT = <choose><when test="PURCHASE_STOCKCOUNT != null">#{PURCHASE_STOCKCOUNT}</when><otherwise>'N'</otherwise></choose>,
+			MOVEMENTSTORAGE = <choose><when test="PURCHASE_MOVEMENTSTORAGE != null">#{PURCHASE_MOVEMENTSTORAGE}</when><otherwise>'N'</otherwise></choose>,
+			MOVEMENTFACTORY = <choose><when test="PURCHASE_MOVEMENTFACTORY != null">#{PURCHASE_MOVEMENTFACTORY}</when><otherwise>'N'</otherwise></choose>,			
+			UNPACK = <choose><when test="PURCHASE_UNPACK != null">#{PURCHASE_UNPACK}</when><otherwise>'N'</otherwise></choose>,
+			EXCEPTIONINPUT = <choose><when test="PURCHASE_EXCEPTIONINPUT != null">#{PURCHASE_EXCEPTIONINPUT}</when><otherwise>'N'</otherwise></choose>,
+			EXCEPTIONOUTPUT = <choose><when test="PURCHASE_EXCEPTIONOUTPUT != null">#{PURCHASE_EXCEPTIONOUTPUT}</when><otherwise>'N'</otherwise></choose>,			
+			PURCHASEFEEDING = <choose><when test="PURCHASE_FEEDING != null">#{PURCHASE_FEEDING}</when><otherwise>'N'</otherwise></choose>,
+			STOCKINFO = <choose><when test="PURCHASE_STOCKINFO != null">#{PURCHASE_STOCKINFO}</when><otherwise>'N'</otherwise></choose>,
+			LOTHISTORY = <choose><when test="PURCHASE_LOTHISTORY != null">#{PURCHASE_LOTHISTORY}</when><otherwise>'N'</otherwise></choose>,			
+			STOCKCOMPARE = <choose><when test="PURCHASE_STOCKCOMPARE != null">#{PURCHASE_STOCKCOMPARE}</when><otherwise>'N'</otherwise></choose>,
+			STOCKMOVEMENT = <choose><when test="PURCHASE_STOCKMOVEMENT != null">#{PURCHASE_STOCKMOVEMENT}</when><otherwise>'N'</otherwise></choose>,
+			
+			<!-- ===== PRODUCTION 서브메뉴 ===== -->
+			SEMIPRODUCTION = <choose><when test="PRODUCTION_SEMIPRODUCTION != null">#{PRODUCTION_SEMIPRODUCTION}</when><otherwise>'N'</otherwise></choose>,
+			TRANSFER = <choose><when test="PRODUCTION_TRANSFER != null">#{PRODUCTION_TRANSFER}</when><otherwise>'N'</otherwise></choose>,
+			PRODUCTIONPRODUCTIONPRODUCTION = <choose><when test="PRODUCTION_PRODUCTIONPRODUCTION != null">#{PRODUCTION_PRODUCTIONPRODUCTION}</when><otherwise>'N'</otherwise></choose>,			
+			PRODUCTIONWIPINPUT = <choose><when test="PRODUCTION_WIPINPUT != null">#{PRODUCTION_WIPINPUT}</when><otherwise>'N'</otherwise></choose>,
+			PRODUCTIONWIPRETURN = <choose><when test="PRODUCTION_WIPRETURN != null">#{PRODUCTION_WIPRETURN}</when><otherwise>'N'</otherwise></choose>,
+			PRODUCTIONMOVEMENTWORKSHOP = <choose><when test="PRODUCTION_MOVEMENTWORKSHOP != null">#{PRODUCTION_MOVEMENTWORKSHOP}</when><otherwise>'N'</otherwise></choose>,			
+			PRODUCTIONEXCEPTIONINPUT = <choose><when test="PRODUCTION_EXCEPTIONINPUT != null">#{PRODUCTION_EXCEPTIONINPUT}</when><otherwise>'N'</otherwise></choose>,			
+			PRODUCTIONEXCEPTIONOUTPUT = <choose><when test="PRODUCTION_EXCEPTIONOUTPUT != null">#{PRODUCTION_EXCEPTIONOUTPUT}</when><otherwise>'N'</otherwise></choose>,			
+			PRODUCTIONSTOCK = <choose><when test="PRODUCTION_STOCK != null">#{PRODUCTION_STOCK}</when><otherwise>'N'</otherwise></choose>,
+			PRODUCTIONSTOCKINFO = <choose><when test="PRODUCTION_STOCKINFO != null">#{PRODUCTION_STOCKINFO}</when><otherwise>'N'</otherwise></choose>,
+			PRODUCTIONSTOCKMOVEMENT = <choose><when test="PRODUCTION_STOCKMOVEMENT != null">#{PRODUCTION_STOCKMOVEMENT}</when><otherwise>'N'</otherwise></choose>,			
+			PRODUCTIONSTOCKCOUNT = <choose><when test="PRODUCTION_STOCKCOUNT != null">#{PRODUCTION_STOCKCOUNT}</when><otherwise>'N'</otherwise></choose>,
+			PRODUCTIONSTOCKCOMPARE = <choose><when test="PRODUCTION_STOCKCOMPARE != null">#{PRODUCTION_STOCKCOMPARE}</when><otherwise>'N'</otherwise></choose>,
+			PRODUCTIONTRANSFER = <choose><when test="PRODUCTION_TRANSFER != null">#{PRODUCTION_TRANSFER}</when><otherwise>'N'</otherwise></choose>,			
+			PRODUCTIONLOTHISTORY = <choose><when test="PRODUCTION_LOTHISTORY != null">#{PRODUCTION_LOTHISTORY}</when><otherwise>'N'</otherwise></choose>,
+			
+			<!-- ===== FABRIC 서브메뉴 ===== -->
+			FABRICPALLETLABELLIST = <choose><when test="FABRIC_PALLETLABELLIST != null">#{FABRIC_PALLETLABELLIST}</when><otherwise>'N'</otherwise></choose>,
+			FABRICINCOMING = <choose><when test="FABRIC_INCOMING != null">#{FABRIC_INCOMING}</when><otherwise>'N'</otherwise></choose>,
+			FABRICINCOMINGRETURN = <choose><when test="FABRIC_INCOMINGRETURN != null">#{FABRIC_INCOMINGRETURN}</when><otherwise>'N'</otherwise></choose>,			
+			FABRICLOCATIONSTATUS = <choose><when test="FABRIC_LOCATIONSTATUS != null">#{FABRIC_LOCATIONSTATUS}</when><otherwise>'N'</otherwise></choose>,
+			FABRICWIP = <choose><when test="FABRIC_WIP != null">#{FABRIC_WIP}</when><otherwise>'N'</otherwise></choose>,
+			FABRICWIPRETURN = <choose><when test="FABRIC_WIPRETURN != null">#{FABRIC_WIPRETURN}</when><otherwise>'N'</otherwise></choose>,			
+			FABRICMOVEMENTFACTORY = <choose><when test="FABRIC_MOVEMENTFACTORY != null">#{FABRIC_MOVEMENTFACTORY}</when><otherwise>'N'</otherwise></choose>,
+			FABRICMOVEMENTSTORAGE = <choose><when test="FABRIC_MOVEMENTSTORAGE != null">#{FABRIC_MOVEMENTSTORAGE}</when><otherwise>'N'</otherwise></choose>,
+			FABRICEXCEPTIONINPUT = <choose><when test="FABRIC_EXCEPTIONINPUT != null">#{FABRIC_EXCEPTIONINPUT}</when><otherwise>'N'</otherwise></choose>,			
+			FABRICEXCEPTIONOUTPUT = <choose><when test="FABRIC_EXCEPTIONOUTPUT != null">#{FABRIC_EXCEPTIONOUTPUT}</when><otherwise>'N'</otherwise></choose>,
+			FABRICSTOCK = <choose><when test="FABRIC_STOCK != null">#{FABRIC_STOCK}</when><otherwise>'N'</otherwise></choose>,
+			FABRICSTOCKINFO = <choose><when test="FABRIC_STOCKINFO != null">#{FABRIC_STOCKINFO}</when><otherwise>'N'</otherwise></choose>,			
+			FABRICLOTHISTORY = <choose><when test="FABRIC_LOTHISTORY != null">#{FABRIC_LOTHISTORY}</when><otherwise>'N'</otherwise></choose>,
+			FABRICSTOCKCOUNT = <choose><when test="FABRIC_STOCKCOUNT != null">#{FABRIC_STOCKCOUNT}</when><otherwise>'N'</otherwise></choose>,
+			FABRICSTOCKCOMPARE = <choose><when test="FABRIC_STOCKCOMPARE != null">#{FABRIC_STOCKCOMPARE}</when><otherwise>'N'</otherwise></choose>,
+			
+			<!-- ===== SALES 서브메뉴 ===== -->
+			SALESINCOMING = <choose><when test="SALES_INCOMING != null">#{SALES_INCOMING}</when><otherwise>'N'</otherwise></choose>,
+			SALESINCOMINGRETURN = <choose><when test="SALES_INCOMINGRETURN != null">#{SALES_INCOMINGRETURN}</when><otherwise>'N'</otherwise></choose>,
+			SALESLOAD = <choose><when test="SALES_LOAD != null">#{SALES_LOAD}</when><otherwise>'N'</otherwise></choose>,			
+			SALESLOADRETURN = <choose><when test="SALES_LOADRETURN != null">#{SALES_LOADRETURN}</when><otherwise>'N'</otherwise></choose>,
+			SALESUNPACK = <choose><when test="SALES_UNPACK != null">#{SALES_UNPACK}</when><otherwise>'N'</otherwise></choose>,
+			SALESMOVEMENTFACTORY = <choose><when test="SALES_MOVEMENTFACTORY != null">#{SALES_MOVEMENTFACTORY}</when><otherwise>'N'</otherwise></choose>,
+			SALESMOVEMENTSTORAGE = <choose><when test="SALES_MOVEMENTSTORAGE != null">#{SALES_MOVEMENTSTORAGE}</when><otherwise>'N'</otherwise></choose>,			
+			SALESEXCEPTIONINPUT = <choose><when test="SALES_EXCEPTIONINPUT != null">#{SALES_EXCEPTIONINPUT}</when><otherwise>'N'</otherwise></choose>,
+			SALESEXCEPTIONOUTPUT = <choose><when test="SALES_EXCEPTIONOUTPUT != null">#{SALES_EXCEPTIONOUTPUT}</when><otherwise>'N'</otherwise></choose>,
+			SALESSTOCK = <choose><when test="SALES_STOCK != null">#{SALES_STOCK}</when><otherwise>'N'</otherwise></choose>,			
+			SALESSTOCKINFO = <choose><when test="SALES_STOCKINFO != null">#{SALES_STOCKINFO}</when><otherwise>'N'</otherwise></choose>,
+			SALESLOTHISTORY = <choose><when test="SALES_LOTHISTORY != null">#{SALES_LOTHISTORY}</when><otherwise>'N'</otherwise></choose>,
+			SALESSTOCKMOVEMENT = <choose><when test="SALES_STOCKMOVEMENT != null">#{SALES_STOCKMOVEMENT}</when><otherwise>'N'</otherwise></choose>,			
+			SALESSTOCKCOUNT = <choose><when test="SALES_STOCKCOUNT != null">#{SALES_STOCKCOUNT}</when><otherwise>'N'</otherwise></choose>,
+			SALESSTOCKCOMPARE = <choose><when test="SALES_STOCKCOMPARE != null">#{SALES_STOCKCOMPARE}</when><otherwise>'N'</otherwise></choose>,
+			SALESTRANSFER = <choose><when test="SALES_TRANSFER != null">#{SALES_TRANSFER}</when><otherwise>'N'</otherwise></choose>,
+			
+			<!-- ===== QUALITY 서브메뉴 ===== -->
+			QUALITYINCOMING = <choose><when test="QUALITY_INCOMING != null">#{QUALITY_INCOMING}</when><otherwise>'N'</otherwise></choose>,
+			QUALITYPROCESS = <choose><when test="QUALITY_PROCESS != null">#{QUALITY_PROCESS}</when><otherwise>'N'</otherwise></choose>,
+			QUALITYQUALITY = <choose><when test="QUALITY_QUALITY != null">#{QUALITY_QUALITY}</when><otherwise>'N'</otherwise></choose>,
+			QUALITYSCRAP = <choose><when test="QUALITY_SCRAP != null">#{QUALITY_SCRAP}</when><otherwise>'N'</otherwise></choose>,
+			QUALITYDEFEAT = <choose><when test="QUALITY_DEFEAT != null">#{QUALITY_DEFEAT}</when><otherwise>'N'</otherwise></choose>,
+			QUALITYINSPECTION = <choose><when test="QUALITY_INSPECTION != null">#{QUALITY_INSPECTION}</when><otherwise>'N'</otherwise></choose>,
+			QUALITYJUDGMENT = <choose><when test="QUALITY_JUDGMENT != null">#{QUALITY_JUDGMENT}</when><otherwise>'N'</otherwise></choose>,
+			QUALITYMOVEMENTFACTORY = <choose><when test="QUALITY_MOVEMENTFACTORY != null">#{QUALITY_MOVEMENTFACTORY}</when><otherwise>'N'</otherwise></choose>,
+			QUALITYMOVEMENTSTORAGE = <choose><when test="QUALITY_MOVEMENTSTORAGE != null">#{QUALITY_MOVEMENTSTORAGE}</when><otherwise>'N'</otherwise></choose>,
+			QUALITYMOVEMENTWORKSHOP = <choose><when test="QUALITY_MOVEMENTWORKSHOP != null">#{QUALITY_MOVEMENTWORKSHOP}</when><otherwise>'N'</otherwise></choose>,
+			QUALITYEXCEPTIONINPUT = <choose><when test="QUALITY_EXCEPTIONINPUT != null">#{QUALITY_EXCEPTIONINPUT}</when><otherwise>'N'</otherwise></choose>,
+			QUALITYEXCEPTIONOUTPUT = <choose><when test="QUALITY_EXCEPTIONOUTPUT != null">#{QUALITY_EXCEPTIONOUTPUT}</when><otherwise>'N'</otherwise></choose>,
+			QUALITYSTOCK = <choose><when test="QUALITY_STOCK != null">#{QUALITY_STOCK}</when><otherwise>'N'</otherwise></choose>,
+			QUALITYSTOCKINFO = <choose><when test="QUALITY_STOCKINFO != null">#{QUALITY_STOCKINFO}</when><otherwise>'N'</otherwise></choose>,
+			QUALITYLOTHISTORY = <choose><when test="QUALITY_LOTHISTORY != null">#{QUALITY_LOTHISTORY}</when><otherwise>'N'</otherwise></choose>,
+			QUALITYSTOCKMOVEMENT = <choose><when test="QUALITY_STOCKMOVEMENT != null">#{QUALITY_STOCKMOVEMENT}</when><otherwise>'N'</otherwise></choose>,
+			QUALITYSTOCKCOUNT = <choose><when test="QUALITY_STOCKCOUNT != null">#{QUALITY_STOCKCOUNT}</when><otherwise>'N'</otherwise></choose>,
+			QUALITYSTOCKCOMPARE = <choose><when test="QUALITY_STOCKCOMPARE != null">#{QUALITY_STOCKCOMPARE}</when><otherwise>'N'</otherwise></choose>
+		
+		WHERE UPPER(ID) IN
+		<foreach item="id" collection="ids" open="(" separator="," close=")">
+		  UPPER(#{id})
+		</foreach>
+	</update>	
+	
+	<update id="updateOtherRolesN">
+		<![CDATA[
+		UPDATE T_WMS_USER_ROLE
+		SET USEYN = 'N'
+		WHERE USER_ID = #{userId}
+		AND ROLE_ID <> 'MANAGER'
+		AND USEYN = 'Y'
+		]]>
+	</update>
+	
+	<update id="mergeManager">
+		MERGE INTO T_WMS_USER_ROLE A
+		USING (
+		    SELECT 
+		        #{userId} AS USER_ID, 
+		        'MANAGER' AS ROLE_ID, 
+		        'Y' AS USEYN 
+		    FROM DUAL
+		) B
+		ON (A.USER_ID = B.USER_ID AND A.ROLE_ID = B.ROLE_ID)
+		WHEN MATCHED THEN
+		    UPDATE SET USEYN = 'Y'
+		WHEN NOT MATCHED THEN
+		    INSERT (USER_ID, ROLE_ID, USEYN)
+		    VALUES (B.USER_ID, B.ROLE_ID, B.USEYN)
+	</update>
+	
+	<delete id="deleteOverride"> 		
+		DELETE FROM T_WMS_USER_PERMISSION_OVERRIDE
+		WHERE USER_ID = #{userId}
+	</delete>
+	
+	<select id="getRolesY" resultType="string">
+		SELECT ROLE_ID
+		FROM T_WMS_USER_ROLE
+		WHERE USER_ID = #{userId}
+		AND USEYN = 'Y'
+	</select>
+	
+	<update id="updateUserRolesN">
+		UPDATE T_WMS_USER_ROLE
+		SET USEYN = 'N'
+		WHERE USER_ID = #{userId}
+		AND ROLE_ID = #{roleId}
+		AND USEYN = 'Y'
+	</update>
+	
+	<update id="mergeUserRole">
+		MERGE INTO T_WMS_USER_ROLE A
+		USING (
+		    SELECT 
+		        #{userId} AS USER_ID, 
+		        #{roleId} AS ROLE_ID, 
+		        'Y' AS USEYN 
+		    FROM DUAL
+		) B
+		ON (A.USER_ID = B.USER_ID AND A.ROLE_ID = B.ROLE_ID)
+		WHEN MATCHED THEN
+		    UPDATE SET USEYN = 'Y'
+		WHEN NOT MATCHED THEN
+		    INSERT (USER_ID, ROLE_ID, USEYN)
+		    VALUES (B.USER_ID, B.ROLE_ID, B.USEYN)
+	</update>
+	
+	<select id="getRoleMenus" resultType = "string">
+		SELECT 
+		    MENU_CODE
+		FROM T_WMS_ROLE_PERMISSION
+		WHERE USEYN = 'Y'
+		AND ROLE_ID IN
+		<foreach collection="roleIds" item="roleId" open="(" separator="," close=")">
+			#{roleId}
+       	</foreach>
+	</select>
+	
+	<delete id="deleteOverrideMenus"> 		
+		DELETE T_WMS_USER_PERMISSION_OVERRIDE
+		WHERE USER_ID = #{userId}
+		AND MENU_CODE IN
+		<foreach collection="menuCodes" item="menuCode" open="(" separator="," close=")">
+			#{menuCode}
+		</foreach>
+	</delete>
+
+	<update id="mergeOverrideY">
+		MERGE INTO T_WMS_USER_PERMISSION_OVERRIDE A
+		USING (
+		    SELECT
+		        #{userId} AS USER_ID,
+		        #{menuCode} AS MENU_CODE,
+		        'Y' AS USEYN
+		    FROM DUAL
+		) B
+		ON (A.USER_ID = B.USER_ID AND A.MENU_CODE = B.MENU_CODE)
+		WHEN MATCHED THEN
+		    UPDATE SET USEYN = 'Y'
+		WHEN NOT MATCHED THEN
+		    INSERT (USER_ID, MENU_CODE, USEYN)
+		    VALUES (B.USER_ID, B.MENU_CODE, B.USEYN)
+	</update>
+	
+	<update id="mergeOverrideN">
+		MERGE INTO T_WMS_USER_PERMISSION_OVERRIDE A
+		USING (
+		    SELECT
+		        #{userId} AS USER_ID,
+		        #{menuCode} AS MENU_CODE,
+		        'N' AS USEYN
+		    FROM DUAL
+		) B
+		ON (A.USER_ID = B.USER_ID AND A.MENU_CODE = B.MENU_CODE)
+		WHEN MATCHED THEN
+		    UPDATE SET USEYN = 'N'
+		WHEN NOT MATCHED THEN
+		    INSERT (USER_ID, MENU_CODE, USEYN)
+		    VALUES (B.USER_ID, B.MENU_CODE, B.USEYN)
+	</update>
+
+	<select id="view_main_menu_user_access" parameterType="string">
+		WITH ROLE_MENU AS (
+		    SELECT DISTINCT B.MENU_CODE
+		    FROM T_WMS_USER_ROLE A
+		    JOIN T_WMS_ROLE_PERMISSION B ON A.ROLE_ID = B.ROLE_ID
+		    WHERE UPPER(A.LOGINID) = UPPER(#{id})
+		    AND A.USEYN = 'Y'
+		    AND B.USEYN = 'Y'
+		),
+		FINAL_MENU AS (
+		    SELECT 
+		        A.MENU_CODE,
+		        CASE 
+		            WHEN C.MENU_CODE IS NOT NULL THEN C.USEYN
+		            WHEN B.MENU_CODE IS NOT NULL THEN 'Y'
+		            ELSE 'N'
+		        END AS FINAL_USEYN
+		    FROM T_WMS_MENU A
+		    LEFT JOIN ROLE_MENU B 
+		    	ON A.MENU_CODE = B.MENU_CODE
+		    LEFT JOIN T_WMS_USER_PERMISSION_OVERRIDE C 
+		    	ON UPPER(C.LOGINID) = UPPER(#{id})
+		    	AND C.MENU_CODE = A.MENU_CODE
+		    WHERE A.USEYN = 'Y'
+		)
+		SELECT MENU_CODE
+		FROM FINAL_MENU
+		WHERE FINAL_USEYN = 'Y'
+		ORDER BY MENU_CODE
+	</select>
+	
+	<!-- 사용자 정보 가져오기 -->
+	<select id="getUserInfo" resultType="map">
+		SELECT
+			KS_NAME,
+			KS_ID,
+			KS_INDATE,
+			KS_WMSLOGINYN,
+			KS_FACTORY_ACCESS,
+			KS_FACTORY,
+			KS_BUSOR,
+			KS_DML_ACCESS
+		FROM T_WMS_USER
+		WHERE KS_ID = #{id}
+	</select>
+	
+	<!-- 사용자 정보 업데이트 -->
+	<update id="updateUserInfo">
+		UPDATE T_WMS_USER
+		   SET KS_FACTORY = #{factory}
+		     , KS_FACTORY_ACCESS = #{factoryAccess}
+		     , KS_BUSOR = #{busor}
+		     , KS_DML_ACCESS = #{dmlAccess}
+		     , KS_WMSLOGINYN = #{loginAccess}
+		 WHERE KS_ID = #{id}
+	</update>
+	
+	<!-- 비밀번호 검색 -->
+	<select id="selectUserPassword" resultType="string">
+		SELECT KS_PASSWD
+		FROM T_WMS_USER
+		WHERE KS_ID = #{id}
+	</select>
+	
+	<!-- 비밀번호 변경 -->
+	<update id="updateUserPassword">
+		UPDATE T_WMS_USER
+		   SET KS_PASSWD = #{newPw}
+		 WHERE KS_ID = #{id}
+	</update>
+
+	<!-- 비밀번호 변경2 -->
+	<update id="updateUserMenuAccessPassword">
+		UPDATE T_WMS_USER_MENU_ACCESS
+		   SET PASSWORD = #{newPw}
+		 WHERE ID = #{id}
+	</update>
+	
+	<!-- 공장 권한 지정 -->
+	<update id="update_user_factory_access">
+		update t_wms_user
+		set ks_factory_access = UPPER(#{factory})
+		where ks_id in 
+		<foreach collection="idList" item="item" open="(" separator="," close=")">
+        	#{item.id}
+    	</foreach>	
+	</update>
+	
+	<!-- 로그인 - 공장 권한 체크 -->
+	<select id="loginCheck_factoryAccess">
+	    SELECT count(*) from t_wms_user
+	    where (UPPER(ks_factory_access) = UPPER(#{factory}) OR UPPER(ks_factory_access) = 'ALL')
+	    	and UPPER(KS_ID) = UPPER(#{userId})
+	</select>
+	
+	
+	<!-- 사용자 체크 -->
+	<select id="check_wms_account">
+		select count(*) from t_wms_user 
+		where ks_wmsloginyn = 'Y'
+			AND upper(ks_id) = upper(#{ks_id})
+	</select>
+	
+	<select id="user_menu_accessCheck">
+		select count(*) from t_wms_user_menu_access
+		where sabun = #{ks_sabun}
+	</select>
+	
+	<insert id="insert_user_account">
+		insert into t_wms_user (
+			ks_id,
+			ks_passwd,
+			ks_busor,
+			ks_wmsloginyn,
+			ks_name,
+			ks_indate,
+			ks_inuser,
+			ks_gubun,
+			ks_factory
+		) values (
+			#{ks_id},
+			#{ks_passwd},
+			#{ks_busor},
+			'Y',
+			#{ks_name},
+			#{ks_indate},
+			#{ks_inuser},
+			'01',
+			#{ks_factory}
+		)
+		
+	</insert>
+	
+	<insert id="insert_user_account_menu_access">
+		INSERT INTO t_wms_user_menu_access 
+		(SABUN, ID, PASSWORD, NAME, INUSER, INDATE, BASICDATA, PURCHASE, FABRIC, PRODUCTION, SALES, QUALITY)
+		VALUES 
+		(#{ks_sabun}, #{ks_id}, #{ks_passwd}, #{ks_name}, #{ks_inuser}, #{ks_indate}, 'Y', 'Y', 'Y', 'Y', 'Y', 'Y')
+	</insert>
+	
+	<!-- <select id="update_user_validationCheck">
+		select count(*) from t_wms_user ks_id = #{id}
+	</select> -->
+	
+	<update id="update_user_pass">
+		update t_wms_user set ks_passwd = #{pass}, ks_name = #{name}
+		where ks_id = #{id}
+	</update>
+	
+	<update id="update_user_pass_menu_access">
+		update t_wms_user_menu_access set password = #{pass}, name = #{name}
+		where id = #{id}
+	</update>
+	
+	<update id = 'update_user_department'>
+		update t_wms_user
+		   set ks_busor = #{depart}
+		 where ks_id = #{id}
+	</update>
+
+	<update id = 'update_user_factory'>
+		update t_wms_user
+		   set ks_factory = #{factory}
+		 where ks_id in 
+		 <foreach collection="list" item="id" open="(" separator="," close=")">
+		 	#{id}
+		 </foreach>
+	</update>
+	
+<!-- 예외 입고 처리 - detail -->
+	<!-- 공정 불출 반납 목록 조회 (검색 조건 포함) -->
+    <!-- <select id="read_exceptionInputDetail" parameterType="map" resultType="com.example.demo.vo.ProductVO">
+		SELECT *
+		FROM (
+		    SELECT
+		        t.*,
+		        ROW_NUMBER() OVER (ORDER BY indate desc, ymdhms desc, barcode) AS rn
+		    FROM (
+		        SELECT
+		        	l.iid,
+		            l.indate,
+		          	l.intf_yn,
+		            l.loginid,
+		            l.factory,
+		            l.storage,
+		            l.custcode,
+		            l.type,
+		            c.subname_ch AS car,
+		            l.itemcode,
+		            b.itemname,
+		            l.qty,
+		            l.invoiceno as invoiceno,
+		            nvl(L.SOURCE2,'EXCEPTION') AS SOURCE2,
+		            l.bdate,
+		            l.barcode,
+		            l.ymdhms,
+                	SUBSTR(l.ymdhms, 9, 2) || ':' || SUBSTR(l.ymdhms, 11, 2) as hhmm,
+                	l.mes_key
+		        FROM t_wms_inbound l
+		        LEFT JOIN t_mi_item b
+		               ON b.itemcode = l.itemcode
+		        LEFT JOIN t_mi_typesub c
+		               ON c.subcode  = b.carno
+		              AND c.typecode = 'MI041'
+		        WHERE l.useyn  = 'Y'
+		          AND l.source = 'INCOMINGEXCEPTION'
+			  	<include refid="where_exceptionInput"/>
+        	) t
+        )
+        WHERE rn BETWEEN #{offset} + 1 AND #{offset} + #{itemsPerPage}
+        ORDER BY indate desc, ymdhms desc, barcode 
+    </select>
+   
+	
+	<select id="read_exceptionInputDetail_all" parameterType="map" resultType="map">
+		SELECT
+		            l.indate,
+		          	l.intf_yn,
+		            l.loginid,
+		            l.factory,
+		            l.storage,
+		            l.custcode,
+		            l.type,
+		            c.subname_ch AS car,
+		            l.itemcode,
+		            b.itemname,
+		            l.qty,
+		            l.invoiceno as invoiceno,
+		            nvl(L.SOURCE2,'EXCEPTION') AS SOURCE2,
+		            l.bdate,
+		            l.barcode,
+		            l.ymdhms,
+                	SUBSTR(l.ymdhms, 9, 2) || ':' || SUBSTR(l.ymdhms, 11, 2) as hhmm
+		        FROM t_wms_inbound l
+		        LEFT JOIN t_mi_item b
+		               ON b.itemcode = l.itemcode
+		        LEFT JOIN t_mi_typesub c
+		               ON c.subcode  = b.carno
+		              AND c.typecode = 'MI041'
+		        WHERE l.useyn  = 'Y'
+		          AND l.source = 'INCOMINGEXCEPTION'
+			  	<include refid="where_exceptionInput"/>
+			  	ORDER BY l.indate desc, l.ymdhms desc, l.barcode
+	</select>
+	
+	재고실사 총 개수 조회 (검색 조건 포함) - Oracle용
+    <select id="getExceptionInputDetailTotalCount" parameterType="map" resultType="int">
+	        SELECT COUNT(*)
+		      FROM t_wms_inbound l
+		      LEFT OUTER JOIN t_mi_item b ON l.itemcode = b.itemcode
+		      LEFT OUTER JOIN t_mi_typesub c ON b.carno = c.subcode AND c.typecode = 'MI041'
+		     WHERE 1=1
+		       AND l.useyn = 'Y'
+		       AND l.source = 'INCOMINGEXCEPTION'
+		     <include refid="where_exceptionInput"/>
+    </select>  -->
+    
+    <!-- <select id="updateTotalQtyExceptionInput" parameterType="map" resultType="string">
+        SELECT
+				sum(qty)
+            FROM t_wms_inbound l
+            LEFT OUTER JOIN t_mi_item b
+                ON l.itemcode = b.itemcode
+            LEFT OUTER JOIN t_mi_typesub c
+                ON b.carno = c.subcode
+                AND c.typecode = 'MI041'
+            WHERE 1=1
+                AND l.useyn = 'Y'
+                AND l.source = 'INCOMINGEXCEPTION'
+                <include refid="where_exceptionInput"/>
+    </select> --> 
+    
+    <!-- <select id="read_exceptionInputSummary" parameterType="map" resultType="com.example.demo.vo.ProductVO">
+		SELECT *
+		FROM (
+		    SELECT
+		        t.*,
+		        ROW_NUMBER() OVER (ORDER BY indate desc, itemcode) AS rn
+		    FROM (
+		        SELECT
+		        l.intf_yn,
+			    l.indate,
+			    l.factory,
+			    l.storage,
+			    l.custcode,
+			    l.type,
+			    c.subname_ch AS car,
+			    l.itemcode,
+			    b.itemname,
+			    sum(l.qty) as qty
+			FROM t_wms_inbound l
+			LEFT JOIN t_mi_item b
+			       ON b.itemcode = l.itemcode
+			LEFT JOIN t_mi_typesub c
+			       ON c.subcode  = b.carno
+			      AND c.typecode = 'MI041'
+			WHERE l.useyn  = 'Y'
+			  AND l.source = 'INCOMINGEXCEPTION'
+			  	<include refid="where_exceptionInput"/>
+        
+        GROUP BY
+				l.intf_yn,
+	            l.indate,
+              l.factory,
+              l.storage,
+              l.custcode,
+              l.type,
+              c.subname_ch,
+              l.itemcode,
+              b.itemname
+            ) t
+        ) 
+        WHERE rn BETWEEN #{offset} + 1 AND #{offset} + #{itemsPerPage}
+        ORDER BY indate desc, itemcode
+    </select>
+	
+	<select id="read_exceptionInputSummary_all" parameterType="map" resultType="map">
+	SELECT
+            l.indate,
+            l.intf_yn,
+			    l.factory,
+			    l.storage,
+			    l.custcode,
+			    l.type,
+			    c.subname_ch AS car,
+			    l.itemcode,
+			    b.itemname,
+			    sum(l.qty) as qty
+        FROM t_wms_inbound l
+        LEFT JOIN t_mi_item b
+               ON b.itemcode = l.itemcode
+        LEFT JOIN t_mi_typesub c
+               ON c.subcode  = b.carno
+              AND c.typecode = 'MI041'
+        WHERE 1 = 1
+		  AND l.useyn   = 'Y'
+		          AND l.source = 'INCOMINGEXCEPTION'
+			  	<include refid="where_exceptionInput"/>
+          GROUP BY
+          		l.intf_yn,
+	            l.indate,
+              l.factory,
+              l.storage,
+              l.custcode,
+              l.type,
+              c.subname_ch,
+              l.itemcode,
+              b.itemname
+        ORDER BY indate desc, itemcode
+	</select>
+	
+	재고실사 총 개수 조회 (검색 조건 포함) - Oracle용
+    <select id="getExceptionInputSummaryTotalCount" parameterType="map" resultType="int">
+	        SELECT COUNT(*) FROM (
+	        	SELECT COUNT(*)
+		        FROM t_wms_inbound l
+		        LEFT OUTER JOIN t_mi_item b
+		            ON l.itemcode = b.itemcode
+		        LEFT OUTER JOIN t_mi_typesub c
+		            ON b.carno = c.subcode
+		            AND c.typecode = 'MI041'
+		        WHERE 1=1
+		            AND l.useyn = 'Y'
+		            AND l.source = 'INCOMINGEXCEPTION'
+			     <include refid="where_exceptionInput"/>
+				GROUP BY
+					l.intf_yn,
+		            l.indate,
+		              l.factory,
+		              l.storage,
+		              l.custcode,
+		              l.type,
+		              c.subname_ch,
+		              l.itemcode,
+		              b.itemname
+	        )
+    </select>  -->
+    
+    <!-- <select id="read_exceptionOutputDetail" parameterType="map" resultType="com.example.demo.vo.ProductVO">
+		SELECT *
+		FROM (
+		    SELECT
+		        t.*,
+		        ROW_NUMBER() OVER (ORDER BY outdate desc, ymdhms desc, barcode) AS rn
+		    FROM (
+		        SELECT
+		        	l.iid,
+		        	l.intf_yn,
+		            l.outdate,
+		            l.loginid,
+		            l.factory,
+		            l.storage,
+		            l.custcode,
+		            l.type,
+		            c.subname_ch AS car,
+		            l.itemcode,
+		            b.itemname,
+		            l.qty,
+		            l.invoiceno as invoiceno,
+		            CASE WHEN l.invoiceno = 'BARCODECOUNT'
+					     THEN 'STOCKCOUNT'
+					     ELSE 'EXCEPTION'
+					END AS SOURCE2,
+		            l.bdate,
+		            l.barcode,
+		            l.ymdhms,
+                	SUBSTR(l.ymdhms, 9, 2) || ':' || SUBSTR(l.ymdhms, 11, 2) as hhmm,
+                	l.mes_key
+		        FROM t_wms_outbound l
+		        LEFT JOIN t_mi_item b
+		               ON b.itemcode = l.itemcode
+		        LEFT JOIN t_mi_typesub c
+		               ON c.subcode  = b.carno
+		              AND c.typecode = 'MI041'
+		        WHERE l.useyn  = 'Y'
+		         AND l.source = 'LOADEXCEPTION'
+			  	<include refid="where_exceptionOutput"/>
+        	) t
+        )
+        WHERE rn BETWEEN #{offset} + 1 AND #{offset} + #{itemsPerPage}
+        ORDER BY rn 
+    </select>
+    
+    <select id="read_exceptionOutputDetail_all" parameterType="map" resultType="map">
+		SELECT			
+        	l.iid,
+        	l.intf_yn,
+            l.outdate,
+            l.factory,
+            l.storage,
+            l.custcode,
+            l.type,
+            c.subname_ch AS car,
+            l.itemcode,
+            b.itemname,
+            l.qty,
+            l.invoiceno as invoiceno,
+		    CASE WHEN l.invoiceno = 'BARCODECOUNT'
+			     THEN 'STOCKCOUNT'
+			     ELSE 'EXCEPTION'
+			END AS SOURCE2,
+            l.loginid,
+            l.bdate,
+            l.barcode,
+            l.ymdhms,
+            SUBSTR(l.ymdhms, 9, 2) || ':' || SUBSTR(l.ymdhms, 11, 2) as hhmm
+        FROM t_wms_outbound l
+        LEFT JOIN t_mi_item b
+               ON b.itemcode = l.itemcode
+        LEFT JOIN t_mi_typesub c
+               ON c.subcode  = b.carno
+              AND c.typecode = 'MI041'
+        WHERE l.useyn  = 'Y'
+         AND l.source = 'LOADEXCEPTION'
+	  	<include refid="where_exceptionOutput"/>
+	  	ORDER BY l.outdate desc, l.ymdhms desc, l.barcode 
+	</select>
+	
+	재고실사 총 개수 조회 (검색 조건 포함) - Oracle용
+    <select id="getExceptionOutputDetailTotalCount" parameterType="map" resultType="int">
+	        SELECT COUNT(*)
+		      FROM t_wms_outbound l
+		      LEFT OUTER JOIN t_mi_item b ON l.itemcode = b.itemcode
+		      LEFT OUTER JOIN t_mi_typesub c ON b.carno = c.subcode AND c.typecode = 'MI041'
+		     WHERE 1=1
+		       AND l.useyn = 'Y'
+		      AND l.source = 'LOADEXCEPTION'
+		     <include refid="where_exceptionOutput"/>
+    </select>  -->
+
+    <!-- <select id="updateTotalQtyExceptionOutput" parameterType="map" resultType="string">
+        SELECT
+				sum(qty)
+            FROM t_wms_outbound l
+            LEFT OUTER JOIN t_mi_item b
+                ON l.itemcode = b.itemcode
+            LEFT OUTER JOIN t_mi_typesub c
+                ON b.carno = c.subcode
+                AND c.typecode = 'MI041'
+            WHERE 1=1
+                AND l.useyn = 'Y'
+               AND l.source = 'LOADEXCEPTION'
+                <include refid="where_exceptionOutput"/>
+    </select> --> 
+	
+	<!-- 재고실사 총 개수 조회 (검색 조건 포함) - Oracle용 -->
+   	<!-- <select id="read_exceptionOutputSummary" parameterType="map" resultType="com.example.demo.vo.ProductVO">
+		SELECT *
+		FROM (
+		    SELECT
+		        t.*,
+		        ROW_NUMBER() OVER (ORDER BY outdate desc, t.itemcode) AS rn
+		    FROM (
+		        SELECT
+		        	l.intf_yn,
+		            l.outdate,
+		            l.factory,
+		            l.storage,
+		            l.custcode,
+		            l.type,
+		            c.subname_ch AS car,
+		            l.itemcode,
+		            b.itemname,
+		            SUM(l.qty) as qty
+		        FROM t_wms_outbound l
+		        LEFT JOIN t_mi_item b
+		               ON b.itemcode = l.itemcode
+		        LEFT JOIN t_mi_typesub c
+		               ON c.subcode  = b.carno
+		              AND c.typecode = 'MI041'
+		        WHERE l.useyn  = 'Y'
+		         AND l.source = 'LOADEXCEPTION'
+			  	<include refid="where_exceptionOutput"/>
+			  	GROUP BY
+			  		l.intf_yn,
+		            l.outdate,
+	              l.factory,
+	              l.storage,
+	              l.custcode,
+	              l.type,
+	              c.subname_ch,
+	              l.itemcode,
+	              b.itemname
+        	) t
+        )
+        WHERE rn BETWEEN #{offset} + 1 AND #{offset} + #{itemsPerPage}
+        ORDER BY rn 
+    </select>
+    
+    <select id="read_exceptionOutputSummary_all" parameterType="map" resultType="map">
+		SELECT
+					l.intf_yn,
+		            l.outdate,
+		            l.factory,
+		            l.storage,
+		            l.custcode,
+		            l.type,
+		            c.subname_ch AS car,
+		            l.itemcode,
+		            b.itemname,
+		            sum(l.qty) as qty
+		        FROM t_wms_outbound l
+		        LEFT JOIN t_mi_item b
+		               ON b.itemcode = l.itemcode
+		        LEFT JOIN t_mi_typesub c
+		               ON c.subcode  = b.carno
+		              AND c.typecode = 'MI041'
+		        WHERE l.useyn  = 'Y'
+		         AND l.source = 'LOADEXCEPTION'
+			  	<include refid="where_exceptionOutput"/>
+			  	GROUP BY
+			  		l.intf_yn,
+		            l.outdate,
+	              l.factory,
+	              l.storage,
+	              l.custcode,
+	              l.type,
+	              c.subname_ch,
+	              l.itemcode,
+	              b.itemname
+			  	ORDER BY outdate desc, itemcode 
+	</select>
+	
+    <select id="getExceptionOutputSummaryTotalCount" parameterType="map" resultType="int">
+		 SELECT COUNT(*) FROM (   
+	        SELECT COUNT(*)
+		      FROM t_wms_outbound l
+		      LEFT OUTER JOIN t_mi_item b ON l.itemcode = b.itemcode
+		      LEFT OUTER JOIN t_mi_typesub c ON b.carno = c.subcode AND c.typecode = 'MI041'
+		     WHERE 1=1
+		       AND l.useyn = 'Y'
+		      AND l.source = 'LOADEXCEPTION'
+		     <include refid="where_exceptionOutput"/>
+		     GROUP BY
+		     	l.intf_yn,	
+		            l.outdate,
+	              l.factory,
+	              l.storage,
+	              l.custcode,
+	              l.type,
+	              c.subname_ch,
+	              l.itemcode,
+	              b.itemname
+	         )    
+    </select> -->
+    
+    <!-- 입고반품 -->
+	<!-- 공정 불출 반납 목록 조회 (검색 조건 포함) -->
+    <!-- <select id="read_incomingReturnDetail" parameterType="map" resultType="com.example.demo.vo.ProductVO">
+		SELECT *
+		FROM (
+		    SELECT
+		        t.*,
+		        ROW_NUMBER() OVER (ORDER BY t.itemcode DESC) AS rn
+		    FROM (
+		        SELECT
+		        	l.iid,
+		        	l.intf_yn,
+		            l.indate,
+		            l.factory,
+		            l.storage,
+		            l.custcode,
+		            NVL(l.custname, (
+				        SELECT cu_sangho
+				        FROM c_cust
+				        WHERE CU_CODE = (
+				            SELECT CUSTCODE
+				            FROM (
+				                SELECT CUSTCODE
+				                FROM t_mi_price_buycust
+				                WHERE ITEMCODE = l.ITEMCODE
+				                ORDER BY CONDATE DESC
+				            )
+				            WHERE ROWNUM = 1
+				        )
+				    )) AS CUSTNAME,
+		            l.type,
+		            c.subname_ch AS car,
+		            l.itemcode,
+		            b.itemname,
+		            l.qty,
+		            l.loginid,
+		            l.bdate,
+		            SUBSTR(l.ymdhms, 9, 2) || ':' || SUBSTR(l.ymdhms, 11, 2) as hhmm,
+		            l.barcode,
+		            l.mes_key
+		        FROM t_wms_inbound l
+		        LEFT JOIN t_mi_item b
+		               ON b.itemcode = l.itemcode
+		        LEFT JOIN t_mi_typesub c
+		               ON c.subcode  = b.carno
+		              AND c.typecode = 'MI041'
+		        WHERE l.useyn  = 'Y'
+		          AND l.source = 'INCOMINGRETURN'
+			  	<include refid="where_exceptionInput"/>
+        	) t
+        )
+        WHERE rn BETWEEN #{offset} + 1 AND #{offset} + #{itemsPerPage}
+        ORDER BY indate desc, hhmm desc, barcode
+         
+    </select>
+	
+	<select id="read_incomingReturnDetail_all" parameterType="map" resultType="map">
+		SELECT
+					l.intf_yn,
+		            l.indate,
+		            l.factory,
+		            l.storage,
+		            l.custcode,
+		            l.type,
+		            c.subname_ch AS car,
+		            NVL(l.custname, (
+				        SELECT cu_sangho
+				        FROM c_cust
+				        WHERE CU_CODE = (
+				            SELECT CUSTCODE
+				            FROM (
+				                SELECT CUSTCODE
+				                FROM t_mi_price_buycust
+				                WHERE ITEMCODE = l.ITEMCODE
+				                ORDER BY CONDATE DESC
+				            )
+				            WHERE ROWNUM = 1
+				        )
+				    )) AS CUSTNAME,
+		            l.itemcode,
+		            b.itemname,
+		            l.qty,
+		            l.loginid,
+		            l.bdate,
+		            SUBSTR(l.ymdhms, 9, 2) || ':' || SUBSTR(l.ymdhms, 11, 2) as hhmm,
+		            l.barcode
+		        FROM t_wms_inbound l
+		        LEFT JOIN t_mi_item b
+		               ON b.itemcode = l.itemcode
+		        LEFT JOIN t_mi_typesub c
+		               ON c.subcode  = b.carno
+		              AND c.typecode = 'MI041'
+		        WHERE l.useyn  = 'Y'
+		          AND l.source = 'INCOMINGRETURN'
+			  	<include refid="where_exceptionInput"/>
+			  	ORDER BY indate desc, hhmm desc, barcode
+	</select>    
+    
+    재고실사 총 개수 조회 (검색 조건 포함) - Oracle용
+    <select id="getIncomingReturnDetailTotalCount" parameterType="map" resultType="int">
+	        SELECT COUNT(*)
+		      FROM t_wms_inbound l
+		      LEFT OUTER JOIN t_mi_item b ON l.itemcode = b.itemcode
+		      LEFT OUTER JOIN t_mi_typesub c ON b.carno = c.subcode AND c.typecode = 'MI041'
+		     WHERE 1=1
+		       AND l.useyn = 'Y'
+		       AND l.source = 'INCOMINGRETURN'
+		     <include refid="where_exceptionInput"/>
+    </select> 
+    재고실사 Total qty 조회 (검색 조건 포함) - Oracle용
+    <select id="updateTotalQtyIncomingReturn" parameterType="map" resultType="string">
+        SELECT
+				sum(qty)
+            FROM t_wms_inbound l
+            LEFT OUTER JOIN t_mi_item b
+                ON l.itemcode = b.itemcode
+            LEFT OUTER JOIN t_mi_typesub c
+                ON b.carno = c.subcode
+                AND c.typecode = 'MI041'
+            WHERE 1=1
+                AND l.useyn = 'Y'
+                AND l.source = 'INCOMINGRETURN'
+                <include refid="where_exceptionInput"/>
+    </select>  -->
+    
+    <!-- <select id="read_incomingReturnSummary" parameterType="map" resultType="com.example.demo.vo.ProductVO">
+		SELECT *
+		FROM (
+		    SELECT
+		        t.*,
+		        ROW_NUMBER() OVER (ORDER BY indate desc, itemcode) AS rn
+		    FROM (
+		        SELECT
+			    l.indate,
+			    l.factory,
+			    l.storage,
+			    l.custcode,
+			    l.type,
+			    c.subname_ch AS car,
+	            NVL(l.custname, (
+			        SELECT cu_sangho
+			        FROM c_cust
+			        WHERE CU_CODE = (
+			            SELECT CUSTCODE
+			            FROM (
+			                SELECT CUSTCODE
+			                FROM t_mi_price_buycust
+			                WHERE ITEMCODE = l.ITEMCODE
+			                ORDER BY CONDATE DESC
+			            )
+			            WHERE ROWNUM = 1
+			        )
+			    )) AS CUSTNAME,
+			    l.itemcode,
+			    b.itemname,
+			    sum(l.qty) as qty,
+			    l.loginid,
+			    l.intf_yn as intf_yn
+			FROM t_wms_inbound l
+			LEFT JOIN t_mi_item b
+			       ON b.itemcode = l.itemcode
+			LEFT JOIN t_mi_typesub c
+			       ON c.subcode  = b.carno
+			      AND c.typecode = 'MI041'
+			WHERE l.useyn  = 'Y'
+			  AND l.source = 'INCOMINGRETURN'
+			  	<include refid="where_exceptionInput"/>
+        
+        GROUP BY
+	            l.indate,
+              l.factory,
+              l.storage,
+              l.custcode,
+              l.type,
+              l.custname,
+              c.subname_ch,
+              l.itemcode,
+              b.itemname,
+              l.loginid,
+              l.intf_yn
+            ) t
+        ) 
+        WHERE rn BETWEEN #{offset} + 1 AND #{offset} + #{itemsPerPage}
+        ORDER BY indate desc, itemcode
+    </select>
+	
+	<select id="read_incomingReturnSummary_all" parameterType="map" resultType="map">
+		SELECT
+            l.indate,
+		    l.factory,
+		    l.storage,
+		    l.custcode,
+		    l.type,
+            NVL(l.custname, (
+		        SELECT cu_sangho
+		        FROM c_cust
+		        WHERE CU_CODE = (
+		            SELECT CUSTCODE
+		            FROM (
+		                SELECT CUSTCODE
+		                FROM t_mi_price_buycust
+		                WHERE ITEMCODE = l.ITEMCODE
+		                ORDER BY CONDATE DESC
+		            )
+		            WHERE ROWNUM = 1
+		        )
+		    )) AS CUSTNAME,
+		    c.subname_ch AS car,
+		    l.itemcode,
+		    b.itemname,
+		    sum(l.qty) as qty,
+		    l.loginid,
+		    l.intf_yn as intf_yn
+        FROM t_wms_inbound l
+        LEFT JOIN t_mi_item b
+               ON b.itemcode = l.itemcode
+        LEFT JOIN t_mi_typesub c
+               ON c.subcode  = b.carno
+              AND c.typecode = 'MI041'
+        WHERE 1 = 1
+		  AND l.useyn   = 'Y'
+		          AND l.source = 'INCOMINGRETURN'
+			  	<include refid="where_exceptionInput"/>
+          GROUP BY
+	             l.indate,
+              l.factory,
+              l.storage,
+              l.custcode,
+              l.type,
+              l.custname,
+              c.subname_ch,
+              l.itemcode,
+              b.itemname,
+              l.loginid,
+              l.intf_yn
+        ORDER BY indate desc, itemcode
+	</select>
+	
+	재고실사 총 개수 조회 (검색 조건 포함) - Oracle용
+    <select id="getIncomingReturnSummaryTotalCount" parameterType="map" resultType="int">
+	        SELECT COUNT(*) FROM (
+	        	SELECT COUNT(*)
+		        FROM t_wms_inbound l
+		        LEFT OUTER JOIN t_mi_item b
+		            ON l.itemcode = b.itemcode
+		        LEFT OUTER JOIN t_mi_typesub c
+		            ON b.carno = c.subcode
+		            AND c.typecode = 'MI041'
+		        WHERE 1=1
+		            AND l.useyn = 'Y'
+		            AND l.source = 'INCOMINGRETURN'
+			     <include refid="where_exceptionInput"/>
+				GROUP BY
+		            l.indate,
+              l.factory,
+              l.storage,
+              l.custcode,
+              l.type,
+              c.subname_ch,
+              l.itemcode,
+              b.itemname,
+              l.loginid,
+              l.intf_yn
+	        )
+    </select>  -->
+    
+    <!-- <select id="read_loadReturnDetail" parameterType="map" resultType="com.example.demo.vo.ProductVO">
+		SELECT *
+		FROM (
+		    SELECT
+		        t.*,
+		        ROW_NUMBER() OVER (ORDER BY outdate DESC, hhmm desc, barcode) AS rn
+		    FROM (
+		        SELECT
+		        	l.iid,
+		        	l.intf_yn,
+		            l.outdate,
+		            l.factory,
+		            l.storage,
+                    nvl(l.custcode,(SELECT CUSTCODE FROM (SELECT CUSTCODE FROM T_SM_SALECUSTPRICE WHERE ITEMCODE = l.ITEMCODE ORDER BY CONDATE DESC) WHERE ROWNUM = 1)) AS custcode,
+                    nvl(l.custname,(SELECT cu_sangho FROM c_cust WHERE CU_CODE = (SELECT CUSTCODE FROM (SELECT CUSTCODE FROM T_SM_SALECUSTPRICE WHERE ITEMCODE = l.ITEMCODE ORDER BY CONDATE DESC) WHERE ROWNUM = 1))) as cname,
+		            l.type,
+		            c.subname_ch AS car,
+		            l.itemcode,
+		            b.itemname,
+		            l.qty,
+		            l.loginid,
+		            TO_CHAR(TO_DATE(ymdhms, 'YYYYMMDDHH24MISS'), 'HH24:MI') as hhmm,
+		            l.barcode,
+		            b.spec
+		        FROM t_wms_outbound l
+		        LEFT JOIN t_mi_item b
+		               ON b.itemcode = l.itemcode
+		        LEFT JOIN t_mi_typesub c
+		               ON c.subcode  = b.carno
+		              AND c.typecode = 'MI041'
+		        WHERE l.useyn  = 'Y'
+		         AND l.source = 'LOADRETURN'
+			  	<include refid="where_loadReturn"/>
+			  	ORDER BY l.itemcode
+        	) t
+        )
+        WHERE rn BETWEEN #{offset} + 1 AND #{offset} + #{itemsPerPage}
+        order by rn
+    </select>
+    
+    <select id="read_loadReturnDetail_all" parameterType="map" resultType="map">
+		SELECT
+        	l.iid,
+        	l.intf_yn,
+            l.outdate,
+            l.factory,
+            l.storage,
+            nvl(l.custcode,(SELECT CUSTCODE FROM (SELECT CUSTCODE FROM T_SM_SALECUSTPRICE WHERE ITEMCODE = l.ITEMCODE ORDER BY CONDATE DESC) WHERE ROWNUM = 1)) AS custcode,
+            nvl(l.custname,(SELECT cu_sangho FROM c_cust WHERE CU_CODE = (SELECT CUSTCODE FROM (SELECT CUSTCODE FROM T_SM_SALECUSTPRICE WHERE ITEMCODE = l.ITEMCODE ORDER BY CONDATE DESC) WHERE ROWNUM = 1))) as cname,
+            l.type,
+            c.subname_ch AS car,
+            l.itemcode,
+            b.itemname,
+            l.qty,
+            l.loginid,
+            TO_CHAR(TO_DATE(ymdhms, 'YYYYMMDDHH24MISS'), 'HH24:MI') as hhmm,
+            l.barcode,
+            b.spec
+        FROM t_wms_outbound l
+        LEFT JOIN t_mi_item b
+               ON b.itemcode = l.itemcode
+        LEFT JOIN t_mi_typesub c
+               ON c.subcode  = b.carno
+              AND c.typecode = 'MI041'
+        WHERE l.useyn  = 'Y'
+         AND l.source = 'LOADRETURN'
+	  	<include refid="where_loadReturn"/>
+	  	ORDER BY outdate desc, hhmm desc, barcode
+	</select>
+	
+	재고실사 총 개수 조회 (검색 조건 포함) - Oracle용
+    <select id="getLoadReturnDetailTotalCount" parameterType="map" resultType="int">
+	        SELECT COUNT(*)
+		      FROM t_wms_outbound l
+		      LEFT OUTER JOIN t_mi_item b ON l.itemcode = b.itemcode
+		      LEFT OUTER JOIN t_mi_typesub c ON b.carno = c.subcode AND c.typecode = 'MI041'
+		     WHERE 1=1
+		       AND l.useyn = 'Y'
+		      AND l.source = 'LOADRETURN'
+		     <include refid="where_exceptionOutput"/>
+    </select> 
+
+재고실사 Total qty 조회 (검색 조건 포함) - Oracle용
+    <select id="updateTotalQtyLoadReturn" parameterType="map" resultType="string">
+        SELECT
+				sum(qty)
+            FROM t_wms_outbound l
+            LEFT OUTER JOIN t_mi_item b
+                ON l.itemcode = b.itemcode
+            LEFT OUTER JOIN t_mi_typesub c
+                ON b.carno = c.subcode
+                AND c.typecode = 'MI041'
+            WHERE 1=1
+                AND l.useyn = 'Y'
+               AND l.source = 'LOADRETURN'
+                <include refid="where_loadReturn"/>
+    </select> --> 
+	
+	<!-- 재고실사 총 개수 조회 (검색 조건 포함) - Oracle용 -->
+   	<!-- <select id="read_loadReturnSummary" parameterType="map" resultType="com.example.demo.vo.ProductVO">
+		SELECT *
+		FROM (
+		    SELECT
+		        t.*,
+		        ROW_NUMBER() OVER (ORDER BY t.itemcode DESC) AS rn
+		    FROM (
+		        SELECT
+		            l.outdate,
+		            l.factory,
+		            l.storage,
+		            l.intf_yn,
+		            nvl(l.custname,(SELECT cu_sangho FROM c_cust WHERE CU_CODE = (SELECT CUSTCODE FROM (SELECT CUSTCODE FROM T_SM_SALECUSTPRICE WHERE ITEMCODE = l.ITEMCODE ORDER BY CONDATE DESC) WHERE ROWNUM = 1))) as cname,
+		            l.type,
+		            c.subname_ch AS car,
+		            l.itemcode,
+		            b.itemname,
+		            SUM(l.qty) as qty,
+		            b.spec
+		        FROM t_wms_outbound l
+		        LEFT JOIN t_mi_item b
+		               ON b.itemcode = l.itemcode
+		        LEFT JOIN t_mi_typesub c
+		               ON c.subcode  = b.carno
+		              AND c.typecode = 'MI041'
+		        WHERE l.useyn  = 'Y'
+		         AND l.source = 'LOADRETURN'
+			  	<include refid="where_loadReturn"/>
+			  	GROUP BY
+		            l.outdate,
+	              l.factory,
+	              l.storage,
+	              l.custname,
+	              l.type,
+	              c.subname_ch,
+	              l.itemcode,
+	              b.itemname,
+	              l.intf_yn,
+	              b.spec
+        	) t
+        )
+        WHERE rn BETWEEN #{offset} + 1 AND #{offset} + #{itemsPerPage}
+        ORDER BY itemcode 
+    </select>
+    
+    <select id="read_loadReturnSummary_all" parameterType="map" resultType="map">
+		SELECT
+            l.outdate,
+            l.factory,
+            l.storage,
+            l.intf_yn,
+            nvl(l.custname,(SELECT cu_sangho FROM c_cust WHERE CU_CODE = (SELECT CUSTCODE FROM (SELECT CUSTCODE FROM T_SM_SALECUSTPRICE WHERE ITEMCODE = l.ITEMCODE ORDER BY CONDATE DESC) WHERE ROWNUM = 1))) as cname,
+            l.type,
+            c.subname_ch AS car,
+            l.itemcode,
+            b.itemname,
+            SUM(l.qty) as qty,
+            b.spec
+        FROM t_wms_outbound l
+        LEFT JOIN t_mi_item b
+               ON b.itemcode = l.itemcode
+        LEFT JOIN t_mi_typesub c
+               ON c.subcode  = b.carno
+              AND c.typecode = 'MI041'
+        WHERE l.useyn  = 'Y'
+         AND l.source = 'LOADRETURN'
+	  	<include refid="where_loadReturn"/>
+	  	GROUP BY
+            l.outdate,
+             l.factory,
+             l.storage,
+             l.custname,
+             l.type,
+             c.subname_ch,
+             l.itemcode,
+             b.itemname,
+             l.intf_yn,
+             b.spec
+	  	ORDER BY itemcode 
+	</select>
+	
+    <select id="getLoadReturnSummaryTotalCount" parameterType="map" resultType="int">
+		 SELECT COUNT(*) FROM (   
+	        SELECT COUNT(*)
+		      FROM t_wms_outbound l
+		      LEFT OUTER JOIN t_mi_item b ON l.itemcode = b.itemcode
+		      LEFT OUTER JOIN t_mi_typesub c ON b.carno = c.subcode AND c.typecode = 'MI041'
+		     WHERE 1=1
+		       AND l.useyn = 'Y'
+		      AND l.source = 'LOADRETURN'
+		     <include refid="where_loadReturn"/>
+		     GROUP BY
+		            l.outdate,
+	              l.factory,
+	              l.storage,
+	              l.CUSTNAME,
+	              l.type,
+	              c.subname_ch,
+	              l.itemcode,
+	              b.itemname,
+	              b.spec
+	         )    
+    </select> -->
+    <select id="read_stockInfo" resultType="com.example.demo.vo.StockVO">
+    	select a.sdate, a.factory, a.storage, a.qty,a.location, a.barcode, b.itemname, a.itemcode, b.spec as oitemcode
+	      from t_wms_location a
+	      left join t_mi_item b
+	      on a.itemcode = b.itemcode and b.deldate = ' '
+	        <!--  where a.itemcode = UPPER(#{itemcode}) -->
+	      where a.useyn   = 'Y'
+	      	<include refid="where_stockInfo"/>
+	       
+	       
+	      ORDER BY a.sdate desc, a.location
+    </select>
+    <!-- <select id="read_stockInfo" resultType="com.example.demo.vo.StockVO">
+    SELECT *
+		FROM (
+		    SELECT
+		        t.*,
+		        ROW_NUMBER() OVER (ORDER BY t.barcode, t.indate DESC) AS rn
+		    FROM (
+		SELECT
+			a.useyn as use_yn,
+			a.barcode, 
+			a.pname,
+			a.pno,
+			a.qty,
+			a.indate,
+			nvl((select location from t_scm_pallet p left join t_wms_location l2 on p.pbarcode = l2.barcode where p.bbarcode = #{barcode} and  p.useyn = 'Y' and l2.useyn = 'Y') ,l.location) as location,
+			nvl((select indate from t_scm_pallet p left join t_wms_location l2 on p.pbarcode = l2.barcode where p.bbarcode = #{barcode} and  p.useyn = 'Y' and l2.useyn = 'Y' ) ,l.indate) as ldate,
+			w.ymdhms as WIP
+			,
+			(select  
+			    count(*)  
+			from t_scm_pallet
+			where pbarcode in (
+				select pbarcode
+				from t_scm_pallet
+				where bbarcode = 'C001252210101,250907,00018,00099.00,WMSMEX'
+			)) as barcode_count
+		  FROM t_scm_barcode a
+		  left join t_wms_location l
+		  on a.barcode = l.barcode and  l.useyn = 'Y'
+		  LEFT OUTER JOIN t_mi_item d ON a.pno = d.itemcode 
+		  LEFT OUTER JOIN t_mi_typesub c ON d.carno = c.subcode AND c.typecode = 'MI041' 
+		  left join t_wms_workmove w on a.barcode = w.barcode and w.useyn = 'Y'
+		WHERE 1=1
+			<include refid="where_stock_info"></include>
+		 order by l.iid desc
+    ) t
+        )
+        WHERE rn BETWEEN #{offset} + 1 AND #{offset} + #{itemsPerPage}
+		 WHERE b.barcode = #{barcode}
+		rownum = 1
+    
+    
+    </select> -->
+    
+    <select id="getStockInfoTotalCount" parameterType="map" resultType="int">
+    	SELECT COUNT(*) from t_wms_location a
+		left join t_mi_item b
+		on a.itemcode = b.itemcode and b.deldate = ' '
+	         where useyn   = 'Y'
+				<include refid="where_stockInfo"/>
+	      ORDER BY sdate, location
+		<!-- SELECT COUNT(*)
+		FROM (
+			SELECT
+				a.useyn as use_yn,
+				a.barcode, 
+				a.pname,
+				a.pno,
+				a.qty,
+				a.indate,
+				nvl((select location from t_scm_pallet p left join t_wms_location l2 on p.pbarcode = l2.barcode where p.bbarcode = #{barcode} and  p.useyn = 'Y' and l2.useyn = 'Y') ,l.location) as location,
+				nvl((select indate from t_scm_pallet p left join t_wms_location l2 on p.pbarcode = l2.barcode where p.bbarcode = #{barcode} and  p.useyn = 'Y' and l2.useyn = 'Y' ) ,l.indate) as ldate,
+				w.ymdhms as WIP
+			  FROM t_scm_barcode a
+			  left join t_wms_location l
+			  on a.barcode = l.barcode and  l.useyn = 'Y'
+			  LEFT OUTER JOIN t_mi_item d ON a.pno = d.itemcode 
+			  LEFT OUTER JOIN t_mi_typesub c ON d.carno = c.subcode AND c.typecode = 'MI041' 
+			  left join t_wms_workmove w on a.barcode = w.barcode and w.useyn = 'Y'
+			WHERE 1=1
+				<include refid="where_stock_info"></include>
+		) -->
+	</select>
+	
+    <select id="getStockInfoTotalQty" resultType="java.math.BigDecimal">
+    	SELECT SUM(QTY)
+    	FROM T_WMS_LOCATION a
+		left join t_mi_item b
+		on a.itemcode = b.itemcode and b.deldate = ' '
+    	WHERE USEYN = 'Y'
+			<include refid="where_stockInfo"/>
+		<!-- SELECT sum(sub.qty)
+		    FROM (
+		        SELECT
+				a.useyn as use_yn,
+				a.barcode, 
+				a.pname,
+				a.pno,
+				a.qty,
+				a.indate,
+				nvl((select location from t_scm_pallet p left join t_wms_location l2 on p.pbarcode = l2.barcode where p.bbarcode = #{barcode} and  p.useyn = 'Y' and l2.useyn = 'Y') ,l.location) as location,
+				nvl((select indate from t_scm_pallet p left join t_wms_location l2 on p.pbarcode = l2.barcode where p.bbarcode = #{barcode} and  p.useyn = 'Y' and l2.useyn = 'Y' ) ,l.indate) as ldate,
+				w.ymdhms as WIP
+			  FROM t_scm_barcode a
+			  left join t_wms_location l
+			  on a.barcode = l.barcode and  l.useyn = 'Y'
+			  LEFT OUTER JOIN t_mi_item d ON a.pno = d.itemcode 
+			  LEFT OUTER JOIN t_mi_typesub c ON d.carno = c.subcode AND c.typecode = 'MI041' 
+			  left join t_wms_workmove w on a.barcode = w.barcode and w.useyn = 'Y'
+			WHERE 1=1
+				<include refid="where_stock_info"></include>
+		    ) sub -->
+	</select>	
+    
+     <select id="read_stockInfo_all" parameterType="map" resultType="map">
+			select a.indate, a.factory, a.storage, a.qty,a.location, a.barcode, b.itemname, a.itemcode
+	      from t_wms_location a
+	      left join t_mi_item b
+	      on a.itemcode = b.itemcode
+	        <!--  where a.itemcode = UPPER(#{itemcode}) -->
+	      where a.useyn   = 'Y'
+	      	<include refid="where_stockInfo"></include>
+	       
+	       
+	      ORDER BY a.indate desc, a.location
+    </select>
+    
+    <select id="read_stockinfoInclude">
+    	<![CDATA[
+		    SELECT mdate,
+		           pbarcode,
+		           bbarcode
+		    FROM t_scm_pallet
+		    WHERE pbarcode IN (
+		        SELECT pbarcode
+		        FROM t_scm_pallet
+		        WHERE bbarcode = #{barcode}
+		    )
+		    ORDER BY bbarcode
+	    ]]>
+    </select>
+    
+    <select id="read_stockInfoInclude_total">
+    	select a.sdate,a.qty,a.location
+	      from t_wms_location a
+	         where a.itemcode = UPPER(#{itemcode})
+	       AND a.useyn   = 'Y'
+	      ORDER BY sdate desc, location
+    </select>
+    
+     <select id="read_stockHistory" resultType="com.example.demo.vo.StockVO">
+		 SELECT
+			 useyn as use_yn,
+			 sdate,
+			 kind,
+			 barcode,
+			 factory,
+			 storage,
+			 mktime as time,
+			 location,
+			 work,
+			 qty,
+			 laststatus as last_status,
+			 loginid,
+			 memo,
+
+			 count(*) over() totalCount
+		 FROM v_itemhistory v
+		 WHERE 1=1
+		 <if test="barcode != null and barcode != ''">
+			 AND UPPER(v.barcode) = UPPER(#{barcode})
+		 </if>
+		 <if test="location != null and location != ''">
+			 AND upper(v.location) = upper(#{location})
+		 </if>
+    </select>
+    
+    <select id="getStockHistoryTotalCount" resultType="int">
+	    SELECT COUNT(*)
+	    FROM v_itemhistory v
+	    WHERE 1=1
+       	<if test="barcode != null and barcode != ''">
+        	AND UPPER(v.barcode) = UPPER(#{barcode})
+        </if>
+        <if test="location != null and location != ''">
+        	AND upper(v.location) = upper(#{location})
+        </if>
+	    AND v.kind NOT IN ('UNPACKSUB')
+	</select>
+    
+    <select id="stock_history_barcodeCheck">
+    	select distinct barcode
+    	from v_itemhistory
+    	WHERE 1=1
+       	<if test="barcode != null and barcode != ''">
+        	AND UPPER(barcode) LIKE UPPER('%' || #{barcode} || '%')
+        </if>
+    </select>
+    
+    <select id="read_stockCountCompare" resultType="com.example.demo.vo.StockVO">
+    	SELECT
+		    NVL(r.factory, l.factory)   AS factory,
+		    NVL(r.storage, l.storage)   AS storage,
+		    NVL(r.itemcode, l.itemcode) AS itemcode,
+		    NVL(r.barcode, l.barcode)   AS barcode,
+		    r.location                  AS rlocation,
+		    l.location                  AS llocation,
+		    CASE 
+		        WHEN r.location = l.location THEN 'TRUE'
+		        ELSE 'FALSE'
+		    END AS difflocation,
+		    NVL(r.qty, 0)               AS rqty,
+		    NVL(l.qty, 0)               AS lqty,
+		    NVL(r.qty, 0) - NVL(l.qty, 0) AS diffqty
+		FROM
+		    (SELECT factory, storage, itemcode, barcode, location, qty <!-- sdate, barcode, qty, loginid, itemcode, location, factory, storage -->
+		       FROM (
+		        SELECT
+		            factory,
+		            storage,
+		            itemcode,
+		            barcode,
+		            location,
+		            qty,
+		            ROW_NUMBER() OVER (
+		                PARTITION BY factory, storage, itemcode, barcode
+		                ORDER BY
+		                    CASE
+		                        WHEN UPPER(scantype) = 'LOCATION' THEN 0
+		                        ELSE 1
+		                    END,
+		                    sdate DESC,
+		                    ymdhms DESC
+		            ) AS rn
+		        FROM t_wms_realstock
+		      WHERE useyn = 'Y'
+		      	
+		        AND sdate = #{startdate}
+		        <if test="itemcode != null and itemcode != ''">
+					AND UPPER(itemcode) LIKE '%' || #{itemcode} || '%'
+				</if>
+				 )
+   				 WHERE rn = 1          <!-- scantype=LOCATION 우선, 없으면 임의 1건 -->
+   				 <if test="factory != null and factory != '' and factory != 'ALL'">
+		        	AND upper(factory) = upper(#{factory})
+		        </if>
+	        	<choose>
+		        	<when test="storage != null and storage.toUpperCase() == 'MATERIAL+SIDESEAT+OUTSIDE'">
+		                AND UPPER(storage) IN ('MATERIAL', 'SIDE SEAT', 'OUTSIDE')
+		            </when>
+		            <when test="storage != null and storage != '' and storage != 'ALL'">
+		                AND UPPER(storage) = UPPER(#{storage})
+		            </when>
+		            <when test="storage == null or storage == ''">
+		                AND UPPER(storage) = UPPER('Material')
+		            </when>
+		            <otherwise>
+		                <!-- storage == 'all'인 경우: 조건 추가 안함 (전체 조회) -->
+		             </otherwise>
+		         </choose>
+				) r
+		FULL JOIN
+		    (SELECT sdate, barcode, qty, loginid, itemcode, location, factory, storage
+		       FROM t_wms_location
+		     <![CDATA[ WHERE (useyn = 'Y' OR YMDHMS_D > REPLACE(#{startdate}, '-', '') || '235959' )]]>
+		      	<if test="factory != null and factory != '' and factory != 'ALL'">
+		        	AND upper(factory) = upper(#{factory})
+		        </if>
+	        	<choose>
+		        	<when test="storage != null and storage.toUpperCase() == 'MATERIAL+SIDESEAT+OUTSIDE'">
+		                AND UPPER(storage) IN ('MATERIAL', 'SIDE SEAT', 'OUTSIDE')
+		            </when>
+		            <when test="storage != null and storage != '' and storage != 'ALL'">
+		                AND UPPER(storage) = UPPER(#{storage})
+		            </when>
+		            <when test="storage == null or storage == ''">
+		                AND UPPER(storage) = UPPER('Material')
+		            </when>
+		            <otherwise>
+		                <!-- storage == 'all'인 경우: 조건 추가 안함 (전체 조회) -->
+		             </otherwise>
+		         </choose>
+		        <![CDATA[AND sdate <= #{startdate}]]>
+		        <if test="itemcode != null and itemcode != ''">
+					AND UPPER(itemcode) LIKE '%' || #{itemcode} || '%'
+				</if>
+		        <if test="rack != null and rack != ''">
+					AND UPPER(rack) LIKE '%' || UPPER(#{rack}) || '%'
+				</if>) l
+		ON  r.factory  = l.factory
+		AND r.storage  = l.storage
+		AND r.itemcode = l.itemcode
+		AND r.barcode  = l.barcode
+		ORDER BY
+		difflocation, diffqty,llocation
+    </select>
+
+	<select id="getStockCountDate" resultType="string">
+		SELECT MAX(sdate) as sdate
+		FROM T_WMS_REALSTOCK_DATE
+		WHERE UPPER(storage) = UPPER(#{storage})
+		and sdate like SUBSTR(#{startdate}, 1, 7) || '%'
+	</select>
+
+	<select id="read_stockCountMissing" parameterType="map" resultType="com.example.demo.vo.StockVO">
+		SELECT
+			t.*,
+			ROW_NUMBER() OVER (ORDER BY t.location, t.itemcode, t.barcode) AS rn
+		FROM (
+        	SELECT
+				l.sdate,
+				l.factory,
+				l.storage,
+				l.location,
+				l.barcode,
+				l.itemcode,
+				l.qty,
+				i.spec as oitemcode,
+				i.itemname,
+				l.useyn,
+				L.YMDHMS_D,
+				B.CUSTCODE,
+       			(SELECT USEYN FROM T_WMS_LOCATION LL WHERE L.IID = LL.IID) AS useynnow,
+       			(SELECT memo_d FROM T_WMS_LOCATION LL WHERE L.IID = LL.IID) AS adjust,
+       			(SELECT DISTINCT 'Y' FROM T_WMS_REALSTOCK RR WHERE L.BARCODE = RR.BARCODE AND SDATE>=#{startdate}
+       			<if test="hour != null and hour != ''">
+       			    <choose>
+       			        <when test="timeDirection != null and timeDirection == 'after'">
+       			            <![CDATA[AND SUBSTR(RR.YMDHMS, 9, 2) >= #{hour}]]>
+       			        </when>
+       			        <otherwise>
+       			            <![CDATA[AND SUBSTR(RR.YMDHMS, 9, 2) <= #{hour}]]>
+       			        </otherwise>
+       			    </choose>
+       			</if>
+       			) AS BARCODESCAN,
+       			nvl((SELECT distinct USEYN FROM T_WMS_LOCATION LL WHERE L.iid = LL.iid and useyn ='Y'),'N') AS useynbarcode 		-- 260427 이부장님과 이야기후 barcode에서 iid로 변경
+        	FROM t_wms_locationBACKUP l
+        	LEFT JOIN t_wms_realstock r
+			ON r.useyn = 'Y'
+			AND r.barcode = l.barcode
+		<if test="hour != null and hour != ''">
+			<choose>
+				<when test="timeDirection != null and timeDirection == 'after'">
+					<![CDATA[AND SUBSTR(R.YMDHMS, 9, 2) >= #{hour}]]>
+				</when>
+				<otherwise>
+					<![CDATA[AND SUBSTR(R.YMDHMS, 9, 2) <= #{hour}]]>
+				</otherwise>
+			</choose>
+		</if>
+        	<include refid="where_stockCountMissing_location_top"/> <!-- 실사일 -->
+        <!-- and l.indate <= '2025-11-01' 로케이션적재일 -->
+        	left join t_mi_item i
+        	on i.itemcode = l.itemcode
+			LEFT JOIN T_MI_ITEM_CUSTINFO B ON L.ITEMCODE = B.ITEMCODE
+		WHERE 1 = 1
+        <!-- (l.useyn = 'Y' OR l.YMDHMS_D > REPLACE(#{startdate}, '-', '') || '235959' ) AND  -->
+        <include refid="where_stockCountMissing_location"/>
+        	<if test="custcode != null and custcode != ''">
+        		AND B.CUSTCODE = #{custcode}
+        	</if>
+        	AND r.location IS NULL
+		) t
+        <if test="status == null or status == '' or status == 'ALL'">
+			<![CDATA[
+				where NOT (
+					-- ✅ COMPLETE 조건 전체를 부정
+					NVL(t.adjust, 'NORMAL') NOT IN ('ADJUSTMENT', 'LOADEXCEPTION-NOSCAN')
+					AND (
+						NVL(t.useynbarcode,'Y') = 'N'
+						OR NVL(t.barcodescan, 'N') = 'Y'
+					)
+				)
+			]]>
+		</if>
+        <if test = "status == 'ADJUST'">
+        	where t.adjust = 'ADJUSTMENT' OR T.ADJUST = 'LOADEXCEPTION-NOSCAN'
+        </if>
+        <if test = "status == 'COMPLETE'">
+        	 where
+            -- 1. ADJUST 쪽 먼저 제외
+            NVL(t.adjust, 'NORMAL') NOT IN ('ADJUSTMENT', 'LOADEXCEPTION-NOSCAN')
+
+            -- 2. NOSCAN 조건 충족
+            AND (NVL(t.useynbarcode,'Y') = 'N' OR NVL(t.barcodescan, 'N') = 'Y')
+        </if>
+        <if test = "status == 'NOSCAN'">
+	        <![CDATA[
+		        where
+		            -- 1. ADJUST 쪽 먼저 제외
+		            NVL(t.adjust, 'NORMAL') NOT IN ('ADJUSTMENT', 'LOADEXCEPTION-NOSCAN')
+		            -- 2. NOSCAN 조건 제외
+		            AND NOT (t.useynbarcode = 'N' OR NVL(t.barcodescan, 'N') = 'Y')
+		    ]]>
+        </if>
+        ORDER BY t.LOCATION, t.ITEMCODE, t.BARCODE
+
+	</select>
+
+	<select id="read_stockCountCompare_all">
+		SELECT
+		    NVL(r.factory, l.factory)   AS factory,
+		    NVL(r.storage, l.storage)   AS storage,
+		    NVL(r.itemcode, l.itemcode) AS itemcode,
+		    NVL(r.barcode, l.barcode)   AS barcode,
+		    r.location                  AS rlocation,
+		    l.location                  AS llocation,
+		    CASE 
+		        WHEN r.location = l.location THEN 'TRUE'
+		        ELSE 'FALSE'
+		    END AS difflocation,
+		    NVL(r.qty, 0)               AS rqty,
+		    NVL(l.qty, 0)               AS lqty,
+		    NVL(r.qty, 0) - NVL(l.qty, 0) AS diffqty
+		FROM
+		    (SELECT factory, storage, itemcode, barcode, location, qty <!-- sdate, barcode, qty, loginid, itemcode, location, factory, storage -->
+		       FROM (
+		        SELECT
+		            factory,
+		            storage,
+		            itemcode,
+		            barcode,
+		            location,
+		            qty,
+		            ROW_NUMBER() OVER (
+		                PARTITION BY factory, storage, itemcode, barcode
+		                ORDER BY
+		                    CASE
+		                        WHEN UPPER(scantype) = 'LOCATION' THEN 0
+		                        ELSE 1
+		                    END,
+		                    sdate DESC,
+		                    ROWID
+		            ) AS rn
+		        FROM t_wms_realstock
+		      WHERE useyn = 'Y'
+		      	<if test="factory != null and factory != '' and factory != 'ALL'">
+		        	AND upper(factory) = upper(#{factory})
+		        </if>
+	        	<choose>
+		        	<when test="storage != null and storage.toUpperCase() == 'MATERIAL+SIDESEAT+OUTSIDE'">
+		                AND UPPER(storage) IN ('MATERIAL', 'SIDE SEAT', 'OUTSIDE')
+		            </when>
+		            <when test="storage != null and storage != '' and storage != 'ALL'">
+		                AND UPPER(storage) = UPPER(#{storage})
+		            </when>
+		            <when test="storage == null or storage == ''">
+		                AND UPPER(storage) = UPPER('Material')
+		            </when>
+		            <otherwise>
+		                <!-- storage == 'all'인 경우: 조건 추가 안함 (전체 조회) -->
+		             </otherwise>
+		         </choose>
+		        AND sdate = #{startdate}
+		        <if test="itemcode != null and itemcode != ''">
+					AND UPPER(itemcode) LIKE '%' || #{itemcode} || '%'
+				</if>
+				)
+   				 WHERE rn = 1          <!-- scantype=LOCATION 우선, 없으면 임의 1건 -->
+				
+				) r
+		FULL JOIN
+		    (SELECT sdate, barcode, qty, loginid, itemcode, location, factory, storage
+		       FROM t_wms_location
+		     <![CDATA[ WHERE (useyn = 'Y' OR YMDHMS_D > REPLACE(#{startdate}, '-', '') || '235959' )]]>
+		      	<if test="factory != null and factory != '' and factory != 'ALL'">
+		        	AND upper(factory) = upper(#{factory})
+		        </if>
+	        	<choose>
+		        	<when test="storage != null and storage.toUpperCase() == 'MATERIAL+SIDESEAT+OUTSIDE'">
+		                AND UPPER(storage) IN ('MATERIAL', 'SIDE SEAT', 'OUTSIDE')
+		            </when>
+		            <when test="storage != null and storage != '' and storage != 'ALL'">
+		                AND UPPER(storage) = UPPER(#{storage})
+		            </when>
+		            <when test="storage == null or storage == ''">
+		                AND UPPER(storage) = UPPER('Material')
+		            </when>
+		            <otherwise>
+		                <!-- storage == 'all'인 경우: 조건 추가 안함 (전체 조회) -->
+		             </otherwise>
+		         </choose>
+		        <![CDATA[AND sdate <= #{startdate}]]>
+		        <if test="itemcode != null and itemcode != ''">
+					AND UPPER(itemcode) LIKE '%' || #{itemcode} || '%'
+				</if>
+				<if test="rack != null and rack != ''">
+					AND UPPER(rack) LIKE '%' || UPPER(#{rack}) || '%'
+				</if>) l
+		ON  r.factory  = l.factory
+		AND r.storage  = l.storage
+		AND r.itemcode = l.itemcode
+		AND r.barcode  = l.barcode
+		ORDER BY
+		difflocation, diffqty,llocation
+	</select>
+	
+	<select id="read_stockCountMissing_all">
+		SELECT
+			t.*,
+		    ROW_NUMBER() OVER (ORDER BY t.location, t.itemcode, t.barcode) AS rn
+		FROM (
+       		SELECT
+				l.sdate,
+				l.factory,
+				l.storage,
+				l.location,
+				l.barcode,
+				l.itemcode,
+				l.qty,
+				i.spec as oitemcode,
+				i.itemname,
+				l.useyn,
+				L.YMDHMS_D,
+				B.CUSTCODE,
+				(SELECT USEYN FROM T_WMS_LOCATION LL WHERE L.IID = LL.IID) AS useynnow,
+				(SELECT memo_d FROM T_WMS_LOCATION LL WHERE L.IID = LL.IID) AS adjust,
+				(SELECT DISTINCT 'Y' FROM T_WMS_REALSTOCK RR WHERE L.BARCODE = RR.BARCODE AND SDATE>=#{startdate}
+				<if test="hour != null and hour != ''">
+					<choose>
+						<when test="timeDirection != null and timeDirection == 'after'">
+							<![CDATA[AND SUBSTR(RR.YMDHMS, 9, 2) >= #{hour}]]>
+						</when>
+						<otherwise>
+							<![CDATA[AND SUBSTR(RR.YMDHMS, 9, 2) <= #{hour}]]>
+						</otherwise>
+					</choose>
+				</if>
+				) AS BARCODESCAN,
+				nvl((SELECT distinct USEYN FROM T_WMS_LOCATION LL WHERE L.iid = LL.iid and useyn ='Y'),'N') AS useynbarcode 		-- 260427 이부장님과 이야기후 barcode에서 iid로 변경
+				FROM t_wms_locationBACKUP l
+        	LEFT JOIN t_wms_realstock r
+        	ON r.useyn = 'Y'
+        	AND r.barcode = l.barcode
+			<if test="hour != null and hour != ''">
+				<choose>
+					<when test="timeDirection != null and timeDirection == 'after'">
+						<![CDATA[AND SUBSTR(R.YMDHMS, 9, 2) >= #{hour}]]>
+					</when>
+					<otherwise>
+						<![CDATA[AND SUBSTR(R.YMDHMS, 9, 2) <= #{hour}]]>
+					</otherwise>
+				</choose>
+			</if>
+        	<include refid="where_stockCountMissing_location_top"/> <!-- 실사일 -->
+        <!-- and l.indate <= '2025-11-01' 로케이션적재일 -->
+        	left join t_mi_item i
+        	on i.itemcode = l.itemcode
+        	LEFT JOIN T_MI_ITEM_CUSTINFO B ON L.ITEMCODE = B.ITEMCODE
+        	WHERE
+        <!-- (l.useyn = 'Y' OR l.YMDHMS_D > REPLACE(#{startdate}, '-', '') || '235959' ) AND  -->
+        	1=1
+        	<include refid="where_stockCountMissing_location"/>
+        	<if test="custcode != null and custcode != ''">
+        		AND B.CUSTCODE = #{custcode}
+        	</if>
+        	AND r.location IS NULL
+		) t
+		<if test="status == null or status == '' or status == 'ALL'">
+			<![CDATA[
+				where NOT (
+					-- ✅ COMPLETE 조건 전체를 부정
+					NVL(t.adjust, 'NORMAL') NOT IN ('ADJUSTMENT', 'LOADEXCEPTION-NOSCAN')
+					AND (
+						NVL(t.useynbarcode,'Y') = 'N'
+						OR NVL(t.barcodescan, 'N') = 'Y'
+					)
+				)
+			]]>
+		</if>
+		<if test = "status == 'ADJUST'">
+			where t.adjust = 'ADJUSTMENT' OR T.ADJUST = 'LOADEXCEPTION-NOSCAN'
+		</if>
+		<if test = "status == 'COMPLETE'">
+			where
+			-- 1. ADJUST 쪽 먼저 제외
+			NVL(t.adjust, 'NORMAL') NOT IN ('ADJUSTMENT', 'LOADEXCEPTION-NOSCAN')
+
+			-- 2. NOSCAN 조건 충족
+			AND (NVL(t.useynbarcode,'Y') = 'N' OR NVL(t.barcodescan, 'N') = 'Y')
+		</if>
+		<if test = "status == 'NOSCAN'">
+			<![CDATA[
+		        where
+		            -- 1. ADJUST 쪽 먼저 제외
+		            NVL(t.adjust, 'NORMAL') NOT IN ('ADJUSTMENT', 'LOADEXCEPTION-NOSCAN')
+		            -- 2. NOSCAN 조건 제외
+		            AND NOT (t.useynbarcode = 'N' OR NVL(t.barcodescan, 'N') = 'Y')
+		    ]]>
+		</if>
+		ORDER BY t.LOCATION, t.ITEMCODE, t.BARCODE
+	</select>
+    
+    <select id="getStockCountCompareTotalCount" resultType="int">
+			    SELECT
+			        count(*)
+			    FROM (
+			        SELECT
+			            COALESCE(a.sdate, r.sdate) as sdate,
+			            COALESCE(a.location, r.location) as location,
+			            COALESCE(a.factory, r.factory) as factory,
+			            COALESCE(a.storage, r.storage) as storage,
+			            COALESCE(a.car, r.car) as car,
+			            r.itemcode as itemcode_real,
+			            r.itemname as itemname_real,
+			            r.qty_sum as qty_real,
+			            r.qty_cnt as cnt_real,
+			            a.itemcode as itemcode_system,
+			            a.itemname as itemname_system,
+			            a.qty_sum as qty_system,
+			            a.qty_cnt as cnt_system
+			        FROM (
+			            SELECT 
+			                a.sdate,
+			                a.location,
+			                a.factory,
+			                a.storage,
+			                c1.subname_ch as car,
+			                a.itemcode,
+			                a_item.itemname,
+			                SUM(a.qty) as qty_sum,
+			                COUNT(*) as qty_cnt
+			            FROM t_wms_stock a
+			                LEFT OUTER JOIN t_mi_item a_item
+			                    ON a.itemcode = a_item.itemcode
+			                LEFT OUTER JOIN t_mi_typesub c1
+			                    ON a_item.carno = c1.subcode
+			                    AND c1.typecode = 'MI041'
+			            WHERE 
+			            	<choose>
+						        <when test="startdate != null and startdate != '' ">
+						            TO_DATE(a.sdate, 'YYYY-MM-DD') = TO_DATE(#{startdate}, 'YYYY-MM-DD')
+						        </when>
+						        <when test="startdate == null or startdate == ''">
+						            TO_DATE(a.sdate, 'YYYY-MM-DD') =TRUNC(SYSDATE)
+						        </when>
+						    </choose>
+			            GROUP BY a.sdate, a.location, c1.subname_ch, a.itemcode, a_item.itemname, a.factory, a.storage
+			        ) a
+			        FULL OUTER JOIN (
+			            SELECT 
+			                r.sdate,
+			                r.location,
+			                r.factory,
+			                r.storage,
+			                c2.subname_ch as car,
+			                r.itemcode,
+			                r_item.itemname,
+			                SUM(r.qty) as qty_sum,
+			                COUNT(*) as qty_cnt
+			            FROM t_wms_realstock r
+			                LEFT OUTER JOIN t_mi_item r_item
+			                    ON r.itemcode = r_item.itemcode
+			                LEFT OUTER JOIN t_mi_typesub c2
+			                    ON r_item.carno = c2.subcode
+			                    AND c2.typecode = 'MI041'
+			            WHERE 
+							<choose>
+						        <when test="startdate != null and startdate != '' ">
+						           TO_DATE(r.sdate, 'YYYY-MM-DD') = TO_DATE(#{startdate}, 'YYYY-MM-DD')
+						        </when>
+						        <when test="startdate == null or startdate == ''">
+						            TO_DATE(r.sdate, 'YYYY-MM-DD') = TRUNC(SYSDATE)
+						        </when>
+						    </choose>
+			            GROUP BY r.sdate, r.location, c2.subname_ch, r.itemcode, r_item.itemname,r.factory, r.storage
+			        ) r
+			            ON TO_DATE(a.sdate, 'YYYY-MM-DD') = TO_DATE(r.sdate, 'YYYY-MM-DD')
+			            AND a.location = r.location
+			            AND a.itemcode = r.itemcode
+			        WHERE 1=1
+					<include refid="where_stock_compare"></include>
+			    ) t
+	</select>
+	
+    <select id="getStockCountMissingTotalCount" resultType="int">
+			    SELECT
+			        count(*)
+			    FROM (
+			    	SELECT
+		                l.indate,
+		                l.location,
+		                l.barcode,
+		                l.itemcode,
+		                l.qty
+		            FROM t_wms_location l
+		            LEFT JOIN t_wms_realstock r
+		                ON r.useyn = 'Y'
+		                AND r.barcode = l.barcode
+		                <include refid="where_stockCountMissing_join"/>
+		           <!--  WHERE l.useyn = 'Y' -->
+	            <![CDATA[ WHERE (l.useyn = 'Y' OR l.YMDHMS_D > REPLACE(#{startdate}, '-', '') || '235959' )]]>
+		                <include refid="where_stockCountMissing_location"/>
+		                AND r.location IS NULL
+				    ORDER BY location
+			    ) t
+	</select>
+	
+	<select id="getStockCountMissingTotalQty" resultType="java.math.BigDecimal">
+	    	SELECT
+                nvl(sum(l.qty),0)
+            FROM t_wms_location l
+            LEFT JOIN t_wms_realstock r
+                ON r.useyn = 'Y'
+                AND r.barcode = l.barcode
+                <include refid="where_stockCountMissing_join"/>
+            <!--  WHERE l.useyn = 'Y' -->
+	            <![CDATA[ WHERE (l.useyn = 'Y' OR l.YMDHMS_D > REPLACE(#{startdate}, '-', '') || '235959' )]]>
+                <include refid="where_stockCountMissing_location"/>
+                AND r.location IS NULL
+	</select>
+    
+    <select id="read_stockHistory_all" parameterType="map" resultType="map">
+    	SELECT
+		    useyn as use_yn,
+		    sdate,
+		    kind,
+		    barcode,
+		    factory,
+		    storage,
+		    mktime as time,
+		    location,
+		    work,
+		    qty,
+		    laststatus as last_status,
+		    loginid,
+		    memo
+		FROM v_itemhistory v
+		WHERE 1=1
+		<if test="barcode != null and barcode != ''">
+        	AND UPPER(v.barcode) = UPPER(#{barcode})
+        </if>
+        <if test="location != null and location != ''">
+        	AND upper(v.location) = upper(#{location})
+        </if>
+		--AND v.kind NOT IN ('UNPACKSUB')
+		--ORDER BY mktime DESC, kind, useyn DESC
+    </select>
+    
+    <select id="readStockCountCompare_detail_stock">
+    	<!-- select 
+    		l.itemcode,
+    		b.itemname,
+    		l.barcode
+    	FROM t_wms_stock l
+    	LEFT JOIN t_mi_item b
+	    	ON l.itemcode = b.itemcode
+	    LEFT JOIN t_mi_typesub c
+	        ON b.carno = c.subcode
+	        AND c.typecode = 'MI041'
+    	WHERE useyn = 'Y'
+    		<include refid="where_stock_compare_info"></include> -->
+	    SELECT 
+			       indate,
+			       location,
+			       barcode,
+			       itemcode,	
+			       '0',
+			       qty
+			FROM t_wms_location
+			WHERE indate = DATE '${sdate}'
+			  AND useyn = 'N'
+			  AND memo_d = 'CHANGE'
+			  <include refid="where_stock_missing_info"></include>
+			  AND SUBSTR(ymdhms_d,1,8) = REPLACE('${sdate}', '-', '')
+			ORDER BY location    		
+    </select>
+    
+    <select id="readStockCountCompare_detail_realStock">
+    	<!-- select 
+    		l.itemcode,
+    		b.itemname,
+    		l.barcode
+    	FROM t_wms_realstock l
+    	LEFT JOIN t_mi_item b
+	    	ON l.itemcode = b.itemcode
+	    LEFT JOIN t_mi_typesub c
+	        ON b.carno = c.subcode
+	        AND c.typecode = 'MI041'
+    	WHERE useyn = 'Y'
+    		<include refid="where_stock_compare_info"></include> -->
+    	SELECT 
+		       SDATE,
+		       LOCATION,
+		       BARCODE,
+		       ITEMCODE,
+		       QTY AS realqty,
+		       '0' AS systemqty
+		FROM (
+		         SELECT 
+		                R.*,
+		                ROW_NUMBER() OVER (
+		                    PARTITION BY LOCATION, BARCODE 
+		                    ORDER BY SDATE
+		                ) AS RN
+		         FROM T_WMS_REALSTOCK R
+		         WHERE SDATE = DATE '${sdate}'
+		           AND USEYN = 'Y'
+		           <include refid="where_stock_missing_info"></include>
+		     ) X
+    </select>
+    
+	<select id="getStockCountCompareTotal" parameterType="map" resultType="map">
+	    SELECT 
+	        NVL(SUM(qty_real), 0) as totalQty_real,
+	        NVL(COUNT(CASE WHEN qty_real > 0 THEN 1 END), 0) as totalCount_real,
+	        NVL(SUM(qty_system), 0) as totalQty_system,
+	        NVL(COUNT(CASE WHEN qty_system > 0 THEN 1 END), 0) as totalCount_system
+	    FROM (
+	        SELECT
+	            r.qty_sum as qty_real,
+	            a.qty_sum as qty_system
+	        FROM (
+	            SELECT
+	                a.sdate,
+	                a.location,
+	                a.factory,
+	                a.storage,
+	                c1.subname_ch as car,
+	                a.itemcode,
+	                a_item.itemname,
+	                SUM(a.qty) as qty_sum,
+	                COUNT(*) as qty_cnt
+	            FROM t_wms_stock a
+	                LEFT OUTER JOIN t_mi_item a_item
+	                    ON a.itemcode = a_item.itemcode
+	                LEFT OUTER JOIN t_mi_typesub c1
+	                    ON a_item.carno = c1.subcode
+	                    AND c1.typecode = 'MI041'
+	            WHERE
+	                <choose>
+	                    <when test="startdate != null and startdate != ''">
+	                        a.sdate = #{startdate}
+	                    </when>
+	                    <when test="startdate == null or startdate == ''">
+	                        a.sdate = TO_CHAR(SYSDATE, 'YYYY-MM-DD') 
+	                    </when>
+	                </choose>
+	            GROUP BY a.sdate, a.location, c1.subname_ch, a.itemcode, a_item.itemname,a.factory, a.storage
+	        ) a
+	        FULL OUTER JOIN (
+	            SELECT
+	                r.sdate,
+	                r.location,
+	                r.factory,
+	                r.storage,
+	                c2.subname_ch as car,
+	                r.itemcode,
+	                r_item.itemname,
+	                SUM(r.qty) as qty_sum,
+	                COUNT(*) as qty_cnt
+	            FROM t_wms_realstock r
+	                LEFT OUTER JOIN t_mi_item r_item
+	                    ON r.itemcode = r_item.itemcode
+	                LEFT OUTER JOIN t_mi_typesub c2
+	                    ON r_item.carno = c2.subcode
+	                    AND c2.typecode = 'MI041'
+	            WHERE
+	                <choose>
+	                    <when test="startdate != null and startdate != '' ">
+	                        r.sdate = #{startdate} 
+	                    </when>
+	                    <when test="startdate == null or startdate == ''">
+	                        r.sdate = TO_CHAR(SYSDATE, 'YYYY-MM-DD') 
+	                    </when>
+	                </choose>
+	            GROUP BY r.sdate, r.location, c2.subname_ch, r.itemcode, r_item.itemname,r.factory, r.storage
+	        ) r
+	            ON a.sdate = r.sdate
+	            AND a.location = r.location
+	            AND a.itemcode = r.itemcode
+	        WHERE 1=1
+	        <include refid="where_stock_compare"></include>
+	    )
+	</select>
+	
+	<select id="getStockHistoryTotalQty" resultType="java.math.BigDecimal">	
+		SELECT COALESCE(SUM(v.qty), 0) as total_qty
+	    FROM v_itemhistory v
+	    WHERE 1=1
+       	<if test="barcode != null and barcode != ''">
+        	AND UPPER(v.barcode) = UPPER(#{barcode})
+        </if>
+        <if test="location != null and location != ''">
+        	AND upper(v.location) = upper(#{location})
+        </if>
+	    AND v.kind NOT IN ('UNPACKSUB')
+	</select>	
+    <select id="readStockCountCompare_detail_compareDetail">
+    
+		SELECT 
+		       SDATE,
+		       LOCATION,
+		       BARCODE,
+		       ITEMCODE,
+		       QTY AS realqty,
+		       '0'  AS systemqty
+		FROM (
+		         SELECT 
+		                R.*,
+		                ROW_NUMBER() OVER (
+		                    PARTITION BY LOCATION, BARCODE 
+		                    ORDER BY SDATE
+		                ) AS RN
+		         FROM T_WMS_REALSTOCK R
+		         <!-- WHERE SDATE = DATE '${sdate}' -->
+		          WHERE TRIM(SDATE) = #{sdate}
+		           AND USEYN = 'Y'
+		           <if test="factory != null and factory != '' and factory != 'ALL'">
+			       		AND UPPER(factory) = UPPER(#{factory})
+				    </if>
+				    <if test="itemcode != null and itemcode != ''">
+			       		AND UPPER(itemcode) = UPPER(#{itemcode})
+				    </if>
+				    <if test="storage != null and storage != '' and storage != 'ALL'">
+				        AND UPPER(storage) = UPPER(#{storage})
+				    </if>
+		           AND location = #{location}
+		     ) X
+		
+		UNION ALL
+		
+		SELECT 
+		       indate,
+		       location,
+		       barcode,
+		       itemcode,
+		       '0'  AS realqty,
+		       qty  AS systemqty
+		FROM t_wms_location
+		<!-- WHERE indate = DATE '${sdate}' -->
+		WHERE TRIM(indate) = #{sdate}
+		  AND useyn = 'N'
+		  <if test="factory != null and factory != '' and factory != 'ALL'">
+	      	AND UPPER(factory) = UPPER(#{factory})
+		  </if>
+			<if test="itemcode != null and itemcode != ''">
+			       		AND UPPER(itemcode) = UPPER(#{itemcode})
+				    </if>
+		  <if test="storage != null and storage != '' and storage != 'ALL'">
+		    AND UPPER(storage) = UPPER(#{storage})
+		  </if>
+		  AND memo_d = 'CHANGE'
+		  <!-- AND SUBSTR(ymdhms_d, 1, 8) = REPLACE('${sdate}', '-', '') -->
+		  AND SUBSTR(TRIM(ymdhms_d), 1, 8) = REPLACE(#{sdate}, '-', '')
+		  AND location = #{location}
+		
+		ORDER BY location
+
+	</select>
+    <select id="readStockCountMissing_detail_stock">
+	    SELECT 
+			       indate,
+			       location,
+			       barcode,
+			       itemcode,	
+			       '0',
+			       qty
+			FROM t_wms_location
+			WHERE indate = DATE '${sdate}'
+			  AND useyn = 'N'
+			  AND memo_d = 'CHANGE'
+			  <include refid="where_stock_missing_info"></include>
+			  AND SUBSTR(ymdhms_d,1,8) = REPLACE('${sdate}', '-', '')
+			ORDER BY location
+    </select>
+    
+    <select id="readStockCountMissing_detail_realStock">
+		SELECT 
+		       SDATE,
+		       LOCATION,
+		       BARCODE,
+		       ITEMCODE,
+		       QTY AS realqty,
+		       '0' AS systemqty
+		FROM (
+		         SELECT 
+		                R.*,
+		                ROW_NUMBER() OVER (
+		                    PARTITION BY LOCATION, BARCODE 
+		                    ORDER BY SDATE
+		                ) AS RN
+		         FROM T_WMS_REALSTOCK R
+		         WHERE SDATE = DATE '${sdate}'
+		           AND USEYN = 'Y'
+		           <include refid="where_stock_missing_info"></include>
+		     ) X
+    </select>
+    
+    <!-- <select id="read_unloadList" parameterType="map" resultType="com.example.demo.vo.LocationVO">
+		SELECT * FROM (
+		
+	            SELECT rownum rn, t.* FROM (
+
+	    SELECT 
+	        l.barcode,
+	        l.indate,
+	        l.factory,
+	        l.storage,
+	        c.subname_ch as car,
+	        l.itemcode,
+	        b.itemname,
+	        SUM(l.qty) as qty,
+            nvl(l.oldlocation,' ') as oldlocation,
+            l.source,
+            l.rack
+	    FROM t_wms_location l
+	    LEFT JOIN t_mi_item b ON l.itemcode = b.itemcode
+	    LEFT JOIN t_mi_typesub c ON b.carno = c.subcode AND c.typecode = 'MI041'
+	    WHERE (l.rack IS NULL or l.rack = '-'
+	        OR l.module IS NULL or l.module = '-'
+	        OR l.levelcode IS NULL OR l.levelcode = '-'
+	        OR l.position IS NULL OR l.position = '-')
+
+               <include refid="where_unloadList"></include>
+
+    <![CDATA[
+	    AND l.useyn = 'Y'
+	    GROUP BY l.barcode, l.indate, l.factory, l.storage, c.subname_ch, l.itemcode, b.itemname, l.source, l.oldlocation, l.rack
+	    ORDER BY l.indate desc, l.itemcode
+
+	            ) t WHERE rownum <= #{offset} + #{itemsPerPage}
+	        ) WHERE rn > #{offset}
+    ]]>
+        WHERE rn BETWEEN #{offset} + 1 AND #{offset} + #{itemsPerPage}
+    </select>
+	
+	<select id="read_unloadList_all" parameterType="map" resultType="map">
+	    SELECT 
+	        l.barcode,
+	        l.indate,
+	        l.factory,
+	        l.storage,
+	        c.subname_ch as car,
+	        l.itemcode,
+	        b.itemname,
+	        SUM(l.qty) as qty,
+            nvl(l.oldlocation,' ') as oldlocation,
+            l.source,
+            l.rack
+	    FROM t_wms_location l
+	    LEFT JOIN t_mi_item b ON l.itemcode = b.itemcode
+	    LEFT JOIN t_mi_typesub c ON b.carno = c.subcode AND c.typecode = 'MI041'
+	    WHERE (l.rack IS NULL or l.rack = '-'
+	        OR l.module IS NULL or l.module = '-'
+	        OR l.levelcode IS NULL OR l.levelcode = '-'
+	        OR l.position IS NULL OR l.position = '-')
+
+               <include refid="where_unloadList"></include>
+
+	    AND l.useyn = 'Y'
+	    GROUP BY l.barcode, l.indate, l.factory, l.storage, c.subname_ch, l.itemcode, b.itemname, l.source, l.oldlocation, l.rack
+	    ORDER BY l.indate desc, l.itemcode
+
+	</select>
+	
+	재고실사 총 개수 조회 (검색 조건 포함) - Oracle용
+    <select id="getUnloadListTotalCount" parameterType="map" resultType="int">
+        SELECT COUNT(*) 
+        FROM (
+	        SELECT 
+		        l.barcode,
+		        l.indate,
+		        l.factory,
+		        l.storage,
+		        c.subname_ch as car,
+		        l.itemcode,
+		        b.itemname,
+		        SUM(l.qty) as qty,
+	            nvl(l.oldlocation,' ') as oldlocation,
+	            l.source
+		    FROM t_wms_location l
+		    LEFT JOIN t_mi_item b ON l.itemcode = b.itemcode
+		    LEFT JOIN t_mi_typesub c ON b.carno = c.subcode AND c.typecode = 'MI041'
+		    WHERE (l.rack IS NULL or l.rack = '-'
+		        OR l.module IS NULL or l.module = '-'
+		        OR l.levelcode IS NULL OR l.levelcode = '-'
+		        OR l.position IS NULL OR l.position = '-')
+	
+	               <include refid="where_unloadList"></include>
+	
+		    AND l.useyn = 'Y'
+		    GROUP BY l.barcode, l.indate, l.factory, l.storage, c.subname_ch, l.itemcode, b.itemname, l.source, l.oldlocation
+		    ORDER BY l.itemcode
+		)
+    </select> 
+    
+    재고실사 Total qty 조회 (검색 조건 포함) - Oracle용
+    <select id="getUnloadListTotalQty" parameterType="map" resultType="java.math.BigDecimal">
+        SELECT NVL(sum(qty), 0) as qty
+          FROM (
+        	SELECT 
+		        SUM(l.qty) as qty
+		    FROM t_wms_location l
+		    LEFT JOIN t_mi_item b ON l.itemcode = b.itemcode
+		    LEFT JOIN t_mi_typesub c ON b.carno = c.subcode AND c.typecode = 'MI041'
+		    WHERE (l.rack IS NULL or l.rack = '-'
+		        OR l.module IS NULL or l.module = '-'
+		        OR l.levelcode IS NULL OR l.levelcode = '-'
+		        OR l.position IS NULL OR l.position = '-')
+	
+	               <include refid="where_unloadList"></include>
+	
+		    AND l.useyn = 'Y'
+		    GROUP BY l.barcode, l.indate, l.factory, l.storage, c.subname_ch, l.itemcode, b.itemname, l.source, l.oldlocation
+		    ORDER BY l.itemcode
+		)
+    </select> --> 
+    
+	<!-- 재고 -->
+	<!-- 재고수불부 -->
+    <select id="read_stockMovement" parameterType="map" resultType="com.example.demo.vo.StockVO">
+    
+		SELECT *
+		FROM (
+		    SELECT
+			    kind,
+			    itemcode,
+			    factory,
+			    storage,
+			    sdate,
+			    plusqty,
+			    minusqty,
+			    ROW_NUMBER() OVER (ORDER BY sdate, plusqty desc, CASE WHEN kind='INVENTORY' THEN 0 ELSE 1 END) AS rn
+			FROM
+			    v_stock
+			WHERE <!-- 1=1 -->
+				<include refid="where_stock_movement"/>
+			
+          ) 
+        WHERE rn BETWEEN #{offset} + 1 AND #{offset} + #{itemsPerPage}
+        ORDER BY rn
+    </select>
+	
+	<select id="read_stockMovement_all" parameterType="map" resultType="map">
+		SELECT
+			    kind,
+			    itemcode,
+			    factory,
+			    storage,
+			    sdate,
+			    plusqty,
+			    minusqty
+			FROM
+			    v_stock
+			WHERE <!-- 1=1 -->
+				<include refid="where_stock_movement"/>
+			ORDER BY sdate, plusqty desc, CASE WHEN kind='INVENTORY' THEN 0 ELSE 1 END
+	</select>
+	
+	<!-- 재고수불부 -->
+    <select id="getStockMovementTotalCount" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+        FROM v_stock
+        WHERE <!-- 1=1 -->
+            <include refid="where_stock_movement"/>
+			
+    </select> 
+    
+    <!-- 언팩 잔량 -->
+	<!-- 언팩 목록 조회 (검색 조건 포함) -->
+    <select id="read_unpackBalance" parameterType="map" resultType="com.example.demo.vo.UnpackVO">
+		SELECT *
+		FROM (
+		    SELECT
+		        t.*,
+		        ROW_NUMBER() OVER (ORDER  BY sdate desc, barcode) AS rn
+		    FROM (
+				SELECT
+				    a.factory,
+				    a.storage,
+				    a.sdate,
+				    a.barcode,
+				    a.itemcode,
+				    a.qty,
+				    NVL(s.scanqty, 0) AS unpacked_qty,
+				    a.qty - NVL(s.scanqty, 0) AS diff_qty
+				FROM t_wms_unpack a
+				LEFT JOIN (
+				    SELECT
+				        unpackbarcode,
+				        SUM(qty) AS scanqty
+				    FROM t_scm_barcode
+				    WHERE useyn = 'Y'
+				    GROUP BY unpackbarcode
+				) s
+				ON s.unpackbarcode = a.barcode
+				WHERE a.useyn = 'Y'
+				<![CDATA[
+				AND a.qty - NVL(s.scanqty, 0) <> 0
+				]]>
+				<include refid="where_unpack_balance"/>
+	        ) t
+        ) 
+        WHERE rn BETWEEN #{offset} + 1 AND #{offset} + #{itemsPerPage}
+        ORDER BY rn
+    </select>
+	
+	<select id="read_unpackBalance_all" parameterType="map" resultType="map">
+		SELECT
+		    a.factory,
+		    a.storage,
+		    a.sdate,
+		    a.barcode,
+		    a.itemcode,
+		    a.qty,
+		    NVL(s.scanqty, 0) AS unpacked_qty,
+		    a.qty - NVL(s.scanqty, 0) AS diff_qty
+		FROM t_wms_unpack a
+		LEFT JOIN (
+		    SELECT
+		        unpackbarcode,
+		        SUM(qty) AS scanqty
+		    FROM t_scm_barcode
+		    WHERE useyn = 'Y'
+		    GROUP BY unpackbarcode
+		) s
+		ON s.unpackbarcode = a.barcode
+		WHERE a.useyn = 'Y'
+		<![CDATA[
+		AND a.qty - NVL(s.scanqty, 0) <> 0
+		]]>
+		<include refid="where_unpack_balance"/>
+		ORDER  BY a.factory,
+		          a.storage,
+		          a.sdate,
+		          a.barcode
+	</select>
+
+	<!-- 언팩 총 개수 조회 (검색 조건 포함) - Oracle용 -->
+    <select id="getUnpackBalanceTotalCount" parameterType="map" resultType="int">
+		SELECT COUNT(*)
+		FROM t_wms_unpack a
+		LEFT JOIN (
+		    SELECT
+		        unpackbarcode,
+		        SUM(qty) AS scanqty
+		    FROM t_scm_barcode
+		    WHERE useyn = 'Y'
+		    GROUP BY unpackbarcode
+		) s
+		ON s.unpackbarcode = a.barcode
+		WHERE a.useyn = 'Y'
+		<![CDATA[
+		AND a.qty - NVL(s.scanqty, 0) <> 0
+		]]>
+		<include refid="where_unpack_balance"/>
+    </select> 
+    
+    <!-- 언팩 Total qty 조회 (검색 조건 포함) - Oracle용 -->
+    <select id="getUnpackBalanceTotalQty" parameterType="map" resultType="java.math.BigDecimal">
+        SELECT NVL(SUM(qty), 0) as total_qty
+		FROM t_wms_unpack a
+		LEFT JOIN (
+		    SELECT
+		        unpackbarcode,
+		        SUM(qty) AS scanqty
+		    FROM t_scm_barcode
+		    WHERE useyn = 'Y'
+		    GROUP BY unpackbarcode
+		) s
+		ON s.unpackbarcode = a.barcode
+		WHERE a.useyn = 'Y'
+		<![CDATA[
+		AND a.qty - NVL(s.scanqty, 0) <> 0
+		]]>
+		<include refid="where_unpack_balance"/>
+    </select> 
+	
+	<select id="check_stockMovement" resultType="int" parameterType="map">
+		SELECT COUNT(*)
+		FROM t_mi_item
+		WHERE itemcode = UPPER(#{itemcode})
+	</select>
+	
+	
+	
+	<!-- 대시보드 -->
+	<select id="dashboard_stock">
+		SELECT
+		    SUBSTR(sdate, 1, 10) AS sdate,
+		    UPPER(factory) as factory,
+		    UPPER(storage) as storage,
+		    SUM(CASE WHEN REGEXP_LIKE(qty, '^[0-9]+(\.[0-9]+)?$') THEN TO_NUMBER(qty) ELSE 0 END) AS total_qty,
+		    COUNT(CASE WHEN REGEXP_LIKE(qty, '^[0-9]+(\.[0-9]+)?$') THEN qty END) AS cnt_qty
+		FROM t_wms_location
+		where useyn = 'Y'
+		GROUP BY
+		    SUBSTR(sdate, 1, 10),
+		    factory,
+		    storage		
+	</select>
+	
+	<select id="dashboard_stock_totalCount">
+		SELECT COUNT(*)
+		FROM (
+		    SELECT
+		        SUBSTR(sdate, 1, 10) AS sdate,
+		        factory,
+		        storage,
+		        SUM(CASE WHEN REGEXP_LIKE(qty, '^[0-9]+(\.[0-9]+)?$') THEN TO_NUMBER(qty) ELSE 0 END) AS total_qty,
+		        COUNT(CASE WHEN REGEXP_LIKE(qty, '^[0-9]+(\.[0-9]+)?$') THEN qty END) AS cnt_qty
+		    FROM t_wms_location
+		    where useyn = 'Y'
+		    GROUP BY
+		        SUBSTR(sdate, 1, 10),
+		        factory,
+		        storage
+		)
+	</select>
+	
+<select id="dashboard_production_summary">
+    SELECT
+        SUM(
+            CASE
+                WHEN REGEXP_LIKE(qty, '^[0-9]+(\.[0-9]+)?$') THEN TO_NUMBER(qty)
+                ELSE 0
+            END
+        ) AS total_qty,
+        COUNT(
+            CASE
+                WHEN REGEXP_LIKE(qty, '^[0-9]+(\.[0-9]+)?$') THEN qty
+            END
+        ) AS count_qty
+    FROM t_wms_semiwork
+    WHERE useyn = 'Y'
+    <if test="sdate != null and sdate != ''">
+        AND sdate = #{sdate}
+    </if>
+    <if test="factory != null and factory != ''">
+        AND UPPER(TRIM(factory)) = UPPER(TRIM(#{factory}))
+    </if>
+</select>
+
+<select id="dashboard_production_hourly">
+    SELECT
+        SUBSTR(ymdhms, 9, 2) AS stime,
+        SUM(
+            CASE
+                WHEN REGEXP_LIKE(qty, '^[0-9]+(\.[0-9]+)?$') THEN TO_NUMBER(qty)
+                ELSE 0
+            END
+        ) AS total_qty,
+        COUNT(
+            CASE
+                WHEN REGEXP_LIKE(qty, '^[0-9]+(\.[0-9]+)?$') THEN qty
+            END
+        ) AS count_qty
+    FROM t_wms_semiwork
+    WHERE useyn = 'Y'
+    <if test="sdate != null and sdate != ''">
+        AND sdate = #{sdate}
+    </if>
+    <if test="factory != null and factory != ''">
+        AND UPPER(TRIM(factory)) = UPPER(TRIM(#{factory}))
+    </if>
+    GROUP BY SUBSTR(ymdhms, 9, 2)
+    ORDER BY stime
+</select>
+
+<select id="dashboard_production_line">
+    SELECT
+        b.lineno AS lineno,
+        SUM(
+            CASE
+                WHEN REGEXP_LIKE(a.qty, '^[0-9]+(\.[0-9]+)?$') THEN TO_NUMBER(a.qty)
+                ELSE 0
+            END
+        ) AS total_qty,
+        COUNT(
+            CASE
+                WHEN REGEXP_LIKE(a.qty, '^[0-9]+(\.[0-9]+)?$') THEN a.qty
+            END
+        ) AS count_qty
+    FROM t_wms_semiwork a
+    INNER JOIN t_scm_barcode b
+        ON a.barcode = b.barcode
+    WHERE a.useyn = 'Y'
+    <if test="sdate != null and sdate != ''">
+        AND a.sdate = #{sdate}
+    </if>
+    <if test="factory != null and factory != ''">
+        AND UPPER(TRIM(a.factory)) = UPPER(TRIM(#{factory}))
+    </if>
+    GROUP BY b.lineno
+    ORDER BY
+        CASE WHEN REGEXP_LIKE(TRIM(b.lineno), '^[0-9]+$') THEN 0 ELSE 1 END,
+        CASE WHEN REGEXP_LIKE(TRIM(b.lineno), '^[0-9]+$') THEN TO_NUMBER(TRIM(b.lineno)) END
+</select>
+
+<select id="dashboard_production_detail">
+    SELECT
+        SUBSTR(a.ymdhms, 9, 2) || ':' || SUBSTR(a.ymdhms, 11, 2) AS stime,
+        CASE
+            WHEN b.lineno IS NULL THEN '정보없음'
+            ELSE b.lineno
+        END AS lineno,
+        d.subname_ch,
+        a.itemcode,
+        c.itemname,
+        CASE
+            WHEN REGEXP_LIKE(a.qty, '^[0-9]+(\.[0-9]+)?$') THEN TO_NUMBER(a.qty)
+            ELSE 0
+        END AS qty
+    FROM t_wms_semiwork a
+    LEFT JOIN t_scm_barcode b
+        ON a.barcode = b.barcode
+    INNER JOIN t_mi_item c
+        ON a.itemcode = c.itemcode
+    INNER JOIN t_mi_typesub d
+        ON c.carno = d.subcode
+       AND d.typecode = 'MI041'
+    WHERE a.useyn = 'Y'
+    <if test="sdate != null and sdate != ''">
+        AND a.sdate = #{sdate}
+    </if>
+    <if test="factory != null and factory != ''">
+        AND UPPER(TRIM(a.factory)) = UPPER(TRIM(#{factory}))
+    </if>
+    ORDER BY a.ymdhms DESC
+</select>
+
+
+
+<!-- 살티요는 work 에서 -->
+<select id="dashboard_production_summary_work">
+    SELECT
+        SUM(
+            CASE
+                WHEN REGEXP_LIKE(a.qty, '^[0-9]+(\.[0-9]+)?$') THEN TO_NUMBER(a.qty)
+                ELSE 0
+            END
+        ) AS total_qty,
+        COUNT(
+            CASE
+                WHEN REGEXP_LIKE(a.qty, '^[0-9]+(\.[0-9]+)?$') THEN a.qty
+            END
+        ) AS count_qty
+    FROM t_wms_work a
+    INNER JOIN t_scm_barcode b
+        ON a.barcode = b.barcode
+    WHERE a.useyn = 'Y'
+    <if test="sdate != null and sdate != ''">
+        AND a.sdate = #{sdate}
+    </if>
+    <if test="factory != null and factory != ''">
+        AND UPPER(TRIM(a.factory)) = UPPER(TRIM(#{factory}))
+    </if>
+    <if test="workplace != null and workplace != '' and workplace != 'ALL'">
+        AND UPPER(TRIM(b.workplace)) = UPPER(TRIM(#{workplace}))
+    </if>
+</select>
+
+<select id="dashboard_production_hourly_work">
+    SELECT
+        SUBSTR(a.ymdhms, 9, 2) AS stime,
+        SUM(
+            CASE
+                WHEN REGEXP_LIKE(a.qty, '^[0-9]+(\.[0-9]+)?$') THEN TO_NUMBER(a.qty)
+                ELSE 0
+            END
+        ) AS total_qty,
+        COUNT(
+            CASE
+                WHEN REGEXP_LIKE(a.qty, '^[0-9]+(\.[0-9]+)?$') THEN a.qty
+            END
+        ) AS count_qty
+    FROM t_wms_work a
+    INNER JOIN t_scm_barcode b
+        ON a.barcode = b.barcode
+    WHERE a.useyn = 'Y'
+    <if test="sdate != null and sdate != ''">
+        AND a.sdate = #{sdate}
+    </if>
+    <if test="factory != null and factory != ''">
+        AND UPPER(TRIM(a.factory)) = UPPER(TRIM(#{factory}))
+    </if>
+    <if test="workplace != null and workplace != '' and workplace != 'ALL'">
+        AND UPPER(TRIM(b.workplace)) = UPPER(TRIM(#{workplace}))
+    </if>
+    GROUP BY SUBSTR(ymdhms, 9, 2)
+    ORDER BY stime
+</select>
+
+<select id="dashboard_production_line_work">
+    SELECT
+        b.lineno AS lineno,
+        SUM(
+            CASE
+                WHEN REGEXP_LIKE(a.qty, '^[0-9]+(\.[0-9]+)?$') THEN TO_NUMBER(a.qty)
+                ELSE 0
+            END
+        ) AS total_qty,
+        COUNT(
+            CASE
+                WHEN REGEXP_LIKE(a.qty, '^[0-9]+(\.[0-9]+)?$') THEN a.qty
+            END
+        ) AS count_qty
+    FROM t_wms_work a
+    INNER JOIN t_scm_barcode b
+        ON a.barcode = b.barcode
+    WHERE a.useyn = 'Y'
+    <if test="sdate != null and sdate != ''">
+        AND a.sdate = #{sdate}
+    </if>
+    <if test="factory != null and factory != ''">
+        AND UPPER(TRIM(a.factory)) = UPPER(TRIM(#{factory}))
+    </if>
+    <if test="workplace != null and workplace != '' and workplace != 'ALL'">
+        AND UPPER(TRIM(b.workplace)) = UPPER(TRIM(#{workplace}))
+    </if>
+    GROUP BY b.lineno
+    ORDER BY
+        CASE WHEN REGEXP_LIKE(TRIM(b.lineno), '^[0-9]+$') THEN 0 ELSE 1 END,
+        CASE WHEN REGEXP_LIKE(TRIM(b.lineno), '^[0-9]+$') THEN TO_NUMBER(TRIM(b.lineno)) END
+</select>
+
+<select id="dashboard_production_detail_work">
+    SELECT
+        SUBSTR(a.ymdhms, 9, 2) || ':' || SUBSTR(a.ymdhms, 11, 2) AS stime,
+        CASE
+            WHEN b.lineno IS NULL THEN '정보없음'
+            ELSE b.lineno
+        END AS lineno,
+        d.subname_ch,
+        a.itemcode,
+        c.itemname,
+        CASE
+            WHEN REGEXP_LIKE(a.qty, '^[0-9]+(\.[0-9]+)?$') THEN TO_NUMBER(a.qty)
+            ELSE 0
+        END AS qty
+    FROM t_wms_work a
+    LEFT JOIN t_scm_barcode b
+        ON a.barcode = b.barcode
+    INNER JOIN t_mi_item c
+        ON a.itemcode = c.itemcode
+    INNER JOIN t_mi_typesub d
+        ON c.carno = d.subcode
+       AND d.typecode = 'MI041'
+    WHERE a.useyn = 'Y'
+    <if test="sdate != null and sdate != ''">
+        AND a.sdate = #{sdate}
+    </if>
+    <if test="factory != null and factory != ''">
+        AND UPPER(TRIM(a.factory)) = UPPER(TRIM(#{factory}))
+    </if>
+    <if test="workplace != null and workplace != '' and workplace != 'ALL'">
+        AND UPPER(TRIM(b.workplace)) = UPPER(TRIM(#{workplace}))
+    </if>
+    ORDER BY a.ymdhms DESC
+</select>
+
+
+	<insert id="insertStock">
+		INSERT INTO t_wms_stock 
+		(sdate, kind, barcode, qty, factory, storage, itemcode, loginid, insdate, memo, useyn, ymdhms)
+		VALUES 
+		(
+			#{sdate},
+			#{source},
+			#{barcode},
+			#{qty},
+			#{factory},
+			#{storage},
+			#{itemcode},
+			#{loginid},
+			#{sdate},
+			#{memo},
+			'Y',
+			#{ymdhms}
+		)
+	</insert>
+	
+	<update id="updateLaststatus_pallet" parameterType="map">
+	    UPDATE t_scm_pallet 
+	    SET laststatus = #{laststatus},
+	    	lastfactory = #{factory},
+	    	laststorage = #{storage}
+	    WHERE pbarcode = #{barcode}
+	</update>
+	
+	<update id="updateLaststatus_barcode" parameterType="map">
+		UPDATE t_scm_barcode 
+		SET laststatus = #{laststatus},
+			lastfactory = #{factory},
+	    	laststorage = #{storage}
+		WHERE barcode = #{barcode}
+	</update>
+	
+	
+	
+	<select id="read_palletInBarcodeList" parameterType="map" resultType="string">
+		SELECT bbarcode FROM t_scm_pallet WHERE pbarcode = #{barcode} AND USEYN = 'Y'
+	</select>
+	
+	
+	
+		
+	<select id="read_purchaseStockDetail" parameterType="map" resultType="map">
+	  SELECT *
+	  FROM (
+	    SELECT
+	      X.*,
+	      ROW_NUMBER() OVER (
+	        ORDER BY <include refid="order_purchaseStockDetail"/>
+	      ) AS RN
+	    FROM (
+	      SELECT
+	        A.FACTORY,
+	        A.STORAGE,
+	        A.LOCATION,
+	        A.INDATE,
+	        C.SUBNAME_CH AS CAR,
+	        A.ITEMCODE,
+	        B.ITEMNAME,
+	        B.SPEC       AS SPEC,
+	        A.QTY,
+	        A.BARCODE,
+	        A.YMDHMS,
+	        A.LOGINID,
+	        SUBSTR(A.YMDHMS, 9, 2) || ':' || SUBSTR(A.YMDHMS, 11, 2) AS HHMM,
+	        CASE
+	          WHEN INSTR(A.BARCODE, ',') > 0
+	            THEN TRIM(REGEXP_SUBSTR(A.BARCODE, '[^,]+', 1, 2))
+	          ELSE ''
+	        END AS BDATE,
+	        COUNT(*) OVER () AS TOTALCOUNT,
+	        SUM(
+	          CASE
+	            WHEN REGEXP_LIKE(TRIM(A.QTY), '^[0-9]+(\.[0-9]+)?$')
+	              THEN TO_NUMBER(TRIM(A.QTY))
+	            ELSE 0
+	          END
+	        ) OVER () AS TOTALQTY
+	      FROM T_WMS_LOCATION A
+	      LEFT JOIN T_MI_ITEM B
+	             ON B.ITEMCODE = A.ITEMCODE
+	      LEFT JOIN T_MI_TYPESUB C
+	             ON C.SUBCODE  = B.CARNO
+	            AND C.TYPECODE = 'MI041'
+	      WHERE A.USEYN = 'Y'
+	      <include refid="where_stock_purchase"/>
+	    ) X
+	  )
+	  <where>
+	    <!-- ✅ limit이 있을 때만 페이징 적용 (엑셀/전체조회는 limit 없음) -->
+	    <if test="limit != null">
+	      RN BETWEEN (NVL(#{offset}, 0) + 1)
+	           AND (NVL(#{offset}, 0) + #{limit})
+	    </if>
+	  </where>
+	  ORDER BY RN
+	</select>
+
+
+	
+	<!-- ============================================================
+	     ✅ 구매 - 재고 - 재고실사 : 엑셀 조회 (전체)
+	     ============================================================ -->
+	
+	<select id="read_purchaseStockDetail_excel" parameterType="map" resultType="map">
+	  SELECT
+	      A.FACTORY,
+	      A.STORAGE,
+	      A.LOCATION,
+	      A.INDATE,
+	      C.SUBNAME_CH AS CAR,
+	      A.ITEMCODE,
+	      B.ITEMNAME,
+	      B.SPEC       AS SPEC,
+	      A.QTY,
+	      A.BARCODE,
+	      A.YMDHMS,
+	      A.LOGINID,
+	      SUBSTR(A.YMDHMS, 9, 2) || ':' || SUBSTR(A.YMDHMS, 11, 2) AS HHMM,
+	      CASE
+	        WHEN INSTR(A.BARCODE, ',') > 0
+	          THEN TRIM(REGEXP_SUBSTR(A.BARCODE, '[^,]+', 1, 2))
+	        ELSE ''
+	      END AS BDATE
+	  FROM T_WMS_LOCATION A
+	  LEFT JOIN T_MI_ITEM B
+	         ON B.ITEMCODE = A.ITEMCODE
+	  LEFT JOIN T_MI_TYPESUB C
+	         ON C.SUBCODE  = B.CARNO
+	        AND C.TYPECODE = 'MI041'
+	  WHERE A.USEYN = 'Y'
+	  <include refid="where_stock_purchase"/>
+	  ORDER BY <include refid="order_purchaseStockDetail"/>
+	</select>
+	
+	<select id="restoreDeliveredIntfList" parameterType="map">
+		<!-- select condate, itemcode, qty, insuser, insdate from t_pm_non_arrivalsub_if where cud_div = 'I' and noinvoice = #{invoice_no} -->
+		select
+    		condate, 
+		    itemcode, 
+		    qty, 
+		    insuser, 
+		    MAX(insdate) as insdate
+		from t_pm_non_arrivalsub_if a
+		where cud_div = 'I' 
+		and noinvoice = #{invoice_no}
+		group by condate, itemcode, qty, insuser		
+	</select>
+	
+	<insert id="restoreDeliveredIntf">
+		<!-- INSERT INTO T_PM_NON_ARRIVALSUB_IF (
+			IFNO,    GUBUN,    BRANCH,    CONDATE,    CFNO,
+			CFSUBNO,     MANCODE,    BUCODE,   CUSTCODE,
+			
+			GORDER,GSALE,GPAY,GMONEY,EXRATE,
+			INPUTDATE,ITEMCODE,QTY,UNITPRICE,WONAMT,VATAMT,
+			
+			TOTAMT,COSTAMT,REMARK,ORDERIDX,NOINVOICE,
+			BRNO,BRSUBNO,    ERP_TRANSFER_FLAG,    ERP_RESULT_FLAG,    ERP_RESULT_REMARK,      INSUSER,
+			
+			INSDATE,    UPDUSER,    UPDDATE,    CUD_DIV,    DATA_DIV,
+			MES_KEY,    DELETE_GUBUN,    MES_SEQ,    PENO,    PESUBNO
+		)
+		values(
+			#{ifno_if},'01','000',#{condate},' ',
+			' ',' ',' ',' ',
+			
+			' ',' ',' ',' ',0,
+			' ', #{itemcode},#{qty},0,0,0,
+			
+			0,0,' ',0, #{invoice_no},
+			' ',' ', 'N','N',' ','ZZ99',
+			
+			TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI'),' ',' ','I','SCM',
+			#{wms_key},' ','1',' ',' '
+		) -->
+		INSERT INTO T_PM_NON_ARRIVALSUB_IF (
+		    IFNO, GUBUN, BRANCH, CONDATE, CFNO,
+		    CFSUBNO, MANCODE, BUCODE, CUSTCODE,
+		    
+		    GORDER, GSALE, GPAY, GMONEY, EXRATE,
+		    INPUTDATE, ITEMCODE, QTY, UNITPRICE, WONAMT, VATAMT,
+		    
+		    TOTAMT, COSTAMT, REMARK, ORDERIDX, NOINVOICE,
+		    BRNO, BRSUBNO, ERP_TRANSFER_FLAG, ERP_RESULT_FLAG, ERP_RESULT_REMARK, INSUSER,
+		    
+		    INSDATE, UPDUSER, UPDDATE, CUD_DIV, DATA_DIV,
+		    MES_KEY, DELETE_GUBUN, MES_SEQ, PENO, PESUBNO
+		)
+		SELECT
+		    T.IFNO, '01', '000', T.CONDATE, ' ',
+		    ' ', ' ', ' ', ' ',
+		    
+		    ' ', ' ', ' ', ' ', 0,
+		    ' ', T.ITEMCODE, T.QTY, 0, 0, 0,
+		    
+		    0, 0, ' ', 0, T.NOINVOICE,
+		    ' ', ' ', 'N', 'N', ' ', 'ZZ99',
+		    
+		    TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI'), ' ', ' ', 'I', 'SCM',
+		    T.MES_KEY, ' ', '1', ' ', ' '
+		FROM (
+		  <foreach collection="rows" item="r" separator=" UNION ALL ">
+		    SELECT
+		      #{r.ifno}      AS IFNO,
+		      #{r.condate}   AS CONDATE,
+		      #{r.itemcode}  AS ITEMCODE,
+		      #{r.qty}       AS QTY,
+		      #{r.invoice_no} AS NOINVOICE,
+		      #{r.mes_key}   AS MES_KEY
+		    FROM dual
+		  </foreach>
+		) T
+	</insert>
+
+	<select id="read_stockCountAdjust" parameterType="map" resultType="com.example.demo.vo.StockVO">
+		SELECT
+			t.factory,
+			t.storage,
+			t.location,
+			t.itemcode,
+			t.itemname,
+			SUM(t.qty) AS qty,
+			MAX(t.useyn) AS useyn,
+			MAX(t.useynnow) AS useynnow,
+			MAX(t.adjust) AS adjust,
+			ROW_NUMBER() OVER (ORDER BY t.location, t.itemcode) AS rn
+		FROM (
+			SELECT
+				l.factory,
+				l.storage,
+				l.location,
+				l.itemcode,
+				l.qty,
+				i.itemname,
+				l.useyn,
+				(SELECT USEYN FROM T_WMS_LOCATION LL WHERE L.IID = LL.IID) AS useynnow,
+				(SELECT memo_d FROM T_WMS_LOCATION LL WHERE L.IID = LL.IID) AS adjust
+			FROM t_wms_locationbackup l
+			LEFT JOIN t_wms_realstock r
+				ON r.useyn = 'Y'
+				AND r.itemcode = l.itemcode
+				AND r.location = l.location
+				AND r.factory = l.factory
+				AND r.storage = l.storage
+				<include refid="where_stockCountMissing_location_top"/>
+			LEFT JOIN t_mi_item i
+				ON i.itemcode = l.itemcode
+			WHERE 1 = 1
+			<include refid="where_stockCountMissing_location_detail"/>
+			AND r.location IS NULL
+		) t
+		WHERE t.adjust = 'ADJUSTMENT'
+		OR t.adjust = 'LOADEXCEPTION-NOSCAN'
+		GROUP BY
+			t.factory,
+			t.storage,
+			t.location,
+			t.itemcode,
+			t.itemname
+		ORDER BY
+			t.location,
+			t.itemcode
+	</select>
+	
+<select id="read_stockCountAdjust_all">
+		 SELECT 
+		
+		    t.*,
+		        (SELECT 'SENDING' 
+		         FROM T_WMS_FACTORYMOVE F 
+		         WHERE F.BARCODE = T.BARCODE 
+		           AND f.Sdate BETWEEN TO_CHAR(TO_DATE( #{startdate} , 'YYYY-MM-DD') - 7, 'YYYY-MM-DD') AND  #{startdate}
+		           AND SOURCE = 'SENDING' 
+		           AND USEYN = 'Y' 
+		        ) AS SENDING,
+		   
+		    ROW_NUMBER() OVER (ORDER BY t.location, t.itemcode, t.barcode) AS rn
+		FROM (
+       SELECT l.indate, l.factory, l.storage, l.location, l.barcode, l.itemcode, l.qty, i.itemname, l.useyn,L.YMDHMS_D,
+       (SELECT USEYN FROM T_WMS_LOCATION LL WHERE L.IID = LL.IID) AS useynnow,
+       (SELECT memo_d FROM T_WMS_LOCATION LL WHERE L.IID = LL.IID) AS adjust,
+       (SELECT DISTINCT 'Y' FROM T_WMS_REALSTOCK RR WHERE L.BARCODE = RR.BARCODE AND SDATE>=#{startdate}) AS BARCODESCAN,
+       nvl((SELECT distinct USEYN FROM T_WMS_LOCATION LL WHERE L.barcode = LL.barcode and useyn ='Y'),'N') AS useynbarcode
+        FROM t_wms_locationBACKUP l
+        LEFT JOIN t_wms_realstock r
+        ON r.useyn = 'Y'
+        AND r.barcode = l.barcode
+        <include refid="where_stockCountMissing_location_top"/> <!-- 실사일 -->
+        <!-- and l.indate <= '2025-11-01' 로케이션적재일 -->
+        left join t_mi_item i 
+        on i.itemcode = l.itemcode
+        WHERE
+        <!-- (l.useyn = 'Y' OR l.YMDHMS_D > REPLACE(#{startdate}, '-', '') || '235959' ) AND  -->
+        1=1
+        <include refid="where_stockCountMissing_location"/>
+        AND r.location IS NULL) t
+        where t.adjust = 'ADJUSTMENT' OR T.ADJUST = 'LOADEXCEPTION-NOSCAN'
+        ORDER BY t.LOCATION, t.ITEMCODE, t.BARCODE
+	</select>
+
+	<select id="getStockCountAdjustTotalCount" resultType="int">
+			    SELECT
+			        count(*)
+			    FROM (
+			    	SELECT
+		                l.indate,
+		                l.location,
+		                l.barcode,
+		                l.itemcode,
+		                l.qty
+		            FROM t_wms_location l
+		            LEFT JOIN t_wms_realstock r
+		                ON r.useyn = 'Y'
+		                AND r.barcode = l.barcode
+		                <include refid="where_stockCountMissing_join"/>
+		           <!--  WHERE l.useyn = 'Y' -->
+	            <![CDATA[ WHERE (l.useyn = 'Y' OR l.YMDHMS_D > REPLACE(#{startdate}, '-', '') || '235959' )]]>
+		                <include refid="where_stockCountMissing_location"/>
+		                AND r.location IS NULL
+				    ORDER BY location
+			    ) t
+	</select>
+	
+	<select id="getStockCountAdjustTotalQty" resultType="java.math.BigDecimal">
+	    	SELECT
+                nvl(sum(l.qty),0)
+            FROM t_wms_location l
+            LEFT JOIN t_wms_realstock r
+                ON r.useyn = 'Y'
+                AND r.barcode = l.barcode
+                <include refid="where_stockCountMissing_join"/>
+            <!--  WHERE l.useyn = 'Y' -->
+	            <![CDATA[ WHERE (l.useyn = 'Y' OR l.YMDHMS_D > REPLACE(#{startdate}, '-', '') || '235959' )]]>
+                <include refid="where_stockCountMissing_location"/>
+                AND r.location IS NULL
+	</select>
+
+	<select id="readStockCountAdjust_detail_stock">
+	    SELECT 
+			       indate,
+			       location,
+			       barcode,
+			       itemcode,	
+			       '0',
+			       qty
+			FROM t_wms_location
+			WHERE indate = DATE '${sdate}'
+			  AND useyn = 'N'
+			  AND memo_d = 'CHANGE'
+			  <include refid="where_stock_missing_info"></include>
+			  AND SUBSTR(ymdhms_d,1,8) = REPLACE('${sdate}', '-', '')
+			ORDER BY location
+    </select>
+    
+    <select id="readStockCountAdjust_detail_realStock">
+		SELECT 
+		       SDATE,
+		       LOCATION,
+		       BARCODE,
+		       ITEMCODE,
+		       QTY AS realqty,
+		       '0' AS systemqty
+		FROM (
+		         SELECT 
+		                R.*,
+		                ROW_NUMBER() OVER (
+		                    PARTITION BY LOCATION, BARCODE 
+		                    ORDER BY SDATE
+		                ) AS RN
+		         FROM T_WMS_REALSTOCK R
+		         WHERE SDATE = DATE '${sdate}'
+		           AND USEYN = 'Y'
+		           <include refid="where_stock_missing_info"></include>
+		     ) X
+    </select>
+
+	
+</mapper>  

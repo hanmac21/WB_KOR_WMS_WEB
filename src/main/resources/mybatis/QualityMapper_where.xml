@@ -1,0 +1,1268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.wbusa.QualityMapper">
+	
+	<sql id="where_qualityDefect">
+	    <if test="intf_yn != null and intf_yn != ''">
+	        AND UPPER(a.intf_yn) = UPPER(#{intf_yn})
+	    </if>
+	    
+	    <choose>
+	        <when test="fromDate != null and fromDate != '' and toDate != null and toDate != ''">
+	            AND a.sdate BETWEEN #{fromDate} AND #{toDate}
+	        </when>
+	        <otherwise>
+	            AND a.sdate BETWEEN TO_CHAR(SYSDATE - 7, 'YYYY-MM-DD') AND TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+	        </otherwise>
+	    </choose>
+	    
+	    <choose>
+	        <when test="factory != null and factory != '' and factory != 'all'">
+	            AND UPPER(a.factory) = UPPER(#{factory})
+	        </when>
+	        <when test="factory == null or factory == ''">
+	            AND UPPER(a.factory) = 'PUEBLA'
+	        </when>
+	        <otherwise>
+	            <!-- factory == 'all'인 경우: 조건 추가 안함 (전체 조회) -->
+	        </otherwise>
+	    </choose>
+	    
+	    <if test="car != null and car != ''">
+	        AND UPPER(c.subname_ch) LIKE '%' || UPPER(#{car}) || '%'
+	    </if>
+	    
+	    <if test="itemcode != null and itemcode != ''">
+	        AND UPPER(a.itemcode) LIKE '%' || UPPER(#{itemcode}) || '%'
+	    </if>
+	    
+	    <if test="itemname != null and itemname != ''">
+	        <!-- AND UPPER(b.itemname) LIKE '%' || UPPER(#{itemname}) || '%' -->
+	        AND UPPER(REPLACE(b.itemname, ' ', '')) LIKE '%' || UPPER(REPLACE(#{itemname}, ' ', '')) || '%'
+	    </if>
+	</sql>	
+	
+		<!-- ===================================================================================================================================================================== -->
+	<!-- <sql id="where_exceptionInput">
+		<if test="intf_yn != null and intf_yn != '' and intf_yn != 'all'">
+			AND a.intf_yn = #{intf_yn}
+		</if>
+		
+		<choose>
+         	<when test="factory != null and factory != '' and factory != 'all'">
+               AND UPPER(a.factory) = UPPER(#{factory})
+           	</when>
+           	<when test="factory == null or factory == ''">
+                AND UPPER(a.factory) = 'SALTILLO'
+            </when>
+            <otherwise>
+                factory == 'all'인 경우: 조건 추가 안함 (전체 조회)
+            </otherwise>
+        </choose>
+            
+        <choose>
+            <when test="storage != null and storage != '' and storage != 'all'">
+                AND UPPER(a.storage) = UPPER(#{storage})
+            </when>
+            <when test="storage == null or storage == ''">
+                AND UPPER(a.storage) = UPPER('H/REST')
+            </when>
+            <otherwise>
+                storage == 'all'인 경우: 조건 추가 안함 (전체 조회)
+            </otherwise>
+        </choose>
+        <choose>
+		    <when test="fromDate != null and fromDate != '' and toDate != null and toDate != ''">
+		        AND a.indate BETWEEN #{fromDate} AND #{toDate}
+		    </when>
+		    <otherwise>
+		        AND a.indate BETWEEN TO_CHAR(SYSDATE - 7, 'YYYY-MM-DD') AND TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+		    </otherwise>
+		</choose>
+		
+		거래처코드
+		<if test="custcode != null and custcode != ''">
+		  AND UPPER(a.custcode) LIKE '%' || #{custcode} || '%' 
+		</if>
+		
+		차종 (부분일치)
+		<if test="car != null and car != ''">
+		  AND UPPER(c.subname_ch) LIKE '%' || #{car} || '%'
+		</if>
+		
+		품번 (부분일치)
+		<if test="itemcode != null and itemcode != ''">
+		  AND UPPER(a.itemcode) LIKE '%' || UPPER(#{itemcode}) || '%'
+		</if>
+		
+		품명 (부분일치)
+		<if test="itemname != null and itemname != ''">
+		  AND UPPER(b.itemname) LIKE '%' || #{itemname} || '%'
+		  AND UPPER(REPLACE(b.itemname, ' ', '')) LIKE '%' || UPPER(REPLACE(#{itemname}, ' ', '')) || '%'
+		</if>	
+		
+		<choose>
+         	<when test="source == 'STOCKCOUNT'">
+               AND UPPER(a.source2) = UPPER(#{source})
+           	</when>
+           	<when test="source == 'EXCEPTION'">
+               AND a.source2 IS NULL
+           	</when>
+            <otherwise>
+                factory == 'all'인 경우: 조건 추가 안함 (전체 조회)
+            </otherwise>
+        </choose>
+	</sql> -->	
+	<!-- ===================================================================================================================================================================== -->
+	<!-- <sql id="where_exceptionOutput">
+		<if test="intf_yn != null and intf_yn != '' and intf_yn != 'all'">
+			AND a.intf_yn = #{intf_yn}
+		</if>
+		
+		<choose>
+         	<when test="factory != null and factory != '' and factory != 'all'">
+               AND UPPER(a.factory) = UPPER(#{factory})
+           	</when>
+           	<when test="factory == null or factory == ''">
+                AND UPPER(a.factory) = 'SALTILLO'
+            </when>
+            <otherwise>
+                factory == 'all'인 경우: 조건 추가 안함 (전체 조회)
+            </otherwise>
+        </choose>
+            
+        <choose>
+            <when test="storage != null and storage != '' and storage != 'all'">
+                AND UPPER(a.storage) = UPPER(#{storage})
+            </when>
+            <when test="storage == null or storage == ''">
+                AND UPPER(a.storage) = UPPER('H/REST')
+            </when>
+            <otherwise>
+                storage == 'all'인 경우: 조건 추가 안함 (전체 조회)
+            </otherwise>
+        </choose>
+        <choose>
+		    <when test="fromDate != null and fromDate != '' and toDate != null and toDate != ''">
+		        AND a.outdate BETWEEN #{fromDate} AND #{toDate}
+		    </when>
+		    <otherwise>
+		        AND a.outdate BETWEEN TO_CHAR(SYSDATE - 7, 'YYYY-MM-DD') AND TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+		    </otherwise>
+		</choose>
+		
+		거래처코드
+		<if test="custcode != null and custcode != ''">
+		  AND UPPER(a.custcode) LIKE '%' || #{custcode} || '%' 
+		</if>		
+		차종 (부분일치)
+		<if test="car != null and car != ''">
+		  AND UPPER(c.subname_ch) LIKE '%' || #{car} || '%'
+		</if>		
+		품번 (부분일치)
+		<if test="itemcode != null and itemcode != ''">
+		  AND UPPER(a.itemcode) LIKE '%' || UPPER(#{itemcode}) || '%'
+		</if>		
+		품명 (부분일치)
+		<if test="itemname != null and itemname != ''">
+		  AND UPPER(b.itemname) LIKE '%' || #{itemname} || '%'
+		  AND UPPER(REPLACE(b.itemname, ' ', '')) LIKE '%' || UPPER(REPLACE(#{itemname}, ' ', '')) || '%'
+		</if>			
+		<choose>
+         	<when test="source == 'STOCKCOUNT'">
+               AND UPPER(a.invoiceno) = 'BARCODECOUNT'
+           	</when>
+           	<when test="source == 'EXCEPTION'">
+               <![CDATA[
+               AND a.invoiceno <> 'BARCODECOUNT'
+               ]]>
+           	</when>
+            <otherwise>
+                factory == 'all'인 경우: 조건 추가 안함 (전체 조회)
+            </otherwise>
+        </choose>
+	</sql> -->	
+	
+	
+	<sql id="searchCondition_exceptionInput">
+ 		<choose>
+	        <when test="searchParams.factory != null and searchParams.factory != '' and searchParams.factory != 'all'">
+	            AND UPPER(a.factory) = UPPER(#{searchParams.factory})
+	        </when>
+	        <when test="searchParams.factory == null or searchParams.factory == ''">
+	            AND UPPER(a.factory) = 'SALTILLO'
+	        </when>
+	    </choose>
+	
+	    <choose>
+	        <when test="searchParams.storage != null and searchParams.storage != '' and searchParams.storage != 'all'">
+	            AND UPPER(a.storage) = UPPER(#{searchParams.storage})
+	        </when>
+	        <when test="searchParams.storage == null or searchParams.storage == ''">
+	            AND UPPER(a.storage) = 'REDCAGE'
+	        </when>
+	    </choose>
+		
+	    <if test="searchParams.fromDate != null and searchParams.fromDate != '' and searchParams.toDate != null and searchParams.toDate != ''">
+	        AND a.indate BETWEEN #{searchParams.fromDate} AND #{searchParams.toDate}
+	    </if>
+	    
+	    <if test="searchParams.car != null and searchParams.car != ''">
+	        AND UPPER(c.subname_ch) LIKE '%' || UPPER(#{searchParams.car}) || '%'
+	    </if>
+	    
+	    <if test="searchParams.itemcode != null and searchParams.itemcode != ''">
+	        AND UPPER(a.itemcode) LIKE '%' || UPPER(#{searchParams.itemcode}) || '%'
+	    </if>
+	
+	    <if test="searchParams.itemname != null and searchParams.itemname != ''">
+	        AND UPPER(REPLACE(b.itemname, ' ', '')) LIKE '%' || UPPER(REPLACE(#{searchParams.itemname}, ' ', '')) || '%'
+	    </if>
+	    
+		<choose>
+         	<when test="searchParams.source == 'STOCKCOUNT'">
+               AND UPPER(a.source2) = 'STOCKCOUNT'
+           	</when>
+           	<when test="searchParams.source == 'EXCEPTION'">
+           	<![CDATA[
+               AND a.source2 IS NOT NULL AND a.source2 <> 'STOCKCOUNT'
+              ]]>
+           	</when>
+            <otherwise>
+            </otherwise>
+        </choose>
+	</sql>
+	
+	<sql id="searchCondition_exceptionOutput">
+ 		<choose>
+	        <when test="searchParams.factory != null and searchParams.factory != '' and searchParams.factory != 'all'">
+	            AND UPPER(a.factory) = UPPER(#{searchParams.factory})
+	        </when>
+	        <when test="searchParams.factory == null or searchParams.factory == ''">
+	            AND UPPER(a.factory) = 'SALTILLO'
+	        </when>
+	    </choose>
+	
+	    <choose>
+	        <when test="searchParams.storage != null and searchParams.storage != '' and searchParams.storage != 'all'">
+	            AND UPPER(a.storage) = UPPER(#{searchParams.storage})
+	        </when>
+	        <when test="searchParams.storage == null or searchParams.storage == ''">
+	            AND UPPER(a.storage) = 'REDCAGE'
+	        </when>
+	    </choose>
+		
+	    <if test="searchParams.fromDate != null and searchParams.fromDate != '' and searchParams.toDate != null and searchParams.toDate != ''">
+	        AND a.outdate BETWEEN #{searchParams.fromDate} AND #{searchParams.toDate}
+	    </if>
+	    
+	    <if test="searchParams.car != null and searchParams.car != ''">
+	        AND UPPER(c.subname_ch) LIKE '%' || UPPER(#{searchParams.car}) || '%'
+	    </if>
+	    
+	    <if test="searchParams.itemcode != null and searchParams.itemcode != ''">
+	        AND UPPER(a.itemcode) LIKE '%' || UPPER(#{searchParams.itemcode}) || '%'
+	    </if>
+	
+	    <if test="searchParams.itemname != null and searchParams.itemname != ''">
+	        AND UPPER(REPLACE(b.itemname, ' ', '')) LIKE '%' || UPPER(REPLACE(#{searchParams.itemname}, ' ', '')) || '%'
+	    </if>
+	    
+		<choose>
+         	<when test="searchParams.source == 'STOCKCOUNT'">
+               AND UPPER(a.invoiceno) = 'BARCODECOUNT'
+           	</when>
+           	<when test="searchParams.source == 'EXCEPTION'">
+               <![CDATA[
+               AND a.invoiceno <> 'BARCODECOUNT'
+               ]]>
+           	</when>
+            <otherwise>
+            </otherwise>
+        </choose>
+	</sql>
+	
+	
+	
+	<!-- 검색 조건 (Mapper XML) -->
+	<sql id="searchCondition_incoming">
+	    <if test="searchParams != null">
+	        <!-- 날짜 범위 검색 -->
+	        <if test="searchParams.fromDate != null and searchParams.fromDate != ''">
+	            AND A.sdate &gt;= #{searchParams.fromDate}
+	        </if>
+	        <if test="searchParams.toDate != null and searchParams.toDate != ''">
+	            AND A.sdate &lt;= #{searchParams.toDate}
+	        </if>
+	        
+	        <!-- 공장 -->
+	        <if test="searchParams.factory != null and searchParams.factory != '' and searchParams.factory != 'all'">
+	            AND UPPER(TRIM(A.factory)) = UPPER(TRIM(#{searchParams.factory}))
+	        </if>
+	        
+	        <!-- 창고 -->
+	        <if test="searchParams.storage != null and searchParams.storage != '' and searchParams.storage != 'all'">
+	            AND UPPER(TRIM(A.storage)) = UPPER(TRIM(#{searchParams.storage}))
+	        </if>
+	        
+	        <!-- 차종 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.car != null and searchParams.car != ''">
+	            AND UPPER(TRIM(C.subname_ch)) LIKE '%' || UPPER(TRIM(#{searchParams.car})) || '%'
+	        </if>
+	        
+	        <!-- 고객사명 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.custname != null and searchParams.custname != ''">
+	            AND UPPER(TRIM(A.custname)) LIKE '%' || UPPER(TRIM(#{searchParams.custname})) || '%'
+	        </if>
+	        
+	        <!-- 품목코드 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.itemcode != null and searchParams.itemcode != ''">
+	            AND UPPER(TRIM(A.itemcode)) LIKE '%' || UPPER(TRIM(#{searchParams.itemcode})) || '%'
+	        </if>
+	        
+	        <!-- 품목명 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.itemname != null and searchParams.itemname != ''">
+	            AND UPPER(TRIM(B.itemname)) LIKE '%' || UPPER(TRIM(#{searchParams.itemname})) || '%'
+	        </if>
+	        
+	        <!-- 품목명 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.line != null and searchParams.line != ''">
+	        	AND UPPER(TRIM(A.line)) LIKE '%' || UPPER(#{searchParams.line}) || '%'
+	        </if>
+	        <!-- 대분류 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.mainCategory != null and searchParams.mainCategory != ''">
+	        	AND UPPER(TRIM(A.mainCategory)) LIKE '%' || UPPER(#{searchParams.mainCategory}) || '%'
+	        </if>
+	        <!-- 중분류 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.subCategory != null and searchParams.subCategory != ''">
+	        	AND UPPER(TRIM(A.subCategory)) LIKE '%' || UPPER(#{searchParams.subCategory}) || '%'
+	        </if>
+	        
+	        <!-- 소분류 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.detailCategory != null and searchParams.detailCategory != ''">
+	        	AND UPPER(TRIM(A.detailCategory)) LIKE '%' || UPPER(#{searchParams.detailCategory}) || '%'
+	        </if>
+	        
+	        <!-- 처리판정 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.judgment != null and searchParams.judgment != ''">
+	        	AND UPPER(TRIM(A.judgment)) LIKE '%' || UPPER(#{searchParams.judgment}) || '%'
+	        </if>
+	    </if>
+	</sql>	
+	
+	<!-- 검색 조건 (Mapper XML) -->
+	<sql id="searchCondition_incoming_parent">
+	    <if test="searchParams != null">
+	        <!-- 날짜 범위 검색 -->
+	        <if test="searchParams.fromDate != null and searchParams.fromDate != ''">
+	            AND a.sdate &gt;= #{searchParams.fromDate}
+	        </if>
+	        <if test="searchParams.toDate != null and searchParams.toDate != ''">
+	            AND a.sdate &lt;= #{searchParams.toDate}
+	        </if>
+	        
+	        <!-- 공장 -->
+	        <if test="searchParams.factory != null and searchParams.factory != '' and searchParams.factory != 'all'">
+	            AND UPPER(TRIM(a.factory)) = UPPER(TRIM(#{searchParams.factory}))
+	        </if>
+	        
+	        <!-- 창고 -->
+	        <if test="searchParams.storage != null and searchParams.storage != '' and searchParams.storage != 'all'">
+	            AND UPPER(TRIM(a.storage)) = UPPER(TRIM(#{searchParams.storage}))
+	        </if>
+	        
+	        <!-- 차종 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.car != null and searchParams.car != ''">
+	            AND UPPER(TRIM(c.subname_ch)) LIKE '%' || UPPER(TRIM(#{searchParams.car})) || '%'
+	        </if>
+	        
+	        <!-- 품목코드 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.itemcode != null and searchParams.itemcode != ''">
+	            AND UPPER(TRIM(a.itemcode)) LIKE '%' || UPPER(TRIM(#{searchParams.itemcode})) || '%'
+	        </if>
+	        
+	        <!-- 품목명 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.itemname != null and searchParams.itemname != ''">
+	            AND UPPER(TRIM(b.itemname)) LIKE '%' || UPPER(TRIM(#{searchParams.itemname})) || '%'
+	        </if>
+	    </if>
+	</sql>	
+	
+	
+	
+	
+	<sql id="searchCondition_process">
+	    <if test="searchParams != null">
+	        <!-- 날짜 범위 검색 -->
+	        <if test="searchParams.fromDate != null and searchParams.fromDate != ''">
+	            AND A.sdate &gt;= #{searchParams.fromDate}
+	        </if>
+	        <if test="searchParams.toDate != null and searchParams.toDate != ''">
+	            AND A.sdate &lt;= #{searchParams.toDate}
+	        </if>
+	        
+	        <!-- 공장 -->
+	        <if test="searchParams.factory != null and searchParams.factory != '' and searchParams.factory != 'all'">
+	            AND UPPER(TRIM(A.factory)) = UPPER(TRIM(#{searchParams.factory}))
+	        </if>
+	        
+	        <!-- 창고 -->
+	        <!-- <if test="searchParams.storage != null and searchParams.storage != '' and searchParams.storage != 'all'">
+	            AND UPPER(TRIM(A.storage)) = UPPER(TRIM(#{searchParams.storage}))
+	        </if> -->
+	        
+	        <!-- 차종 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.car != null and searchParams.car != ''">
+	            AND UPPER(TRIM(C.subname_ch)) LIKE '%' || UPPER(TRIM(#{searchParams.car})) || '%'
+	        </if>
+	        
+	        <!-- 고객사명 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.custname != null and searchParams.custname != ''">
+	            AND UPPER(TRIM(A.custname)) LIKE '%' || UPPER(TRIM(#{searchParams.custname})) || '%'
+	        </if>
+	        
+	        <!-- 품목코드 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.itemcode != null and searchParams.itemcode != ''">
+	            AND UPPER(TRIM(A.itemcode)) LIKE '%' || UPPER(TRIM(#{searchParams.itemcode})) || '%'
+	        </if>
+	        
+	        <!-- 품목명 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.itemname != null and searchParams.itemname != ''">
+	            AND UPPER(TRIM(B.itemname)) LIKE '%' || UPPER(TRIM(#{searchParams.itemname})) || '%'
+	        </if>
+	        
+	        <choose>
+	         	<when test="searchParams.source != null and searchParams.source != '' and searchParams.source != 'ALL'">
+	            AND UPPER(TRIM(A.SOURCE)) LIKE '%' || UPPER(#{searchParams.source}) || '%'
+	           	</when>
+	            <otherwise>
+	                <!-- factory == 'all'인 경우: 조건 추가 안함 (전체 조회) -->
+	            </otherwise>
+	        </choose>
+	        
+	        <!-- 품목명 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.line != null and searchParams.line != ''">
+	        	AND UPPER(TRIM(A.line)) LIKE '%' || UPPER(#{searchParams.line}) || '%'
+	        </if>
+	        <!-- 대분류 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.mainCategory != null and searchParams.mainCategory != ''">
+	        	AND UPPER(TRIM(A.mainCategory)) LIKE '%' || UPPER(#{searchParams.mainCategory}) || '%'
+	        </if>
+	        <!-- 중분류 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.subCategory != null and searchParams.subCategory != ''">
+	        	AND UPPER(TRIM(A.subCategory)) LIKE '%' || UPPER(#{searchParams.subCategory}) || '%'
+	        </if>
+	        
+	        <!-- 소분류 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.detailCategory != null and searchParams.detailCategory != ''">
+	        	AND UPPER(TRIM(A.detailCategory)) LIKE '%' || UPPER(#{searchParams.detailCategory}) || '%'
+	        </if>
+	        
+	        <!-- 처리판정 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.judgment != null and searchParams.judgment != ''">
+	        	AND UPPER(TRIM(A.judgment)) LIKE '%' || UPPER(#{searchParams.judgment}) || '%'
+	        </if>
+	        
+	        <if test="searchParams.status != null and searchParams.status != ''">
+		        AND UPPER(a.postyn) = UPPER(#{searchParams.status})
+		    </if>
+	    </if>
+	</sql>	
+	<sql id="searchCondition_decomposition">
+	    <if test="searchParams != null">
+	        <!-- 날짜 범위 검색 -->
+	        <if test="searchParams.fromDate != null and searchParams.fromDate != ''">
+	            AND A.sdate &gt;= #{searchParams.fromDate}
+	        </if>
+	        <if test="searchParams.toDate != null and searchParams.toDate != ''">
+	            AND A.sdate &lt;= #{searchParams.toDate}
+	        </if>
+	        
+	        <!-- 공장 -->
+	        <if test="searchParams.factory != null and searchParams.factory != '' and searchParams.factory != 'all'">
+	            AND UPPER(TRIM(A.factory)) = UPPER(TRIM(#{searchParams.factory}))
+	        </if>
+	        
+	        <!-- 창고 -->
+	        <!-- <if test="searchParams.storage != null and searchParams.storage != '' and searchParams.storage != 'all'">
+	            AND UPPER(TRIM(A.storage)) = UPPER(TRIM(#{searchParams.storage}))
+	        </if> -->
+	        
+	        <!-- 차종 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.car != null and searchParams.car != ''">
+	            AND UPPER(TRIM(C.subname_ch)) LIKE '%' || UPPER(TRIM(#{searchParams.car})) || '%'
+	        </if>
+	        
+	        <!-- 고객사명 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.custname != null and searchParams.custname != ''">
+	            AND UPPER(TRIM(A.custname)) LIKE '%' || UPPER(TRIM(#{searchParams.custname})) || '%'
+	        </if>
+	        
+	        <!-- ASSY품목코드 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.assyitemcode != null and searchParams.assyitemcode != ''">
+	            AND UPPER(TRIM(A.itemcode)) LIKE '%' || UPPER(TRIM(#{searchParams.assyitemcode})) || '%'
+	        </if>
+	        
+	        <!-- ASSY품목명 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.assyitemname != null and searchParams.assyitemname != ''">
+	            AND UPPER(TRIM(B.itemname)) LIKE '%' || UPPER(TRIM(#{searchParams.assyitemname})) || '%'
+	        </if>
+
+	        <!-- 자식품목코드 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.itemcode != null and searchParams.itemcode != ''">
+	            AND UPPER(TRIM(A.CHILDcode)) LIKE '%' || UPPER(TRIM(#{searchParams.itemcode})) || '%'
+	        </if>
+	        
+	        <!-- 품목명 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.itemname != null and searchParams.itemname != ''">
+	            AND UPPER(TRIM(B2.ITEMNAME)) LIKE '%' || UPPER(TRIM(#{searchParams.itemname})) || '%'
+	        </if>
+	        
+	        <!-- 처리판정 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.judgment != null and searchParams.judgment != ''">
+	        	AND UPPER(TRIM(A.judgment)) LIKE '%' || UPPER(#{searchParams.judgment}) || '%'
+	        </if>
+	        
+	        <if test="searchParams.status != null and searchParams.status != ''">
+		        AND UPPER(a.postyn) = UPPER(#{searchParams.status})
+		    </if>
+	    </if>
+	</sql>	
+	<sql id="searchCondition_process_parent">
+	    <if test="searchParams != null">
+	        <!-- 날짜 범위 검색 -->
+	        <if test="searchParams.fromDate != null and searchParams.fromDate != ''">
+	            AND A.sdate &gt;= #{searchParams.fromDate}
+	        </if>
+	        <if test="searchParams.toDate != null and searchParams.toDate != ''">
+	            AND A.sdate &lt;= #{searchParams.toDate}
+	        </if>
+	        
+	        <!-- 공장 -->
+	        <if test="searchParams.factory != null and searchParams.factory != '' and searchParams.factory != 'all'">
+	            AND UPPER(TRIM(A.factory)) = UPPER(TRIM(#{searchParams.factory}))
+	        </if>
+	        
+	        <!-- 창고 -->
+	        <if test="searchParams.storage != null and searchParams.storage != '' and searchParams.storage != 'all'">
+	            AND UPPER(TRIM(A.storage)) = UPPER(TRIM(#{searchParams.storage}))
+	        </if>
+	        
+	        <!-- 차종 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.car != null and searchParams.car != ''">
+	            AND UPPER(TRIM(C.subname_ch)) LIKE '%' || UPPER(TRIM(#{searchParams.car})) || '%'
+	        </if>
+	        
+	        <!-- 품목코드 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.itemcode != null and searchParams.itemcode != ''">
+	            AND UPPER(TRIM(A.itemcode)) LIKE '%' || UPPER(TRIM(#{searchParams.itemcode})) || '%'
+	        </if>
+	        
+	        <!-- 품목명 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.itemname != null and searchParams.itemname != ''">
+	            AND UPPER(TRIM(B.itemname)) LIKE '%' || UPPER(TRIM(#{searchParams.itemname})) || '%'
+	        </if>
+	    </if>
+	</sql>	
+	
+	
+	
+	<sql id="searchCondition_return">
+	    <if test="searchParams != null">
+	        <!-- 날짜 범위 검색 -->
+	        <if test="searchParams.fromDate != null and searchParams.fromDate != ''">
+	            AND A.sdate &gt;= #{searchParams.fromDate}
+	        </if>
+	        <if test="searchParams.toDate != null and searchParams.toDate != ''">
+	            AND A.sdate &lt;= #{searchParams.toDate}
+	        </if>
+
+	        <!-- 공장 -->
+	        <if test="searchParams.factory != null and searchParams.factory != '' and searchParams.factory != 'all'">
+	            AND UPPER(TRIM(A.factory)) = UPPER(TRIM(#{searchParams.factory}))
+	        </if>
+
+	        <!-- 창고 -->
+	        <if test="searchParams.storage != null and searchParams.storage != '' and searchParams.storage != 'all'">
+	            AND UPPER(TRIM(A.storage)) = UPPER(TRIM(#{searchParams.storage}))
+	        </if>
+
+	        <!-- 차종 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.car != null and searchParams.car != ''">
+	            AND UPPER(TRIM(C.subname_ch)) LIKE '%' || UPPER(TRIM(#{searchParams.car})) || '%'
+	        </if>
+
+	        <!-- 고객사명 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.custname != null and searchParams.custname != ''">
+	            AND UPPER(TRIM(A.custname)) LIKE '%' || UPPER(TRIM(#{searchParams.custname})) || '%'
+	        </if>
+
+	        <!-- 품목코드 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.itemcode != null and searchParams.itemcode != ''">
+	            AND UPPER(TRIM(A.itemcode)) LIKE '%' || UPPER(TRIM(#{searchParams.itemcode})) || '%'
+	        </if>
+
+	        <!-- 품목명 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.itemname != null and searchParams.itemname != ''">
+	            AND UPPER(TRIM(B.itemname)) LIKE '%' || UPPER(TRIM(#{searchParams.itemname})) || '%'
+	        </if>
+
+	        <!-- 바코드 -->
+	        <if test="searchParams.barcode != null and searchParams.barcode != ''">
+	            AND UPPER(TRIM(A.barcode)) LIKE '%' || UPPER(TRIM(#{searchParams.barcode})) || '%'
+	        </if>
+
+	        <!-- 고객사 품번 -->
+	        <if test="searchParams.spec != null and searchParams.spec != ''">
+	            AND UPPER(TRIM(B.spec)) LIKE '%' || UPPER(TRIM(#{searchParams.spec})) || '%'
+	        </if>
+
+	        <!-- 차종 -->
+	        <if test="searchParams.car != null and searchParams.car != ''">
+	            AND UPPER(TRIM(C.subname_ch)) LIKE '%' || UPPER(TRIM(#{searchParams.car})) || '%'
+	        </if>
+
+	        <!-- 판정 (source2 기준) -->
+	        <if test="searchParams.judgment != null and searchParams.judgment != ''">
+	            AND UPPER(TRIM(A.source2)) = UPPER(TRIM(#{searchParams.judgment}))
+	        </if>
+	    </if>
+	</sql>
+
+	<sql id="searchCondition_return_parent">
+	    <if test="searchParams != null">
+	        <!-- 날짜 범위 검색 -->
+	        <if test="searchParams.fromDate != null and searchParams.fromDate != ''">
+	            AND A.sdate &gt;= #{searchParams.fromDate}
+	        </if>
+	        <if test="searchParams.toDate != null and searchParams.toDate != ''">
+	            AND A.sdate &lt;= #{searchParams.toDate}
+	        </if>
+	        
+	        <!-- 공장 -->
+	        <if test="searchParams.factory != null and searchParams.factory != '' and searchParams.factory != 'all'">
+	            AND UPPER(TRIM(A.factory)) = UPPER(TRIM(#{searchParams.factory}))
+	        </if>
+	        
+	        <!-- 창고 -->
+	        <if test="searchParams.storage != null and searchParams.storage != '' and searchParams.storage != 'all'">
+	            AND UPPER(TRIM(A.storage)) = UPPER(TRIM(#{searchParams.storage}))
+	        </if>
+	        
+	        <!-- 차종 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.car != null and searchParams.car != ''">
+	            AND UPPER(TRIM(C.subname_ch)) LIKE '%' || UPPER(TRIM(#{searchParams.car})) || '%'
+	        </if>
+	        
+	        <!-- 품목코드 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.itemcode != null and searchParams.itemcode != ''">
+	            AND UPPER(TRIM(A.itemcode)) LIKE '%' || UPPER(TRIM(#{searchParams.itemcode})) || '%'
+	        </if>
+	        
+	        <!-- 품목명 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.itemname != null and searchParams.itemname != ''">
+	            AND UPPER(TRIM(B.itemname)) LIKE '%' || UPPER(TRIM(#{searchParams.itemname})) || '%'
+	        </if>
+	    </if>
+	</sql>	
+	
+	<sql id="searchCondition_wareInsp">
+	    <if test="searchParams != null">
+	        <if test="searchParams.fromDate != null and searchParams.fromDate != ''">
+	            AND A.sdate &gt;= #{searchParams.fromDate}
+	        </if>
+	        <if test="searchParams.toDate != null and searchParams.toDate != ''">
+	            AND A.sdate &lt;= #{searchParams.toDate}
+	        </if>
+	        <if test="searchParams.factory != null and searchParams.factory != '' and searchParams.factory != 'all'">
+	            AND UPPER(TRIM(A.factory)) = UPPER(TRIM(#{searchParams.factory}))
+	        </if>
+	        <if test="searchParams.itemcode != null and searchParams.itemcode != ''">
+	            AND UPPER(TRIM(A.itemcode)) LIKE '%' || UPPER(TRIM(#{searchParams.itemcode})) || '%'
+	        </if>
+	        <if test="searchParams.spec != null and searchParams.spec != ''">
+	            AND UPPER(TRIM(B.spec)) LIKE '%' || UPPER(TRIM(#{searchParams.spec})) || '%'
+	        </if>
+	        <if test="searchParams.car != null and searchParams.car != ''">
+	            AND UPPER(TRIM(C.subname_ch)) LIKE '%' || UPPER(TRIM(#{searchParams.car})) || '%'
+	        </if>
+	        <if test="searchParams.barcode != null and searchParams.barcode != ''">
+	            AND UPPER(TRIM(A.barcode)) LIKE '%' || UPPER(TRIM(#{searchParams.barcode})) || '%'
+	        </if>
+	        <if test="searchParams.judgment != null and searchParams.judgment != ''">
+	            AND UPPER(TRIM(A.source2)) = UPPER(TRIM(#{searchParams.judgment}))
+	        </if>
+	    </if>
+	</sql>
+
+	<sql id="searchCondition_disposal">
+	    <if test="searchParams != null">
+	        <if test="searchParams.fromDate != null and searchParams.fromDate != ''">
+	            AND A.sdate &gt;= #{searchParams.fromDate}
+	        </if>
+	        <if test="searchParams.toDate != null and searchParams.toDate != ''">
+	            AND A.sdate &lt;= #{searchParams.toDate}
+	        </if>
+	        <if test="searchParams.factory != null and searchParams.factory != '' and searchParams.factory != 'all'">
+	            AND UPPER(TRIM(A.factory)) = UPPER(TRIM(#{searchParams.factory}))
+	        </if>
+	        <if test="searchParams.itemcode != null and searchParams.itemcode != ''">
+	            AND UPPER(TRIM(A.itemcode)) LIKE '%' || UPPER(TRIM(#{searchParams.itemcode})) || '%'
+	        </if>
+	        <if test="searchParams.spec != null and searchParams.spec != ''">
+	            AND UPPER(TRIM(B.spec)) LIKE '%' || UPPER(TRIM(#{searchParams.spec})) || '%'
+	        </if>
+	        <if test="searchParams.car != null and searchParams.car != ''">
+	            AND UPPER(TRIM(C.subname_ch)) LIKE '%' || UPPER(TRIM(#{searchParams.car})) || '%'
+	        </if>
+	        <if test="searchParams.barcode != null and searchParams.barcode != ''">
+	            AND UPPER(TRIM(A.barcode)) LIKE '%' || UPPER(TRIM(#{searchParams.barcode})) || '%'
+	        </if>
+	        <if test="searchParams.source != null and searchParams.source != ''">
+	            AND UPPER(TRIM(A.source)) = UPPER(TRIM(#{searchParams.source}))
+	        </if>
+	        <if test="searchParams.judgment != null and searchParams.judgment != ''">
+	            AND UPPER(TRIM(A.source2)) = UPPER(TRIM(#{searchParams.judgment}))
+	        </if>
+	    </if>
+	</sql>
+
+	<sql id="searchCondition_warehouse">
+	    <if test="searchParams != null">
+	        <!-- 날짜 범위 검색 -->
+	        <if test="searchParams.fromDate != null and searchParams.fromDate != ''">
+	            AND A.sdate &gt;= #{searchParams.fromDate}
+	        </if>
+	        <if test="searchParams.toDate != null and searchParams.toDate != ''">
+	            AND A.sdate &lt;= #{searchParams.toDate}
+	        </if>
+	
+	        <!-- 공장 -->
+	        <if test="searchParams.factory != null and searchParams.factory != '' and searchParams.factory != 'all'">
+	            AND UPPER(TRIM(A.factory)) = UPPER(TRIM(#{searchParams.factory}))
+	        </if>
+	
+	        <!-- 창고 -->
+	        <if test="searchParams.storage != null and searchParams.storage != '' and searchParams.storage != 'all'">
+	            AND UPPER(TRIM(A.storage)) = UPPER(TRIM(#{searchParams.storage}))
+	        </if>
+	
+	        <!-- 차종 -->
+	        <if test="searchParams.car != null and searchParams.car != ''">
+	            AND UPPER(TRIM(C.subname_ch)) LIKE '%' || UPPER(TRIM(#{searchParams.car})) || '%'
+	        </if>
+	        
+	        <!-- 고객사명 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.custname != null and searchParams.custname != ''">
+	            AND UPPER(TRIM(A.custname)) LIKE '%' || UPPER(TRIM(#{searchParams.custname})) || '%'
+	        </if>
+	
+	        <!-- 품목코드 -->
+	        <if test="searchParams.itemcode != null and searchParams.itemcode != ''">
+	            AND UPPER(TRIM(A.itemcode)) LIKE '%' || UPPER(TRIM(#{searchParams.itemcode})) || '%'
+	        </if>
+	
+	        <!-- 품목명 -->
+	        <if test="searchParams.itemname != null and searchParams.itemname != ''">
+	            AND UPPER(TRIM(B.itemname)) LIKE '%' || UPPER(TRIM(#{searchParams.itemname})) || '%'
+	        </if>
+	
+	        <!-- ✅ LINE / LINENO -->
+	        <if test="searchParams.line != null and searchParams.line != ''">
+	            AND UPPER(TRIM(A.line)) LIKE '%' || UPPER(TRIM(#{searchParams.line})) || '%'
+	        </if>
+	
+	        <!-- ✅ MAIN CATEGORY -->
+	        <if test="searchParams.mainCategory != null and searchParams.mainCategory != ''">
+	            AND UPPER(TRIM(A.maincategory)) LIKE '%' || UPPER(TRIM(#{searchParams.mainCategory})) || '%'
+	        </if>
+	
+	        <!-- ✅ SUB CATEGORY -->
+	        <if test="searchParams.subCategory != null and searchParams.subCategory != ''">
+	            AND UPPER(TRIM(A.subcategory)) LIKE '%' || UPPER(TRIM(#{searchParams.subCategory})) || '%'
+	        </if>
+	
+	        <!-- ✅ DETAIL CATEGORY -->
+	        <if test="searchParams.detailCategory != null and searchParams.detailCategory != ''">
+	            AND UPPER(TRIM(A.detailcategory)) LIKE '%' || UPPER(TRIM(#{searchParams.detailCategory})) || '%'
+	        </if>
+	
+	        <!-- ✅ JUDGMENT -->
+	        <if test="searchParams.judgment != null and searchParams.judgment != ''">
+	            AND UPPER(TRIM(A.judgment)) LIKE '%' || UPPER(TRIM(#{searchParams.judgment})) || '%'
+	        </if>
+	        <!-- 품목명 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.line != null and searchParams.line != ''">
+	        	AND UPPER(TRIM(A.line)) LIKE '%' || UPPER(#{searchParams.line}) || '%'
+	        </if>
+	        <!-- 대분류 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.mainCategory != null and searchParams.mainCategory != ''">
+	        	AND UPPER(TRIM(A.mainCategory)) LIKE '%' || UPPER(#{searchParams.mainCategory}) || '%'
+	        </if>
+	        <!-- 중분류 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.subCategory != null and searchParams.subCategory != ''">
+	        	AND UPPER(TRIM(A.subCategory)) LIKE '%' || UPPER(#{searchParams.subCategory}) || '%'
+	        </if>
+	        
+	        <!-- 소분류 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.detailCategory != null and searchParams.detailCategory != ''">
+	        	AND UPPER(TRIM(A.detailCategory)) LIKE '%' || UPPER(#{searchParams.detailCategory}) || '%'
+	        </if>
+	        
+	        <!-- 처리판정 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.judgment != null and searchParams.judgment != ''">
+	        	AND UPPER(TRIM(A.judgment)) LIKE '%' || UPPER(#{searchParams.judgment}) || '%'
+	        </if>
+	    </if>
+	</sql>
+
+	
+	<sql id="searchCondition_warehouse_parent">
+	    <if test="searchParams != null">
+	        <!-- 날짜 범위 검색 -->
+	        <if test="searchParams.fromDate != null and searchParams.fromDate != ''">
+	            AND a.sdate &gt;= #{searchParams.fromDate}
+	        </if>
+	        <if test="searchParams.toDate != null and searchParams.toDate != ''">
+	            AND a.sdate &lt;= #{searchParams.toDate}
+	        </if>
+	        
+	        <!-- 공장 -->
+	        <if test="searchParams.factory != null and searchParams.factory != '' and searchParams.factory != 'all'">
+	            AND UPPER(TRIM(a.factory)) = UPPER(TRIM(#{searchParams.factory}))
+	        </if>
+	        
+	        <!-- 창고 -->
+	        <if test="searchParams.storage != null and searchParams.storage != '' and searchParams.storage != 'all'">
+	            AND UPPER(TRIM(a.storage)) = UPPER(TRIM(#{searchParams.storage}))
+	        </if>
+	        
+	        <!-- 차종 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.car != null and searchParams.car != ''">
+	            AND UPPER(TRIM(c.subname_ch)) LIKE '%' || UPPER(TRIM(#{searchParams.car})) || '%'
+	        </if>
+	        
+	        <!-- 품목코드 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.itemcode != null and searchParams.itemcode != ''">
+	            AND UPPER(TRIM(a.itemcode)) LIKE '%' || UPPER(TRIM(#{searchParams.itemcode})) || '%'
+	        </if>
+	        
+	        <!-- 품목명 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.itemname != null and searchParams.itemname != ''">
+	            AND UPPER(TRIM(b.itemname)) LIKE '%' || UPPER(TRIM(#{searchParams.itemname})) || '%'
+	        </if>
+	    </if>
+	</sql>
+	
+	
+	<!-- 통합 조회 -->
+	
+	
+	<sql id="searchCondition_total_list">
+	    <if test="searchParams != null">
+	        <!-- 날짜 범위 검색 -->
+	        <if test="searchParams.fromDate != null and searchParams.fromDate != ''">
+	            AND A.sdate &gt;= #{searchParams.fromDate}
+	        </if>
+	        <if test="searchParams.toDate != null and searchParams.toDate != ''">
+	            AND A.sdate &lt;= #{searchParams.toDate}
+	        </if>
+	        
+	        <!-- 공장 -->
+	        <if test="searchParams.factory != null and searchParams.factory != '' and searchParams.factory != 'all'">
+	            AND UPPER(TRIM(A.factory)) = UPPER(TRIM(#{searchParams.factory}))
+	        </if>
+	        
+	        <!-- 창고 -->
+	        <if test="searchParams.storage != null and searchParams.storage != '' and searchParams.storage != 'all'">
+	            AND UPPER(TRIM(A.storage)) = UPPER(TRIM(#{searchParams.storage}))
+	        </if>
+	        
+	        <!-- 차종 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.car != null and searchParams.car != ''">
+	            AND UPPER(TRIM(C.subname_ch)) LIKE '%' || UPPER(TRIM(#{searchParams.car})) || '%'
+	        </if>
+	        
+	        <!-- 품목코드 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.itemcode != null and searchParams.itemcode != ''">
+	            AND UPPER(TRIM(A.itemcode)) LIKE '%' || UPPER(TRIM(#{searchParams.itemcode})) || '%'
+	        </if>
+	        
+	        <!-- 품목명 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.itemname != null and searchParams.itemname != ''">
+	            AND UPPER(TRIM(B.itemname)) LIKE '%' || UPPER(TRIM(#{searchParams.itemname})) || '%'
+	        </if>
+	    </if>
+	</sql>
+	
+	<sql id="where_stock">
+		<choose>
+			<when test="factory != null and factory != '' and factory.toUpperCase() != 'ALL'">
+				AND UPPER(a.factory) = UPPER(#{factory})
+           	</when>
+           	<when test="factory == null or factory == ''">
+                AND UPPER(a.factory) = 'SALTILLO'
+            </when>
+            <otherwise>
+                <!-- factory == 'all'인 경우: 조건 추가 안함 (전체 조회) -->
+            </otherwise>
+		</choose>
+         
+        <choose>
+            <when test="storage != null and storage != '' and storage.toUpperCase() != 'ALL'">
+                AND UPPER(a.storage) = UPPER(#{storage})
+            </when>
+            <when test="storage == null or storage == ''">
+                AND UPPER(a.storage) = UPPER('REDCAGE')
+            </when>
+            <otherwise>
+                <!-- storage == 'all'인 경우: 조건 추가 안함 (전체 조회) -->
+            </otherwise>
+        </choose>
+         
+        <if test="indate != null and indate != ''">
+            AND a.indate = #{indate}
+        </if>
+         
+		<if test="car != null and car != ''">
+			AND UPPER(c.subname_ch) LIKE '%' || UPPER(#{car}) || '%'
+		</if>
+		
+		<if test="itemcode != null and itemcode != ''">
+			AND UPPER(a.itemcode) LIKE '%' || UPPER(#{itemcode}) || '%'
+		</if>
+		
+		<if test="itemname != null and itemname != ''">
+			AND UPPER(REPLACE(b.itemname, ' ', '')) LIKE '%' || UPPER(REPLACE(#{itemname}, ' ', '')) || '%'
+		</if>	
+	</sql>	
+	
+	
+	<sql id="where_stock_view_a">
+		<choose>
+			<when test="factory != null and factory != '' and factory != 'all'">
+				AND UPPER(a.factory) = UPPER(#{factory})
+           	</when>
+           	<when test="factory == null or factory == ''">
+                AND UPPER(a.factory) = 'SALTILLO'
+            </when>
+            <otherwise>
+                <!-- factory == 'all'인 경우: 조건 추가 안함 (전체 조회) -->
+            </otherwise>
+        </choose>
+        
+        <choose>
+            <when test="storage != null and storage != '' and storage != 'all'">
+                AND UPPER(a.storage) = UPPER(#{storage})
+            </when>
+            <when test="storage == null or storage == ''">
+                AND UPPER(a.storage) = UPPER('REDCAGE')
+            </when>
+            <otherwise>
+                <!-- storage == 'all'인 경우: 조건 추가 안함 (전체 조회) -->
+             </otherwise>
+         </choose>
+
+		<if test="car != null and car != ''">
+			AND UPPER(a.car) LIKE '%' || UPPER(#{car}) || '%'
+		</if>
+
+		<if test="itemcode != null and itemcode != ''">
+			AND UPPER(a.itemcode) LIKE '%' || UPPER(#{itemcode}) || '%'
+		</if>
+
+		<if test="itemname != null and itemname != ''">
+			AND UPPER(REPLACE(a.itemname, ' ', '')) LIKE '%' || UPPER(REPLACE(#{itemname}, ' ', '')) || '%'
+		</if>	
+	
+	</sql>	
+	<sql id="where_stock_view">
+		<choose>
+			<when test="factory != null and factory != '' and factory != 'all'">
+               AND UPPER(factory) = UPPER(#{factory})
+           	</when>
+           	<when test="factory == null or factory == ''">
+                AND UPPER(factory) = 'SALTILLO'
+            </when>
+            <otherwise>
+                <!-- factory == 'all'인 경우: 조건 추가 안함 (전체 조회) -->
+            </otherwise>
+        </choose>
+            
+        <choose>
+            <when test="storage != null and storage != '' and storage != 'all'">
+                AND UPPER(storage) = UPPER(#{storage})
+            </when>
+            <when test="storage == null or storage == ''">
+                AND UPPER(storage) = UPPER('REDCAGE')
+            </when>
+            <otherwise>
+                <!-- storage == 'all'인 경우: 조건 추가 안함 (전체 조회) -->
+            </otherwise>
+        </choose>
+			
+		<if test="car != null and car != ''">
+			AND UPPER(car) LIKE '%' || UPPER(#{car}) || '%'
+		</if>
+		
+		<if test="itemcode != null and itemcode != ''">
+			AND UPPER(itemcode) LIKE '%' || UPPER(#{itemcode}) || '%'
+		</if>
+		
+		<if test="itemname != null and itemname != ''">
+			AND UPPER(REPLACE(itemname, ' ', '')) LIKE '%' || UPPER(REPLACE(#{itemname}, ' ', '')) || '%'
+		</if>		
+	</sql>	
+	
+	<sql id="where_workshop">		
+	    <choose>
+	        <when test="fromDate != null and fromDate != '' and toDate != null and toDate != ''">
+	            AND a.indate BETWEEN #{fromDate} AND #{toDate}
+	        </when>
+	        <otherwise>
+	            AND a.indate BETWEEN TO_CHAR(SYSDATE - 7, 'YYYY-MM-DD') AND TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+	        </otherwise>
+	    </choose>
+	    
+		<choose>
+			<when test="factory != null and factory != '' and factory != 'all'">
+				AND UPPER(a.factory) = UPPER(#{factory})
+           	</when>
+           	<when test="factory == null or factory == ''">
+                AND UPPER(a.factory) = 'SALTILLO'
+            </when>
+            <otherwise>
+                <!-- factory == 'all'인 경우: 조건 추가 안함 (전체 조회) -->
+            </otherwise>
+        </choose>
+        
+        <choose>
+            <when test="storage1 != null and storage1 != '' and storage1 == 'REDCAGE'">
+                AND A.SOURCE = 'TOREDCAGE'
+            </when>
+            <when test="storage1 != null and storage1 != '' and storage2 == 'REDCAGE'">
+                AND A.SOURCE = 'FROMREDCAGE'
+            </when>
+            <when test="storage1 == null or storage1 == ''">
+                AND A.SOURCE = 'TOREDCAGE'
+            </when>
+         </choose>
+
+		<if test="car != null and car != ''">
+			AND UPPER(a.car) LIKE '%' || UPPER(#{car}) || '%'
+		</if>
+
+		<if test="itemcode != null and itemcode != ''">
+			AND UPPER(a.itemcode) LIKE '%' || UPPER(#{itemcode}) || '%'
+		</if>
+
+		<if test="itemname != null and itemname != ''">
+			AND UPPER(REPLACE(a.itemname, ' ', '')) LIKE '%' || UPPER(REPLACE(#{itemname}, ' ', '')) || '%'
+		</if>	
+	
+	</sql>	
+
+	<sql id="searchCondition_workshop">
+		<choose>
+			<when test="searchParams.factory != null and searchParams.factory != '' and searchParams.factory != 'all'">
+				AND UPPER(a.factory) = UPPER(#{searchParams.factory})
+			</when>
+			<when test="searchParams.factory == null or searchParams.factory == ''">
+				AND UPPER(a.factory) = 'SALTILLO'
+			</when>
+		</choose>
+
+		<choose>
+			<when test="searchParams.storage1 != null and searchParams.storage1 != '' and searchParams.storage1 == 'REDCAGE'">
+				AND A.SOURCE = 'FROMREDCAGE'
+			</when>
+			<when test="searchParams.storage1 != null and searchParams.storage1 != '' and searchParams.storage2 == 'REDCAGE'">
+				AND A.SOURCE = 'TOREDCAGE'
+			</when>
+			<when test="searchParams.storage1 == null or searchParams.storage1 == ''">
+				AND A.SOURCE = 'FROMREDCAGE'
+			</when>
+		</choose>
+
+		<if test="searchParams.fromDate != null and searchParams.fromDate != '' and searchParams.toDate != null and searchParams.toDate != ''">
+			AND a.indate BETWEEN #{searchParams.fromDate} AND #{searchParams.toDate}
+		</if>
+
+		<if test="searchParams.car != null and searchParams.car != ''">
+			AND UPPER(c.subname_ch) LIKE '%' || UPPER(#{searchParams.car}) || '%'
+		</if>
+
+		<if test="searchParams.itemcode != null and searchParams.itemcode != ''">
+			AND UPPER(a.itemcode) LIKE '%' || UPPER(#{searchParams.itemcode}) || '%'
+		</if>
+
+		<if test="searchParams.itemname != null and searchParams.itemname != ''">
+			AND UPPER(REPLACE(b.itemname, ' ', '')) LIKE '%' || UPPER(REPLACE(#{searchParams.itemname}, ' ', '')) || '%'
+		</if>
+	</sql>
+	
+	<sql id="searchCondition_stock">
+	    <if test="searchParams != null">	        
+	        <!-- 공장 -->
+	        <if test="searchParams.factory != null and searchParams.factory != '' and searchParams.factory != 'all'">
+	            AND UPPER(TRIM(a.factory)) = UPPER(TRIM(#{searchParams.factory}))
+	        </if>
+	        
+	        <!-- 창고 -->
+	        <if test="searchParams.storage != null and searchParams.storage != '' and searchParams.storage != 'all'">
+	            AND UPPER(TRIM(a.storage)) = UPPER(TRIM(#{searchParams.storage}))
+	        </if>
+	        
+	        <!-- 차종 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.car != null and searchParams.car != ''">
+	            AND UPPER(TRIM(c.subname_ch)) LIKE '%' || UPPER(TRIM(#{searchParams.car})) || '%'
+	        </if>
+	        
+	        <!-- 품목코드 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.itemcode != null and searchParams.itemcode != ''">
+	            AND UPPER(TRIM(a.itemcode)) LIKE '%' || UPPER(TRIM(#{searchParams.itemcode})) || '%'
+	        </if>
+	        
+	        <!-- 품목명 (UPPER + 공백제거 적용됨) -->
+	        <if test="searchParams.itemname != null and searchParams.itemname != ''">
+	            AND UPPER(TRIM(b.itemname)) LIKE '%' || UPPER(TRIM(#{searchParams.itemname})) || '%'
+	        </if>
+	    </if>
+	</sql>	
+	
+	<sql id="where_qualityrealstock">
+		<choose>
+            <when test="searchParams.scantype != null and searchParams.scantype != '' and searchParams.scantype != 'all'">
+                AND a.scantype = #{searchParams.scantype}
+            </when>
+            <when test="searchParams.scantype == null or searchParams.scantype == ''">
+                
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+		<choose>
+            <when test="searchParams.counttype != null and searchParams.counttype != '' and searchParams.counttype != 'all'">
+                AND a.source = #{searchParams.counttype}
+            </when>
+            <when test="searchParams.counttype == null or searchParams.counttype == ''">
+                
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+        
+        <choose>
+            <when test="searchParams.factory != null and searchParams.factory != '' and searchParams.factory != 'all'">
+                AND UPPER(a.factory) = UPPER(#{searchParams.factory})
+            </when>
+            <when test="searchParams.factory == null or searchParams.factory == ''">
+                AND UPPER(a.factory) = 'SALTILLO'
+            </when>
+            <otherwise>
+                <!-- factory == 'all'인 경우: 조건 추가 안함 (전체 조회) -->
+            </otherwise>
+        </choose>
+        
+        <choose>
+            <when test="searchParams.storage != null and searchParams.storage != '' and searchParams.storage != 'all'">
+                AND UPPER(a.storage) = UPPER(#{searchParams.storage})
+            </when>
+            <when test="searchParams.storage == null or searchParams.storage == ''">
+                AND UPPER(a.storage) = UPPER('REDCAGE')
+            </when>
+            <otherwise>
+                <!-- storage == 'all'인 경우: 조건 추가 안함 (전체 조회) -->
+             </otherwise>
+         </choose>
+         
+         <if test="searchParams.sdate != null and searchParams.sdate != ''">
+             AND a.sdate = #{searchParams.sdate}
+         </if>
+         
+         <if test="searchParams.car != null and searchParams.car != ''">
+		    AND UPPER(c.subname_ch) LIKE '%' || #{searchParams.car} || '%'
+		</if>
+		
+		<if test="searchParams.itemcode != null and searchParams.itemcode != ''">
+		    AND UPPER(a.itemcode) LIKE '%' || #{searchParams.itemcode} || '%'
+		</if>
+		
+		<if test="searchParams.itemname != null and searchParams.itemname != ''">
+		    <!-- AND UPPER(b.itemname) LIKE '%' || #{itemname} || '%' -->
+		    AND UPPER(REPLACE(b.itemname, ' ', '')) LIKE '%' || UPPER(REPLACE(#{searchParams.itemname}, ' ', '')) || '%'
+		</if>
+		
+		<if test="searchParams.location != null and searchParams.location != ''">
+		    AND UPPER(a.location) LIKE '%' || #{searchParams.location} || '%'
+		</if>
+		
+		<if test="searchParams.loginid != null and searchParams.loginid != ''">
+		    AND UPPER(a.loginid) LIKE '%' || #{searchParams.loginid} || '%'
+		</if>
+	</sql>
+	
+	<sql id="searchCondition_judgment">
+	    <if test="searchParams != null">
+	        <!-- 기간 조회 -->
+	        <if test="searchParams.fromDate != null and searchParams.fromDate != ''">
+	            AND A.sdate &gt;= #{searchParams.fromDate}
+	        </if>
+	        <if test="searchParams.toDate != null and searchParams.toDate != ''">
+	            AND A.sdate &lt;= #{searchParams.toDate}
+	        </if>
+			<!-- factory -->
+	        <if test="searchParams.factory != null and searchParams.factory != ''">
+	            AND UPPER(A.factory) = #{searchParams.factory}
+	        </if>
+	
+	        <!-- 검사종류(SOURCE): PRODUCTION / RETURN -->
+	        <!-- all/ALL/빈값/null이면 조건 없음 -->
+			<if test="searchParams.source != null and searchParams.source != '' 
+			          and searchParams.source != 'all' and searchParams.source != 'ALL'">
+			    AND UPPER(TRIM(A.source)) = UPPER(TRIM(#{searchParams.source}))
+			</if>
+	
+	        <!-- 차종 -->
+	        <if test="searchParams.car != null and searchParams.car != ''">
+	            AND UPPER(TRIM(C.subname_ch)) LIKE '%' || UPPER(TRIM(#{searchParams.car})) || '%'
+	        </if>
+	
+	        <!-- 품번 -->
+	        <if test="searchParams.itemcode != null and searchParams.itemcode != ''">
+	            AND UPPER(TRIM(A.itemcode)) LIKE '%' || UPPER(TRIM(#{searchParams.itemcode})) || '%'
+	        </if>
+	
+	        <!-- 품명 -->
+	        <if test="searchParams.itemname != null and searchParams.itemname != ''">
+	            AND UPPER(TRIM(B.itemname)) LIKE '%' || UPPER(TRIM(#{searchParams.itemname})) || '%'
+	        </if>
+	    </if>
+	</sql>
+
+	<sql id="searchCondition_qStockIO">
+		<if test="searchParams.fromDate != null and searchParams.fromDate != '' and searchParams.toDate != null and searchParams.toDate != ''">
+			<![CDATA[
+		    AND (
+		    (SDATE LIKE #{searchParams.toDate} || '%' AND KIND = 'INVENTORY')	OR (SDATE LIKE #{searchParams.fromDate} || '%' AND KIND <> 'INVENTORY')
+			)
+			]]>
+		</if>
+		<if test="searchParams.factory != null and searchParams.factory != '' and searchParams.factory != 'all'">
+			AND UPPER(TRIM(factory)) = UPPER(TRIM(#{searchParams.factory}))
+		</if>
+		<!-- 창고: all 이면 무시 -->
+		<if test="searchParams.storage != null and searchParams.storage != '' and searchParams.storage != 'all'">
+			AND UPPER(TRIM(storage)) LIKE '%' || UPPER(TRIM(#{searchParams.storage})) || '%'
+		</if>
+		<if test="searchParams.itemcode != null and searchParams.itemcode != ''">
+			AND UPPER(TRIM(a.itemcode)) LIKE '%' || UPPER(TRIM(#{searchParams.itemcode})) || '%'
+		</if>
+		<if test="searchParams.itemname != null and searchParams.itemname != ''">
+			AND UPPER(TRIM(b.itemname)) LIKE '%' || UPPER(TRIM(#{searchParams.itemname})) || '%'
+		</if>
+	</sql>
+	
+</mapper>  

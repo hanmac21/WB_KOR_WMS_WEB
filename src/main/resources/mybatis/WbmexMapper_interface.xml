@@ -1,0 +1,2417 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.wbusa.WbusaMapper">
+
+	<!-- MAX VAL 모음 -->
+
+    <select id="selectIfno_semiProduction_sub_if" resultType="string">
+    	SELECT MAX(IFNO) FROM  T_MM_WORKSUB_IF
+    	WHERE ifno LIKE '%${date}%'
+    </select>
+    
+    <select id="selectIfno_semiProduction_input_if" resultType="string">
+    	SELECT MAX(IFNO) FROM T_MM_Work_Input_IF
+    	WHERE ifno LIKE '%${date}%'
+    </select>	
+    
+    <select id="selectIfno_exceptionInput_if" resultType="string">
+    	SELECT MAX(IFNO) FROM T_ST_EXCEPTENTERSUB_IF
+    	WHERE ifno LIKE '%${date}%'
+    </select>	
+    
+    <select id="selectIfno_exceptionOutput_if" resultType="string">
+    	SELECT MAX(IFNO) FROM T_ST_ExceptDeliverysub_IF
+    	WHERE ifno LIKE '%${date}%'
+    </select>	
+    
+    <select id="selectIfno_storage_if" resultType="string">
+    	SELECT MAX(IFNO) FROM T_ST_Movesub_IF
+    	WHERE ifno LIKE '%${date}%'
+    </select>
+    
+    <select id="selectIfno_wipReturn_if" resultType="string">
+    	SELECT MAX(IFNO) FROM T_MM_DELIVERYBACKSUB_IF
+    	WHERE ifno LIKE '%${date}%'
+    </select>	
+    
+    <select id="selectIfno_incomingReturn_if" resultType="string">
+    	SELECT MAX(IFNO) FROM T_PM_ENTERbackSUB_IF
+    	WHERE ifno LIKE '%${date}%'
+    </select>	
+    
+	<select id="selectIfno_workMove_if" resultType="string">
+    	SELECT MAX(IFNO) FROM T_MM_OUTREQUESTSUB_IF
+    	WHERE ifno LIKE '%${date}%'
+    </select>
+    
+    <!-- <select id="selectIfno_workMove_real_if" resultType="string">
+    	SELECT MAX(IFNO) FROM T_MM_DELIVERYSUB_REAL_IF
+    	WHERE ifno LIKE '%${date}%'
+    </select> -->
+
+	<select id="selectIfno_factoryReceiving_if" resultType="string">
+    	SELECT MAX(IFNO) FROM T_ST_Movesub_IF
+    	WHERE ifno LIKE '%${date}%'
+    </select>
+    
+	<select id="selectIfno_unreceivedItemDelivery_if" resultType="string">
+    	SELECT MAX(IFNO) FROM T_PM_NON_ARRIVALSUB_IF
+    	WHERE ifno LIKE '%${date}%'
+    </select>
+	<!-- MAX VAL - END -->
+	
+	
+	
+	<!-- UPDATE WMS DB -->
+	
+	<update id = "semiProduction_confirm_summary_updateYn">
+		update T_WMS_SEMIWORK
+			set intf_yn = 'Y',
+			intf_ymdhms = TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS'),
+			ifno = #{ifno_if},
+			mes_key = #{mes_key}
+		where itemcode = #{itemcode}
+			and sdate = #{sdate}
+			and barcode in(
+				SELECT b.barcode
+		         FROM t_scm_barcode b
+		        WHERE b.lineno = #{line}
+			) 
+	</update>	
+	
+	<update id = "semiProduction_confirm_summary_cancel_updateYn">
+		update T_WMS_SEMIWORK
+			set intf_yn = 'N',
+			ifno = '',
+			mes_key = '',
+			mes_seq = '',
+			wms_seq = '',
+			wms_seq1 = '',
+			intf_ymdhms = '',
+			intf_ymdhms_d = TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+		where mes_key = #{meskey}
+			and barcode = #{barcode}
+			and sdate = #{sdate}
+	</update>	
+	
+	<update id = "exceptionInput_confirm_summary_updateYn">
+		update T_WMS_INBOUND
+			set intf_yn = 'Y',
+			ifno = #{ifno_if},
+			mes_key = #{mes_key},
+			intf_ymdhms = TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+		where factory = #{factory}
+			and storage = #{storage}
+			and barcode = #{barcode}
+			and sdate = #{indate}
+			and source = 'INCOMINGEXCEPTION'
+	</update>	
+	
+	<update id = "exceptionInput_confirm_summary_cancel_updateYn">
+		update T_WMS_INBOUND
+			set intf_yn = 'N',
+			ifno = '',
+			intf_ymdhms = '',
+			mes_key = '',
+			mes_seq = '',
+			intf_ymdhms_d = TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')			
+		where factory = #{factory}
+			and storage = #{storage}
+			and barcode = #{barcode}
+			and sdate = #{indate}
+			and source = 'INCOMINGEXCEPTION'
+	</update>	
+	
+	<!-- 예외 출고 등록 -->
+	<update id = "exceptionOutput_confirm_summary_updateYn">
+		update T_WMS_OUTBOUND
+			set intf_yn = 'Y',
+			ifno = #{ifno_if},
+			mes_key = #{mes_key},
+			intf_ymdhms = TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+		where factory = #{factory}
+			and storage = #{storage}
+			and itemcode = #{itemcode}
+			and sdate = #{outdate}
+			and source = 'LOADEXCEPTION'
+	</update>	
+	
+	<!-- 예외 출고 등록 취소 -->
+	<update id = "exceptionOutput_confirm_summary_cancel_updateYn">
+		update T_WMS_OUTBOUND
+			set intf_yn = 'N',
+			ifno = '',
+			mes_key = '',
+			mes_seq = '',
+			intf_ymdhms = '',
+			intf_ymdhms_d = TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+		where factory = #{factory}
+			and storage = #{storage}
+			and barcode = #{barcode}
+			and sdate = #{outdate}
+			and source = 'LOADEXCEPTION'
+	</update>	
+	
+	<!-- 창고 이동 등록 -->
+	<update id = "storage_confirm_summary_updateYn">
+		update T_WMS_STOCKMOVE
+			set intf_yn = 'Y',
+			ifno = #{ifno_if},
+			mes_key = #{mes_key},
+			intf_ymdhms = TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+		where factory = #{factory}
+			and storage1 = #{storage1}
+			and storage2 = #{storage2}
+			and barcode = #{barcode}
+			and sdate = #{sdate}
+	</update>	
+	
+	<!-- 창고 이동 등록 취소 -->
+	<update id = "storage_confirm_summary_cancel_updateYn">
+		update T_WMS_STOCKMOVE
+			set intf_yn = 'N',
+			ifno = '',
+			mes_key = '',
+			mes_seq = '',
+			intf_ymdhms = '',
+			intf_ymdhms_d = TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+		where factory = #{factory}
+			and storage2 = #{storage2}
+			and barcode = #{barcode}
+			and sdate = #{sdate}
+			and source= 'RECEIVING'
+	</update>
+	
+	<update id = "wipReturn_confirm_summary_updateYn">
+		update T_WMS_WORKMOVE
+			set intf_yn = 'Y',
+			ifno = #{ifno_if},
+			mes_key = #{mes_key},
+			intf_ymdhms = TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+		where factory = #{factory}
+			and storage = #{storage}
+			and barcode = #{barcode}
+			and sdate = #{indate}
+			and source = 'WIPRETURN'
+	</update>	
+	
+	<update id = "wipReturn_confirm_summary_cancel_updateYn">
+		update T_WMS_WORKMOVE
+			set intf_yn = 'N',
+			ifno = '',
+			mes_key = '',
+			wms_seq = '',
+			intf_ymdhms = '',
+			intf_ymdhms_d = TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+		where factory = #{factory}
+			and storage = #{storage}
+			and barcode = #{barcode}
+			and sdate = #{indate}
+			and source = 'WIPRETURN'
+	</update>	
+	
+	<update id = "incomingReturn_confirm_summary_updateYn">
+		update T_WMS_INBOUND
+			set intf_yn = 'Y',
+			ifno = #{ifno_if},
+			mes_key = #{mes_key},
+			intf_ymdhms = TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+		where factory = #{factory}
+			and storage = #{storage}
+			and barcode = #{barcode}
+			and sdate = #{indate}
+			and source = 'INCOMINGRETURN'
+	</update>	
+	
+	<update id = "incomingReturn_confirm_summary_cancel_updateYn">
+		update T_WMS_INBOUND
+			set intf_yn = 'N',
+			ifno = '',
+			mes_key = '',
+			mes_seq = '',
+			intf_ymdhms = '',
+			intf_ymdhms_d = TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+		where factory = #{factory}
+			and storage = #{storage}
+			and barcode = #{barcode}
+			and sdate = #{indate}
+			and source = 'INCOMINGRETURN'
+	</update>	
+	
+	<!-- 공장 이동 등록 -->
+	<update id = "factoryReceiving_confirm_summary_updateYn">
+		update T_WMS_FACTORYMOVE
+			set intf_yn = 'Y',
+			ifno = #{ifno_if},
+			mes_key = #{mes_key},
+			intf_ymdhms = TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+		where factory = #{factory}
+			and storage = #{storage}
+			and itemcode = #{itemcode}
+			and sdate = #{sdate}
+			and barcode = #{barcode}
+	</update>	
+	
+	<!-- 공장 이동 등록 취소 -->
+	<update id = "factoryReceiving_confirm_summary_cancel_updateYn">
+		update T_WMS_FACTORYMOVE
+			set intf_yn = 'N',
+			ifno = '',
+			mes_key = '',
+			wms_seq = '',
+			mes_key = '',
+			mes_seq = '',
+			intf_ymdhms = '',
+			intf_ymdhms_d = TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+		where factory = #{factory}
+			and storage = #{storage}
+			and itemcode = #{itemcode}
+			and sdate = #{sdate}
+			and barcode = #{barcode}
+	</update>
+	
+	<update id="production_confirm_cancel_updateYn">
+		update T_WMS_WORK
+			set intf_yn = 'N',
+			ifno = '',
+			mes_key = '',
+			wms_seq = '',
+			wms_seq1 = '',
+			intf_ymdhms = '',
+			intf_ymdhms_d = TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+		where factory = #{factory}
+			and storage = #{storage}
+			and itemcode = #{itemcode}
+			and sdate = #{sdate}
+			and barcode = #{barcode}
+	</update>
+	
+	<update id="salesTransfer_confirm_cancel_updateYn">
+		update T_WMS_WORKOUTBOUND
+			set intf_yn = 'N',
+			ifno = '',
+			mes_key = '',
+			mes_seq = '',
+			intf_ymdhms = '',
+			intf_ymdhms_d = TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+		where itemcode = #{itemcode}
+			and sdate = #{sdate}
+			and barcode = #{barcode}
+	</update>
+	
+	<!-- UPDATE WMS DB - END -->
+	
+	<!-- WMS KEY SELECT DB -->
+	
+	
+	<!-- mes_key 조회 -->
+	<select id="selectWmskey_semiProduction" parameterType="map" resultType="string">
+		SELECT NVL(
+		    (SELECT DISTINCT mes_key 
+		     FROM t_wms_semiwork
+		     WHERE sdate = #{sdate}
+		       AND barcode = #{barcode}
+		       AND mes_key IS NOT NULL
+		       AND ROWNUM = 1), 
+		    'none'
+		) AS mes_key
+		FROM dual
+	</select>
+	
+	<select id="selectWmskey_exceptionInputSummary" parameterType="map" resultType="string">
+		SELECT NVL(
+		    (SELECT DISTINCT mes_key 
+		     FROM t_wms_inbound
+		     WHERE factory = #{factory}
+				and storage = #{storage}
+				and barcode = #{barcode}
+				and sdate = #{indate}
+		       AND mes_key IS NOT NULL
+		       AND source = 'INCOMINGEXCEPTION'
+		       AND ROWNUM = 1), 
+		    'none'
+		) AS mes_key
+		FROM dual
+	</select>
+	
+	<select id="selectWmskey_exceptionOutputSummary" parameterType="map" resultType="string">
+		SELECT NVL(
+		    (SELECT DISTINCT mes_key 
+		     FROM t_wms_outbound
+		     WHERE factory = #{factory}
+				and storage = #{storage}
+				and barcode = #{barcode}
+				and outdate = #{outdate}
+		       AND mes_key IS NOT NULL
+		       AND source = 'LOADEXCEPTION'
+		       AND ROWNUM = 1), 
+		    'none'
+		) AS mes_key
+		FROM dual
+	</select>
+	
+	<select id="selectWmskey_storageSummary" parameterType="map" resultType="string">
+		SELECT NVL(
+		    (SELECT DISTINCT mes_key 
+		     FROM t_wms_stockmove
+		     WHERE factory = #{factory}
+				and storage2 = #{storage2}
+				and barcode = #{barcode}
+				and sdate = #{sdate}
+		       AND mes_key IS NOT NULL
+		       AND ROWNUM = 1), 
+		    'none'
+		) AS mes_key
+		FROM dual
+	</select>
+	
+	<select id="selectWmskey_wipReturnSummary" parameterType="map" resultType="string">
+		SELECT NVL(
+		    (SELECT DISTINCT mes_key 
+		     FROM t_wms_workmove
+		     WHERE factory = #{factory}
+				and storage = #{storage}
+		        AND barcode = #{barcode}
+				and sdate = #{indate}
+		       AND mes_key IS NOT NULL
+		       AND source = 'WIPRETURN'
+		       AND ROWNUM = 1), 
+		    'none'
+		) AS mes_key
+		FROM dual
+	</select>
+	
+	<select id="selectWmskey_incomingReturnSummary" parameterType="map" resultType="string">
+		SELECT NVL(
+		    (SELECT DISTINCT mes_key 
+		     FROM t_wms_inbound
+		     WHERE factory = #{factory}
+				and storage = #{storage}
+		        AND barcode = #{barcode}
+				and sdate = #{indate}
+		       AND mes_key IS NOT NULL
+		       AND source = 'INCOMINGRETURN'
+		       AND ROWNUM = 1), 
+		    'none'
+		) AS mes_key
+		FROM dual
+	</select>
+	
+	<select id="selectWmskey_workMove" parameterType="map" resultType="string">
+		SELECT NVL(
+		    (SELECT DISTINCT mes_key 
+		     FROM t_wms_workmove
+		     WHERE sdate = #{indate}
+		       AND barcode = #{barcode}
+		       AND mes_key IS NOT NULL
+		       AND ROWNUM = 1), 
+		    'none'
+		) AS mes_key
+		FROM dual
+	</select>
+	
+	<select id="selectWmskey_factoryReceiving" parameterType="map" resultType="string">
+		SELECT NVL(
+		    (SELECT DISTINCT mes_key 
+		     FROM t_wms_factoryMove
+		     WHERE factory = #{factory}
+				and storage = #{storage}
+				and barcode = #{barcode}
+				and sdate = #{sdate}
+		       AND mes_key IS NOT NULL
+		       AND ROWNUM = 1), 
+		    'none'
+		) AS mes_key
+		FROM dual
+	</select>
+	
+	<select id="unreceivedItemDelivery" parameterType="map" resultType="string">
+		SELECT NVL(
+		    (SELECT DISTINCT mes_key 
+		     FROM t_wms_factoryMove
+		     WHERE factory = #{factory}
+				and storage = #{storage}
+				and barcode = #{barcode}
+				and sdate = #{sdate}
+		       AND mes_key IS NOT NULL
+		       AND ROWNUM = 1), 
+		    'none'
+		) AS mes_key
+		FROM dual
+	</select>
+	
+	<!-- WMS KEY SELECT DB - END -->
+	
+	
+	
+	
+	<insert id = "inbound_intf_qc">
+		INSERT INTO T_QC_BUYREQUESTSUB_IF (
+           IFNO, GUBUN, BRANCH, CONDATE, BRNO,
+           BRSUBNO, ITEMCODE, MANCODE, CUSTCODE, PONO,
+           POSUBNO, POQTY, PENO, PESUBNO, QTY,
+           UNITPRICE, ERP_TRANSFER_FLAG, ERP_RESULT_FLAG, ERP_RESULT_REMARK, REMARK,
+           INSUSER, INSDATE, UPDUSER, UPDDATE, CUD_DIV,
+           DATA_DIV, MES_KEY, MES_SEQ, DELETE_GUBUN,ROOMCODE
+       )
+       VALUES
+           (
+               #{ifno}, '01', '000', #{condate}, ' ',
+               ' ', #{itemcode}, 'ZZ99', #{custcode}, ' ',
+               ' ', 0, ' ', ' ', #{qty},
+               '757', 'N', 'N', ' ', ' ',
+               'SCMPDA', TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI'), ' ', ' ', #{cuddiv},
+               'SCM', #{meskey}, 1, ' ', #{roomcode}
+           )
+	</insert>
+	
+	<insert id = "inbound_intf_pm">
+		INSERT INTO T_PM_ENTERSUB_IF (
+           IFNO, GUBUN, BRANCH, CONDATE, PENO,
+           PESUBNO, ITEMCODE, MANCODE, CUSTCODE, ROOMCODE,
+           LOTNO, POQTY, KIQTY, UNITPRICE, AMOUNT,
+           QTY, PONO, POSUBNO, REMARK, VATAMT,
+           CMB_REASON, ERP_TRANSFER_FLAG, ERP_RESULT_FLAG, ERP_RESULT_REMARK, INSUSER,
+           INSDATE, UPDUSER, UPDDATE, CUD_DIV, DATA_DIV,
+           MES_KEY, DELETE_GUBUN, MES_SEQ, GMONEY, GENTER
+       )
+       VALUES
+           (
+               #{ifno}, '01', '000', #{condate}, ' ',
+               ' ', #{itemcode}, 'ZZ99', #{custcode}, #{roomcode},
+               ' ', 0, 0, '999', 0,
+               #{qty}, ' ', ' ', ' ', 0,
+               ' ', 'N', 'N', ' ', 'SCMPDA',
+               TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI'), ' ', ' ', #{cuddiv}, 'SCM',
+               #{meskey}, ' ', 1, '002', '001'
+           )
+		
+	</insert>	
+	
+	<insert id = "inbound_intf_pm_cancel"><!--사용안함-->
+		INSERT INTO T_PM_ENTERSUB_IF (
+           IFNO, GUBUN, BRANCH, CONDATE, PENO,
+           PESUBNO, ITEMCODE, MANCODE, CUSTCODE, ROOMCODE,
+           LOTNO, POQTY, KIQTY, UNITPRICE, AMOUNT,
+           QTY, PONO, POSUBNO, REMARK, VATAMT,
+           CMB_REASON, ERP_TRANSFER_FLAG, ERP_RESULT_FLAG, ERP_RESULT_REMARK, INSUSER,
+           INSDATE, UPDUSER, UPDDATE, CUD_DIV, DATA_DIV,
+           MES_KEY, DELETE_GUBUN, MES_SEQ, GMONEY, GENTER
+       )
+       VALUES
+           (
+               #{ifno}, '01', '000', #{condate}, ' ',
+               ' ', #{itemcode}, 'ZZ99', #{custcode}, #{roomcode},
+               ' ', 0, 0, '999', 0,
+               #{qty}, ' ', ' ', ' ', 0,
+               ' ', 'N', 'N', ' ', 'SCMPDA',
+               TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI'), ' ', ' ', #{cuddiv}, 'SCM',
+               #{mes_key}, ' ', 1, '002', '001'
+           )
+		
+	</insert>
+
+	<insert id = "inbound_intf_pm_delete">
+		INSERT INTO T_PM_ENTERSUB_IF (
+			IFNO,MES_KEY,MES_SEQ,DATA_DIV,CUD_DIV,DELETE_GUBUN,GUBUN
+		)
+		VALUES
+		('DE' || SUBSTR(#{meskey}, 3),#{meskey},'1','SCM','D','A','01')
+	</insert>
+
+	<insert id = "inbound_intf_qc_delete">
+		INSERT INTO T_QC_BUYREQUESTSUB_IF (
+		IFNO,MES_KEY,MES_SEQ,DATA_DIV,CUD_DIV,DELETE_GUBUN
+		)
+		VALUES
+		('DE' || SUBSTR(#{meskey}, 3),#{meskey},'1','SCM','D','A')
+	</insert>
+	
+	<insert id = "inbound_intf_0039_worksub_cancel">
+		INSERT INTO T_MM_WORKSUB_IF(IFNO,MES_KEY,MES_SEQ,DATA_DIV,CUD_DIV,DELETE_GUBUN) 
+		VALUES('DF' || SUBSTR(#{mes_key}, 3),#{mes_key},'1','SCM','D','A')
+	</insert>
+	<insert id = "inbound_intf_0039_workinput_cancel">
+		INSERT INTO T_MM_Work_Input_IF(IFNO,MES_KEY,MES_SEQ,DATA_DIV,CUD_DIV,DELETE_GUBUN)
+		VALUES('DF' || SUBSTR(#{mes_key}, 3),#{mes_key},'1','SCM','D','A')
+	</insert>
+	<insert id = "inbound_intf_0039_entersub_cancel">
+		INSERT INTO T_MM_ENTERSUB_IF(IFNO,MES_KEY,MES_SEQ,DATA_DIV,CUD_DIV,DELETE_GUBUN) 
+		VALUES('DF' || SUBSTR(#{mes_key}, 3),#{mes_key},'1','SCM','D','A')
+	</insert>
+	<insert id = "inbound_intf_qc_cancel"><!--사용안함-->
+		INSERT INTO T_QC_BUYREQUESTSUB_IF (
+           IFNO, GUBUN, BRANCH, CONDATE, BRNO,
+           BRSUBNO, ITEMCODE, MANCODE, CUSTCODE, PONO,
+           POSUBNO, POQTY, PENO, PESUBNO, QTY,
+           UNITPRICE, ERP_TRANSFER_FLAG, ERP_RESULT_FLAG, ERP_RESULT_REMARK, REMARK,
+           INSUSER, INSDATE, UPDUSER, UPDDATE, CUD_DIV,
+           DATA_DIV, MES_KEY, MES_SEQ, DELETE_GUBUN,ROOMCODE
+       )
+       VALUES
+           (
+               #{ifno}, '01', '000', #{condate}, ' ',
+               ' ', #{itemcode}, 'ZZ99', #{custcode}, ' ',
+               ' ', 0, ' ', ' ', #{qty},
+               '757', 'N', 'N', ' ', ' ',
+               'SCMPDA', TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI'), ' ', ' ', #{cuddiv},
+               'SCM', #{mes_key}, 1, ' ', #{roomcode}
+           )
+	</insert>
+	
+	<insert id="workMove_confirm_if" parameterType="map">
+		INSERT INTO T_MM_OUTREQUESTSUB_IF (
+		    IFNO, GUBUN, BRANCH, CONDATE, MRNO,
+		    MRSUBNO, CHILDCODE, MANCODE, ROOMCODE, WCCODE,
+		    OUTQTY, TREASON, TESTATE, REMARK, ERP_TRANSFER_FLAG,
+		    ERP_RESULT_FLAG, ERP_RESULT_REMARK, IFDATE, INSUSER, INSDATE,
+		    UPDUSER, UPDDATE, CUD_DIV, DATA_DIV, MES_KEY,
+		    DELETE_GUBUN, MES_SEQ, PENO, PESUBNO, EENO,
+		    EESUBNO
+		)
+		VALUES (
+		    #{ifno_if}, '01', '000', #{condate}, ' ',
+		    ' ', #{itemcode}, 'ZZ99', #{roomcode}, #{wccode},
+		     to_number(#{qty}), '001', '001', ' ', 'N',
+		    'N', ' ', ' ', 'ZZ99', TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI'),
+		    ' ', ' ', 'I', 'SCM', #{mes_key},
+		    ' ', '1', ' ', ' ', ' ',
+		    ' '
+		)
+    </insert>
+	 <insert id="workMove_confirm_summary_cancel_if" parameterType="map">
+		 INSERT INTO T_MM_OUTREQUESTSUB_IF (
+		    IFNO, GUBUN, BRANCH, CONDATE, MRNO,
+		    MRSUBNO, CHILDCODE, MANCODE, ROOMCODE, WCCODE,
+		    OUTQTY, TREASON, TESTATE, REMARK, ERP_TRANSFER_FLAG,
+		    ERP_RESULT_FLAG, ERP_RESULT_REMARK, IFDATE, INSUSER, INSDATE,
+		    UPDUSER, UPDDATE, CUD_DIV, DATA_DIV, MES_KEY,
+		    DELETE_GUBUN, MES_SEQ, PENO, PESUBNO, EENO,
+		    EESUBNO
+		)
+		VALUES (
+		    #{ifno_if}, '01', '000', #{condate}, ' ',
+		    ' ', #{itemcode}, 'ZZ99', #{roomcode}, #{wccode},
+		    to_number(#{qty}), '001', '001', ' ', 'N',
+		    'N', ' ', ' ', 'ZZ99', TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI'),
+		    ' ', ' ', 'D', 'SCM', #{mes_key},
+		    'A', '1', ' ', ' ', ' ',
+		    ' '
+		)
+	 </insert>
+	<!-- 불출 -->
+	 <!-- <insert id="workMove_confirm_if" parameterType="map">
+		INSERT INTO T_MM_DELIVERYSUB_IF (
+		       IFNO, GUBUN, BRANCH, CONDATE, MDNO,
+		       MDSUBNO, CHILDCODE, MANCODE, ROOMCODE, WCCODE,
+		       OUTQTY, QTY, TREASON, TESTATE, REMARK,
+		       ERP_TRANSFER_FLAG, ERP_RESULT_FLAG, ERP_RESULT_REMARK, IFDATE, INSUSER,
+		       INSDATE, UPDUSER, UPDDATE, CUD_DIV, DATA_DIV,
+		       MES_KEY, DELETE_GUBUN, MES_SEQ, MONO, MOSUBNO, MOSUBNO2
+		)
+		VALUES (
+		       #{ifno_if}, '01', '000', '20260101', ' ',
+		       ' ', 'W100309000171', 'SCMPDA', 'M001', 'C0001',
+		       '999', #{qty}, '001', '001', 'sample data',
+		       'N', 'N', ' ', ' ', 'SCMPDA',
+		       TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI'), ' ', ' ', 'I', 'SCM',
+		       #{mes_key}, ' ', '1', ' ', ' ', ' '
+		)
+    </insert> -->
+    
+    
+    <!-- <insert id="workMove_confirm_real_if" parameterType="map">
+		INSERT INTO T_MM_DELIVERYSUB_REAL_IF (
+		       IFNO, GUBUN, BRANCH, CONDATE, MDNO,
+		       MDSUBNO2, CHILDCODE, MANCODE, ROOMCODE, WCCODE,
+		       RQTY, QTY, TESTATE, REMARK,
+		       ERP_TRANSFER_FLAG, ERP_RESULT_FLAG, ERP_RESULT_REMARK, IFDATE, INSUSER,
+		       INSDATE, UPDUSER, UPDDATE, CUD_DIV, DATA_DIV,
+		       MES_KEY, DELETE_GUBUN, MES_SEQ
+		)
+		VALUES (
+		       #{ifno_real_if}, '01', '000', '20260101', ' ',
+		       ' ', 'W100309000171', 'WMSPDA', 'M001', 'C0001',
+		       '999', #{qty}, '001', 'sample data',
+		       'N', 'N', ' ', ' ', 'SCMPDA',
+		       TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI'), ' ', ' ', 'I', 'SCM',
+		       #{mes_key}, ' ', '1'
+		)
+    </insert> -->
+    
+	<!-- <insert id="workMove_confirm_summary_cancel_if" parameterType="map">
+		INSERT INTO T_MM_DELIVERYSUB_IF (
+		       IFNO, GUBUN, BRANCH, CONDATE, MDNO,
+		       MDSUBNO, CHILDCODE, MANCODE, ROOMCODE, WCCODE,
+		       OUTQTY, QTY, TREASON, TESTATE, REMARK,
+		       ERP_TRANSFER_FLAG, ERP_RESULT_FLAG, ERP_RESULT_REMARK, IFDATE, INSUSER,
+		       INSDATE, UPDUSER, UPDDATE, CUD_DIV, DATA_DIV,
+		       MES_KEY, DELETE_GUBUN, MES_SEQ, MONO, MOSUBNO, MOSUBNO2
+		)
+		VALUES (
+		       #{ifno_if}, '01', '000', '20260101', ' ',
+		       ' ', 'W100309000171', 'SCMPDA', 'M001', 'C0001',
+		       '999', #{qty}, '001', '001', 'sample data',
+		       'N', 'N', ' ', ' ', 'SCMPDA',
+		       TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI'), ' ', ' ', 'D', 'SCM',
+		       #{mes_key}, ' ', '1', ' ', ' ', ' '
+		)
+    </insert>
+    
+    <insert id="workMove_confirm_summary_cancel_real_if" parameterType="map">
+		INSERT INTO T_MM_DELIVERYSUB_REAL_IF (
+		       IFNO, GUBUN, BRANCH, CONDATE, MDNO,
+		       MDSUBNO2, CHILDCODE, MANCODE, ROOMCODE, WCCODE,
+		       RQTY, QTY, TESTATE, REMARK,
+		       ERP_TRANSFER_FLAG, ERP_RESULT_FLAG, ERP_RESULT_REMARK, IFDATE, INSUSER,
+		       INSDATE, UPDUSER, UPDDATE, CUD_DIV, DATA_DIV,
+		       MES_KEY, DELETE_GUBUN, MES_SEQ
+		)
+		VALUES (
+		       #{ifno_real_if}, '01', '000', '20260101', ' ',
+		       ' ', 'W100309000171', 'WMSPDA', 'M001', 'C0001',
+		       '999', #{qty}, '001', 'sample data',
+		       'N', 'N', ' ', ' ', 'SCMPDA',
+		       TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI'), ' ', ' ', 'D', 'SCM',
+		       #{mes_key}, ' ', '1'
+		)
+    </insert> -->
+	
+	<!-- 생산실적등록 -->
+	<insert id="semiProduction_confirm_summary_sub_if" parameterType="map">
+		INSERT INTO T_MM_WORKSUB_IF (
+		    IFNO, GUBUN, BRANCH, CONDATE, MWNO,
+		    MWSUBNO, ITEMCODE, MANCODE, TWORK,
+		    
+		    QTY, GQTY, BQTY, LOTNO, REMARK, 
+		    MONO, MOSUBNO, MOSUBNO2, GINPUT,
+		    
+		    MCCODE, WORKTEAM, GEND, WCCODE, MPSITEM, 
+		    RTCODE, GTEST_1, GTEST_2, TOWCCODE, PCODE,
+		    
+		    ERP_TRANSFER_FLAG, ERP_RESULT_FLAG, ERP_RESULT_REMARK, IFDATE, INSUSER,
+		    INSDATE, UPDUSER, UPDDATE, CUD_DIV, DATA_DIV,
+		    
+		    MES_KEY, DELETE_GUBUN, MES_SEQ
+		) VALUES (
+		    #{ifno_if}, '01', '000', #{condate}, ' ',
+		    ' ', #{itemcode}, 'ZZ99', '001',
+		    
+		    #{qty}, #{qty}, 0, ' ', ' ',
+		    ' ', ' ', ' ', 1,
+		    
+		    #{lineno}, '001', 1, #{wccode}, #{itemcode},
+		    ' ', 1, 1, ' ', ' ',
+		    
+		    'N', 'N', ' ', ' ', 'ZZ99',
+		    TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI'), ' ', ' ', 'I', 'SCM',
+		    
+		    #{mes_key}, ' ', 1
+		)
+    </insert>
+    
+    <select id = "semiProduction_confirm_count" resultType ="map">
+    	select childcode, qtyper from t_mi_mbomstr where itemcode = #{itemcode}
+    </select>
+    
+	<!-- 생산실적등록 -->
+	<insert id="semiProduction_confirm_summary_input_if" parameterType="map">
+		INSERT INTO T_MM_Work_Input_IF (
+		    IFNO, GUBUN, BRANCH, CONDATE, MWNO,
+		    MWSUBNO, MWSUBNO2, ITEMCODE, MANCODE, TWORK, CHILDCODE,
+		    
+		    QTYPER, LOSS, LOTNO, REMARK, RCGUBUN, INQTY, WCCODE, MPSITEM, QTY, PCODE,
+		    ERP_TRANSFER_FLAG, ERP_RESULT_FLAG, ERP_RESULT_REMARK, IFDATE, INSUSER,
+		    
+		    INSDATE, UPDUSER, UPDDATE, CUD_DIV, DATA_DIV,
+		    MES_KEY, DELETE_GUBUN, MES_SEQ, MES_SEQ1
+		    
+		) VALUES (
+		    #{ifno_real_if}, '01', '000', #{condate}, ' ',
+		    ' ', ' ', #{itemcode}, 'ZZ99', '001', #{childcode},
+		    
+		    #{qtyper}, 0, ' ', ' ', 0, #{inqty}, #{wccode}, #{itemcode}, #{qty}, ' ',
+		    'N', 'N', ' ', ' ', 'ZZ99',
+		    
+		    TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI'), ' ', ' ', 'I', 'SCM',
+		    #{mes_key}, ' ', 1, #{messeq}
+		)
+    </insert>
+    
+	<!-- 생산실적등록 취소-->
+	<insert id="semiProduction_confirm_summary_cancel_sub_if" parameterType="map">
+		INSERT INTO T_MM_WORKSUB_IF (
+		    IFNO, GUBUN, BRANCH, CONDATE, MWNO,
+		    MWSUBNO, ITEMCODE, MANCODE, TWORK,
+		    
+		    QTY, GQTY, BQTY, LOTNO, REMARK, 
+		    MONO, MOSUBNO, MOSUBNO2, GINPUT,
+		    
+		    MCCODE, WORKTEAM, GEND, WCCODE, MPSITEM, 
+		    RTCODE, GTEST_1, GTEST_2, TOWCCODE, PCODE,
+		    
+		    ERP_TRANSFER_FLAG, ERP_RESULT_FLAG, ERP_RESULT_REMARK, IFDATE, INSUSER,
+		    INSDATE, UPDUSER, UPDDATE, CUD_DIV, DATA_DIV,
+		    
+		    MES_KEY, DELETE_GUBUN, MES_SEQ
+		) VALUES (
+		    #{ifno_if}, '01', '000', #{condate}, ' ',
+		    ' ', #{itemcode}, 'ZZ99', '001',
+		    
+		    #{qty}, #{qty}, 0, ' ', ' ',
+		    ' ', ' ', ' ', 1,
+		    
+		    #{lineno}, '001', 1, #{wccode}, #{itemcode},
+		    ' ', 1, 1, ' ', ' ',
+		    
+		    'N', 'N', ' ', ' ', 'ZZ99',
+		    TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI'), ' ', ' ', 'D', 'SCM',
+		    
+		    #{mes_key}, 'A', 1
+		)
+    </insert>
+    
+	<!-- 생산실적등록 취소-->
+	<insert id="semiProduction_confirm_summary_cancel_input_if" parameterType="map">
+		INSERT INTO T_MM_Work_Input_IF (
+		    IFNO, GUBUN, BRANCH, CONDATE, MWNO,
+		    MWSUBNO, MWSUBNO2, ITEMCODE, MANCODE, TWORK, CHILDCODE,
+		    
+		    QTYPER, LOSS, LOTNO, REMARK, RCGUBUN, INQTY, WCCODE, MPSITEM, QTY, PCODE,
+		    ERP_TRANSFER_FLAG, ERP_RESULT_FLAG, ERP_RESULT_REMARK, IFDATE, INSUSER,
+		    
+		    INSDATE, UPDUSER, UPDDATE, CUD_DIV, DATA_DIV,
+		    MES_KEY, DELETE_GUBUN, MES_SEQ, MES_SEQ1
+		    
+		) VALUES (
+		    #{ifno_real_if}, '01', '000', #{condate}, ' ',
+		    ' ', ' ', #{itemcode}, 'ZZ99', '001', #{childcode},
+		    
+		    #{qtyper}, 0, ' ', ' ', 0, #{inqty}, #{wccode}, #{itemcode}, #{qty}, ' ',
+		    'N', 'N', ' ', ' ', 'ZZ99',
+		    
+		    TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI'), ' ', ' ', 'D', 'SCM',
+		    #{mes_key}, 'A', 1, 1
+		)
+    </insert>
+	
+	
+	<!-- 예외 입고 등록 -->
+	<insert id="exceptionInput_confirm_summary_if" parameterType="map">
+		INSERT INTO T_ST_EXCEPTENTERSUB_IF (
+		    IFNO, GUBUN, BRANCH, CONDATE, EENO,
+    		EESUBNO, ITEMCODE, ROOMCODE,
+    		
+		    QTY, LOTNO, TREASON, REMARK, ERNO, ERSUBNO, ITEMCODE2, PCODE,
+		    ERP_TRANSFER_FLAG, ERP_RESULT_FLAG, ERP_RESULT_REMARK, IFDATE, INSUSER,
+		    
+		    INSDATE, UPDUSER, UPDDATE, CUD_DIV, DATA_DIV,
+		    MES_KEY, DELETE_GUBUN, MES_SEQ, BQTY
+		) VALUES (
+		    #{ifno_if}, '01', '000', #{condate}, ' ',
+		    ' ', #{itemcode}, #{roomcode}, 
+		    
+		    #{qty}, ' ', '005', ' ', ' ', ' ', ' ', ' ',
+		    'N', 'N', ' ', ' ', 'ZZ99',
+		    
+		    TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI'), ' ', ' ', 'I', 'SCM',
+		    #{mes_key}, ' ', 1, 0
+		)
+    </insert>
+    
+    <!-- 예외 입고 취소 -->
+	<insert id="exceptionInput_confirm_summary_cancel_if" parameterType="map">
+		INSERT INTO T_ST_EXCEPTENTERSUB_IF (
+		    IFNO, GUBUN, BRANCH, CONDATE, EENO,
+    		EESUBNO, ITEMCODE, ROOMCODE,
+    		
+		    QTY, LOTNO, TREASON, REMARK, ERNO, ERSUBNO, ITEMCODE2, PCODE,
+		    ERP_TRANSFER_FLAG, ERP_RESULT_FLAG, ERP_RESULT_REMARK, IFDATE, INSUSER,
+		    
+		    INSDATE, UPDUSER, UPDDATE, CUD_DIV, DATA_DIV,
+		    MES_KEY, DELETE_GUBUN, MES_SEQ, BQTY
+		) VALUES (
+		    #{ifno_if}, '01', '000', #{condate}, ' ',
+		    ' ', #{itemcode}, #{roomcode}, 
+		    
+		    #{qty}, ' ', '005', ' ', ' ', ' ', ' ', ' ',
+		    'N', 'N', ' ', ' ', 'ZZ99',
+		    
+		    TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI'), ' ', ' ', 'D', 'SCM',
+		    #{mes_key}, ' ', 1, 0
+		)
+    </insert>
+	
+	<!-- 예외 출고 등록 -->
+	<insert id="exceptionOutput_confirm_summary_if" parameterType="map">
+		INSERT INTO T_ST_ExceptDeliverysub_IF (
+			IFNO, GUBUN, BRANCH, CONDATE, EDNO,
+			EDSUBNO, ITEMCODE,  MANCODE,
+			
+			QTY,LOTNO, TREASON,  REMARK, PACKING, RQTY,BQTY,SAUP,ROOMCODE,
+			ERNO,ERSUBNO,BUCODE,GMAKE,PCODE,ITEMCODE2,
+			
+			ERP_TRANSFER_FLAG, ERP_RESULT_FLAG, ERP_RESULT_REMARK, IFDATE, INSUSER,			
+			INSDATE, UPDUSER, UPDDATE, CUD_DIV, DATA_DIV,
+			
+			MES_KEY, DELETE_GUBUN, MES_SEQ
+		) VALUES (
+		    #{ifno_if}, '01', '000', #{condate}, ' ',
+		    ' ', #{itemcode}, 'ZZ99', 
+		    
+		    #{qty}, ' ', '005', ' ', ' ', 0, 0, ' ', 'M001',
+    		' ', ' ', ' ', 0, ' ', ' ',
+		    
+		    'N', 'N', ' ', ' ', 'ZZ99',
+		    TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI'), ' ', ' ', 'I', 'SCM',
+		    
+		    #{mes_key}, ' ', 1
+		)
+    </insert>
+    
+    <!-- 예외 출고 취소 -->
+	<insert id="exceptionOutput_confirm_summary_cancel_if" parameterType="map">
+		INSERT INTO T_ST_ExceptDeliverysub_IF (
+		    IFNO, GUBUN, BRANCH, CONDATE, EDNO,
+			EDSUBNO, ITEMCODE,  MANCODE,
+			
+			QTY,LOTNO, TREASON,  REMARK, PACKING, RQTY,BQTY,SAUP,ROOMCODE,
+			ERNO,ERSUBNO,BUCODE,GMAKE,PCODE,ITEMCODE2,
+			
+			ERP_TRANSFER_FLAG, ERP_RESULT_FLAG, ERP_RESULT_REMARK, IFDATE, INSUSER,			
+			INSDATE, UPDUSER, UPDDATE, CUD_DIV, DATA_DIV,
+			
+			MES_KEY, DELETE_GUBUN, MES_SEQ
+		) VALUES (
+		    #{ifno_if}, '01', '000', #{condate}, ' ',
+			' ', #{itemcode}, 'ZZ99',
+			
+			#{qty}, ' ', '005', ' ', ' ', 0, 0, ' ', 'M001',
+			' ', ' ', ' ', 0, ' ', ' ',
+			
+			'N', 'N', ' ', ' ', 'ZZ99',
+			TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI'), ' ', ' ', 'D', 'SCM',
+			
+			#{mes_key}, 'A', 1
+		)
+    </insert>
+	
+	<!-- 창고 이동 등록 -->
+	<insert id="storage_confirm_summary_if" parameterType="map">
+		INSERT INTO T_ST_Movesub_IF (
+			IFNO, GUBUN, SMNO, SMSUBNO, MANCODE, CONDATE, OUTROOM, OUTBUCODE, ITEMCODE, QTY,
+			GQTY, BQTY, TESTATE, INROOM, INBUCODE, TREASON, LOTNO, REMARK, CF, CONTENTS,
+			
+			EFLAG, BRANCH, PACKING, OUTBRANCH, SAUP, OUTSAUP, UNITPRICE, SCNO, SCSUBNO,
+			
+			ERP_TRANSFER_FLAG, ERP_RESULT_FLAG, ERP_RESULT_REMARK, IFDATE, INSUSER,
+			INSDATE, UPDUSER, UPDDATE, CUD_DIV, DATA_DIV,
+			
+			MES_KEY, DELETE_GUBUN, MES_SEQ, MES_SEQ1
+		) VALUES (
+		    #{ifno_if}, '01', ' ', ' ', 'ZZ99', #{condate}, #{outroom}, ' ', #{itemcode}, 0,
+			#{qty}, 0, '001', #{inroom}, ' ', '006', ' ', ' ', 0, ' ',
+			
+			0, '000', ' ', ' ', ' ', ' ', 0, ' ', ' ',
+			
+			'N', 'N', ' ', ' ', 'ZZ99',
+			TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI'), ' ', ' ', 'I', 'SCM',
+			
+			#{mes_key}, ' ', 1, 0
+		)
+    </insert>
+    
+    <!-- 창고 이동 취소 -->
+	<insert id="storage_confirm_summary_cancel_if" parameterType="map">
+		INSERT INTO T_ST_Movesub_IF (
+		    IFNO, GUBUN, SMNO, SMSUBNO, MANCODE, CONDATE, OUTROOM, OUTBUCODE, ITEMCODE, QTY,
+			GQTY, BQTY, TESTATE, INROOM, INBUCODE, TREASON, LOTNO, REMARK, CF, CONTENTS,
+			
+			EFLAG, BRANCH, PACKING, OUTBRANCH, SAUP, OUTSAUP, UNITPRICE, SCNO, SCSUBNO,
+			
+			ERP_TRANSFER_FLAG, ERP_RESULT_FLAG, ERP_RESULT_REMARK, IFDATE, INSUSER,
+			INSDATE, UPDUSER, UPDDATE, CUD_DIV, DATA_DIV,
+			
+			MES_KEY, DELETE_GUBUN, MES_SEQ, MES_SEQ1
+		) VALUES (
+		    #{ifno_if}, '01', ' ', ' ', 'ZZ99', #{condate}, #{outroom}, ' ', #{itemcode}, 0,
+			#{qty}, 0, '001', #{inroom}, ' ', '006', ' ', ' ', 0, ' ',
+			
+			0, '000', ' ', ' ', ' ', ' ', 0, ' ', ' ',
+			
+			'N', 'N', ' ', ' ', 'ZZ99',
+			TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI'), ' ', ' ', 'D', 'SCM',
+			
+			#{mes_key}, 'A', 1, 0
+		)
+    </insert>
+	
+	
+	
+	<!-- 공정 불출 반납 -->
+	<insert id="wipReturn_confirm_summary_if" parameterType="map">
+		INSERT INTO T_MM_DELIVERYBACKSUB_IF (
+		    IFNO, GUBUN, BRANCH, CONDATE, MBNO,
+		    MBSUBNO, ITEMCODE, MANCODE, WCCODE, ROOMCODE,
+		    
+		    BQTY, GQTY, TREASON, TESTATE, REMARK,
+		    ERP_TRANSFER_FLAG, ERP_RESULT_FLAG, ERP_RESULT_REMARK, IFDATE,
+		    
+		    INSUSER, INSDATE, UPDUSER, UPDDATE, QTY, CUD_DIV, DATA_DIV,
+		    MES_KEY, DELETE_GUBUN, MES_SEQ, LOTNO
+		) VALUES (
+		    #{ifno_if}, '01', '000', #{condate}, ' ',
+		    ' ', #{itemcode}, 'ZZ99', #{wccode}, #{roomcode},
+		    
+		    0, #{qty}, '002','001',' ',
+		    'N', 'N', ' ', ' ',
+		    
+		    'ZZ99', TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI'), ' ', ' ', #{qty}, 'I', 'SCM',
+		    #{mes_key}, ' ', 1, ' '
+		)
+    </insert>
+    
+	<insert id="wipReturn_confirm_summary_cancel_if" parameterType="map">
+		INSERT INTO T_MM_DELIVERYBACKSUB_IF (
+		    IFNO, GUBUN, BRANCH, CONDATE, MBNO,
+		    MBSUBNO, ITEMCODE, MANCODE, WCCODE, ROOMCODE,
+		    
+		    BQTY, GQTY, TREASON,TESTATE, REMARK,
+		    ERP_TRANSFER_FLAG, ERP_RESULT_FLAG, ERP_RESULT_REMARK, IFDATE,
+		    
+		    INSUSER, INSDATE, UPDUSER, UPDDATE, QTY, CUD_DIV, DATA_DIV,
+		    MES_KEY, DELETE_GUBUN, MES_SEQ, LOTNO
+		) VALUES (
+		    #{ifno_if}, '01', '000',  #{condate}, ' ',
+		    ' ', #{itemcode}, 'ZZ99', #{wccode}, #{roomcode},
+		    
+		    0, #{qty}, '002', '001',' ',
+		    'N', 'N', ' ', ' ',
+		    
+		    'ZZ99', TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI'), ' ', ' ', #{qty}, 'D', 'SCM',
+		    #{mes_key}, 'A', 1, ' '
+		)
+    </insert>
+    
+	<!--  입고 반납 -->
+	<insert id="incomingReturn_confirm_summary_if" parameterType="map">
+		INSERT INTO T_PM_ENTERbackSUB_IF (
+		    IFNO, GUBUN, BRANCH, CONDATE, PBNO,
+		    PBSUBNO, ITEMCODE, MANCODE, CUSTCODE, ROOMCODE,
+		    
+		    BQTY, GQTY, UNITPRICE, AMOUNT,
+		    REMARK,
+		    
+		    ERP_TRANSFER_FLAG, ERP_RESULT_FLAG, ERP_RESULT_REMARK, INSUSER,
+		    INSDATE, UPDUSER, UPDDATE, CUD_DIV, DATA_DIV,
+		    
+		    MES_KEY, DELETE_GUBUN, MES_SEQ
+		) VALUES (
+		    #{ifno_if}, '01', '000', #{condate}, ' ',
+		    ' ', #{itemcode}, 'SCMPDA', '0001', 'M001',
+		    
+		    0, #{qty}, '757', 0,
+		    ' ',
+		    
+		    'N', 'N', ' ', 'SCMPDA',
+		    TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI'), ' ', ' ', 'I', 'SCM',
+		    
+		    #{mes_key}, ' ', 1
+		)
+    </insert>
+    
+	<insert id="incomingReturn_confirm_summary_cancel_if" parameterType="map">
+		INSERT INTO T_PM_ENTERbackSUB_IF (
+		    IFNO, GUBUN, BRANCH, CONDATE, PBNO,
+		    PBSUBNO, ITEMCODE, MANCODE, CUSTCODE, ROOMCODE,
+		    
+		    BQTY, GQTY, UNITPRICE, AMOUNT,
+		    REMARK,
+		    
+		    ERP_TRANSFER_FLAG, ERP_RESULT_FLAG, ERP_RESULT_REMARK, INSUSER,
+		    INSDATE, UPDUSER, UPDDATE, CUD_DIV, DATA_DIV,
+		    
+		    MES_KEY, DELETE_GUBUN, MES_SEQ
+		) VALUES (
+		    #{ifno_if}, '01', '000', #{condate}, ' ',
+		    ' ', #{itemcode}, 'SCMPDA', '0001', 'M001',
+		    
+		    0, #{qty}, '757', 0,
+		    ' ',
+		    
+		    'N', 'N', ' ', 'SCMPDA',
+		    TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI'), ' ', ' ', 'D', 'SCM',
+		    
+		    #{mes_key}, ' ', 1
+		)
+    </insert>
+	
+	
+	<!-- JW  -->
+	
+	<select id="selectIfno_loadSummary_if" resultType="string">
+    	SELECT MAX(IFNO) FROM T_SM_DELIVERYSUB_SCM_IF
+    	WHERE ifno LIKE '%${date}%'
+    </select>	
+    
+    <select id="selectIfno_loadReturnSummary_if" resultType="string">
+    	SELECT MAX(IFNO) FROM T_SM_DELIVERYBACKSUB_IF
+    	WHERE ifno LIKE '%${date}%'
+    </select>	
+    
+    <select id="selectIfno_stockCountSummary_if" resultType="string">
+    	SELECT MAX(IFNO) FROM T_ST_CHANGESUB
+    	WHERE ifno LIKE '%${date}%'
+    </select>	
+
+    <select id="selectIfno_wipStockstockCountSummary_if" resultType="string">
+    	SELECT MAX(IFNO) FROM T_MM_CHANGESUB
+    	WHERE ifno LIKE '%${date}%'
+    </select>	
+    
+    <select id="selectIfno_transferSummary_if" resultType="string">
+    	SELECT MAX(IFNO) FROM T_MM_ENTERSUB_IF
+    	WHERE ifno LIKE '%${date}%'
+    </select>	
+	
+	
+	
+	<insert id="load_confirm_summary_if" parameterType="map">
+	    INSERT INTO T_SM_DELIVERYSUB_SCM_IF (
+	        IFNO, GUBUN, BRANCH, CONDATE, SDNO,
+	        SDSUBNO, MANCODE, CUSTCODE, GMONEY, ITEMCODE,
+	        QTY, SRNO, SRSUBNO, UNITPRICE, AMOUNT,
+	        REMARK, GORDER, GSELLTYPE, GSALE, LOTNO,
+	        ROOMCODE, ORDERIDX, PITEMCODE, ERP_TRANSFER_FLAG, ERP_RESULT_FLAG,
+	        ERP_RESULT_REMARK, IFDATE, INSUSER, INSDATE, UPDUSER,
+	        UPDDATE, CUD_DIV, DATA_DIV, MES_KEY, DELETE_GUBUN,
+	        MES_SEQ, GDELIVERY, DELCUSTCODE, DELDATE, REQDATE
+	    )
+	    VALUES (
+	        #{ifno_if}, '01', '000', #{condate}, ' ',
+	        ' ', 'ZZ99', #{cucode}, '002', #{itemcode},
+	        
+	        #{qty}, ' ', ' ', '0', 0,
+	        <!-- ' ', '001', '001', '001', ' ', -->
+	        #{invoiceno} ,CASE WHEN #{cucode} = '0012' THEN '003' ELSE '001' END,'001','001',' ', --4
+	        
+	        #{roomcode}, 0, #{itemcode}, 'N', 'N',
+	        ' ', ' ', 'ZZ99', TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI'), ' ',
+	        
+	        ' ', 'I', 'SCM', #{mes_key}, ' ',
+	        1, '003', '001', TO_CHAR(SYSDATE, 'YYYYMMDD'), TO_CHAR(SYSDATE, 'YYYYMMDD')
+	    )
+	</insert>	
+	
+	<!--<insert id="load_confirm_summary_cancel_if" parameterType="map">
+	    INSERT INTO T_SM_DELIVERYSUB_SCM_IF (
+	        IFNO, GUBUN, BRANCH, CONDATE, SDNO,
+	        SDSUBNO, MANCODE, CUSTCODE, GMONEY, ITEMCODE,
+	        QTY, SRNO, SRSUBNO, UNITPRICE, AMOUNT,
+	        REMARK, GORDER, GSELLTYPE, GSALE, LOTNO,
+	        ROOMCODE, ORDERIDX, PITEMCODE, ERP_TRANSFER_FLAG, ERP_RESULT_FLAG,
+	        ERP_RESULT_REMARK, IFDATE, INSUSER, INSDATE, UPDUSER,
+	        UPDDATE, CUD_DIV, DATA_DIV, MES_KEY, DELETE_GUBUN,
+	        MES_SEQ, GDELIVERY, DELCUSTCODE, DELDATE, REQDATE
+	    )
+	    VALUES (
+	        #{ifno_if}, '01', '000', #{condate}, ' ',
+	        ' ', 'ZZ99', #{cucode}, '002', #{itemcode},
+	        
+	        #{qty}, ' ', ' ', '0', 0,
+	        #{loginid}, '001', '001', '001', ' ',
+	        
+	        #{roomcode}, 0, #{itemcode}, 'N', 'N',
+	        ' ', ' ', 'ZZ99', TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI'), ' ',
+	        
+	        ' ', 'D', 'SCM', #{mes_key}, 'A',
+	        1, '003', '0001', TO_CHAR(SYSDATE, 'YYYYMMDD'), TO_CHAR(SYSDATE, 'YYYYMMDD')
+	    )
+	</insert>-->
+
+	<insert id="load_confirm_summary_cancel_if" parameterType="map">
+		INSERT INTO T_SM_DELIVERYSUB_SCM_IF
+		(IFNO,MES_KEY, MES_SEQ, DATA_DIV, CUD_DIV, DELETE_GUBUN )
+		VALUES ( 'DE' || SUBSTR(#{meskey}, 3),#{meskey},'1','SCM','D','A')
+	</insert>
+
+	<insert id="loadReturn_confirm_summary_if" parameterType="map">
+	    INSERT INTO T_SM_DELIVERYBACKSUB_IF (
+	        IFNO, GUBUN, BRANCH, CONDATE, SBNO,
+	        SBSUBNO, ITEMCODE, MANCODE, CUSTCODE, QTY,
+	        
+	        UNITPRICE, REMARK, BRNO, BRSUBNO, GFREE,
+	        ROOMCODE, ITEMACNT, SDNO, SDSUBNO, ORDERIDX,
+	        
+	        TREASON, PCODE, ERP_TRANSFER_FLAG, ERP_RESULT_FLAG, ERP_RESULT_REMARK,
+	        IFDATE, INSUSER, INSDATE, UPDUSER, UPDDATE,
+	        
+	        CUD_DIV, DATA_DIV, MES_KEY, DELETE_GUBUN, MES_SEQ,
+	        LOTNO
+	    )
+	    VALUES (
+	        #{ifno_if}, '01', '000', #{condate}, ' ',
+	        ' ', #{itemcode}, 'ZZ99', '0001', #{qty},
+	        
+	        999, ' ', ' ', ' ', 0,
+	        'M001', ' ', ' ', ' ', 0,
+	        
+	        '001', #{itemcode}, 'N', 'N', ' ',
+	        ' ', 'ZZ99', TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI'), ' ',
+	        
+	        ' ', 'I', 'SCM', #{mes_key}, ' ',
+	        1, ' '
+	    )
+	</insert>	
+	
+	<insert id="loadReturn_confirm_summary_cancel_if" parameterType="map">
+	    INSERT INTO T_SM_DELIVERYBACKSUB_IF (
+	        IFNO, GUBUN, BRANCH, CONDATE, SBNO,
+	        SBSUBNO, ITEMCODE, MANCODE, CUSTCODE, QTY,
+	        
+	        UNITPRICE, REMARK, BRNO, BRSUBNO, GFREE,
+	        ROOMCODE, ITEMACNT, SDNO, SDSUBNO, ORDERIDX,
+	        
+	        TREASON, PCODE, ERP_TRANSFER_FLAG, ERP_RESULT_FLAG, ERP_RESULT_REMARK,
+	        IFDATE, INSUSER, INSDATE, UPDUSER, UPDDATE,
+	        
+	        CUD_DIV, DATA_DIV, MES_KEY, DELETE_GUBUN, MES_SEQ,
+	        LOTNO
+	    )
+	    VALUES (
+	        #{ifno_if}, '01', '000', #{condate}, ' ',
+	        ' ', #{itemcode}, 'ZZ99', '0001', #{qty},
+	        
+	        999, ' ', ' ', ' ', 0,
+	        'M001', ' ', ' ', ' ', 0,
+	        
+	        '001', #{itemcode}, 'N', 'N', ' ',
+	        ' ', 'ZZ99', TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI'), ' ',
+	        
+	        ' ', 'D', 'SCM', #{mes_key}, ' ',
+	        1, ' '
+	    )
+	</insert>	
+
+	<insert id="loadReturn_confirm_detail_cancel_if" parameterType="map">
+	    INSERT INTO T_SM_DELIVERYBACKSUB_IF (
+	        IFNO, GUBUN, BRANCH, CONDATE, SBNO,
+	        SBSUBNO, ITEMCODE, MANCODE, CUSTCODE, QTY,
+	        
+	        UNITPRICE, REMARK, BRNO, BRSUBNO, GFREE,
+	        ROOMCODE, ITEMACNT, SDNO, SDSUBNO, ORDERIDX,
+	        
+	        TREASON, PCODE, ERP_TRANSFER_FLAG, ERP_RESULT_FLAG, ERP_RESULT_REMARK,
+	        IFDATE, INSUSER, INSDATE, UPDUSER, UPDDATE,
+	        
+	        CUD_DIV, DATA_DIV, MES_KEY, DELETE_GUBUN, MES_SEQ,
+	        LOTNO, GORDER
+	    )
+	    VALUES (
+	        #{ifno_if}, '01', '000', #{condate}, ' ',
+	        ' ', #{itemcode}, 'ZZ99', '0001', #{qty},
+	        
+	        999, ' ', ' ', ' ', 0,
+	        'M001', ' ', ' ', ' ', 0,
+	        
+	        '001', #{itemcode}, 'N', 'N', ' ',
+	        ' ', 'ZZ99', TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI'), ' ',
+	        
+	        ' ', 'D', 'SCM', #{mes_key}, 'A',
+	        1, ' ', '001'
+	    )
+	</insert>	
+	
+	<delete id="stockCountPurWIPListIntf_if_delete" parameterType="map">
+		DELETE FROM T_MM_CHANGESUB 
+		WHERE CONDATE = #{condate}
+			AND WCCODE = #{roomcode} 
+	</delete>	
+
+	<delete id="stockCountPurWIPListIntf_if_storage_delete" parameterType="map">
+		DELETE FROM T_ST_CHANGESUB 
+		WHERE CONDATE = #{condate}
+			AND ROOMCODE = #{roomcode} 
+	</delete>
+
+	<delete id="erpInterface_confirm_summary_if_delete" parameterType="map">
+		DELETE FROM T_ST_CHANGESUB
+		WHERE CONDATE = #{condate}
+			AND ROOMCODE = #{roomcode}
+
+	</delete>
+	<insert id="erpInterface_confirm_summary_if" parameterType="map">
+		INSERT INTO T_ST_CHANGESUB (
+		    GUBUN, CONDATE, ROOMCODE, ITEMCODE,
+		    LOTNO, BUCODE, MANCODE, TESTATE, GSTOCK,
+		    
+		    BSTOCK, STOCK, GQTY, BQTY, QTY,
+		    REMARK, GMAKE, BRANCH, PACKING, SAUP,
+		    
+		    CMB_ITEMTYPE, TINSPECT, RGQTY, RBQTY
+		)
+		VALUES (
+		    '01', #{condate},#{roomcode}, #{itemcode},
+		    ' ', ' ', 'ZZ99', '001', #{qty},
+		    
+		    0<!-- #{bqty} -->, 0, 0, 0, 0,
+		    'WMS - ', '0', '000', ' ', ' ',
+		    
+		    ' ', '001', 0, 0
+		)
+<!-- 		INSERT INTO T_ST_CHANGESUB (
+		    IFNO, GUBUN, CONDATE, ROOMCODE, ITEMCODE,
+		    LOTNO, BUCODE, MANCODE, TESTATE, GSTOCK,
+		    
+		    BSTOCK, STOCK, GQTY, BQTY, QTY,
+		    REMARK, GMAKE, BRANCH, PACKING, SAUP,
+		    
+		    CMB_ITEMTYPE, TINSPECT, RGQTY, RBQTY, ERP_TRANSFER_FLAG,
+		    ERP_RESULT_FLAG, ERP_RESULT_REMARK, IFDATE, INSUSER, INSDATE,
+		    
+		    UPDUSER, UPDDATE, CUD_DIV, DATA_DIV, MES_KEY,
+		    DELETE_GUBUN, MES_SEQ, UPDATE_GUBUN
+		)
+		VALUES (
+		    #{ifno_if}, '01', '20251205',#{roomcode}, #{itemcode},
+		    ' ', ' ', 'ZZ99', '001', #{qty},
+		    
+		    #{bqty}, 0, 0, 0, 0,
+		    ' ', '0', '000', ' ', ' ',
+		    
+		    ' ', '001', 0, 0, 'N',
+		    'N', ' ', ' ', 'ZZ99', TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI'),
+		    
+		    ' ', ' ', 'I', 'SCM', #{mes_key},
+		    ' ', '1', ' '
+		) -->
+	</insert>
+	
+	<insert id="stockCountSorage_if" parameterType="map">
+		INSERT INTO T_ST_CHANGESUB (
+		    GUBUN, CONDATE, ROOMCODE, ITEMCODE,
+		    LOTNO, BUCODE, MANCODE, TESTATE, GSTOCK,
+		    
+		    BSTOCK, STOCK, GQTY, BQTY, QTY,
+		    REMARK, GMAKE, BRANCH, PACKING, SAUP,
+		    
+		    CMB_ITEMTYPE, TINSPECT, RGQTY, RBQTY
+		)
+		VALUES (
+		    '01', #{condate},#{roomcode}, #{itemcode},
+		    ' ', ' ', 'ZZ99', '001', #{qty},
+		    
+		    #{bqty}<!-- #{bqty} -->, 0, 0, 0, 0,
+		    'WMS - ', '0', '000', ' ', ' ',
+		    
+		    ' ', '001', 0, 0
+		)	
+	</insert>
+	
+	<insert id="erpInterface_confirm_summary_mm_if" parameterType="map">
+		INSERT INTO T_MM_CHANGE (
+		    GUBUN,
+		    CONDATE,
+		    WCCODE,
+		    MANCODE,
+		    INUSER,
+		    INDATE,
+		    BRANCH
+		) VALUES (
+		    '01',
+		    #{condate},
+		    #{roomcode},
+		    'ZZ99',
+		    'ZZ99',
+		    TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI'),
+		    '000'
+		)
+	</insert>	
+	<insert id="erpInterface_confirm_summary_st_if" parameterType="map">
+		INSERT INTO T_ST_CHANGE (
+		    GUBUN,
+		    CONDATE,
+		    ROOMCODE,
+		    MANCODE,
+		    INUSER,
+		    INDATE,
+		    BRANCH
+		) VALUES (
+		    '01',
+		    #{condate},
+		    #{roomcode},
+		    'ZZ99',
+		    'ZZ99',
+		    TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI'),
+		    '000'
+		)
+	</insert>
+	
+	<delete id="erpInterface_confirm_summary_mm_if_delete">
+		DELETE FROM T_MM_CHANGE WHERE
+			condate = #{condate}
+			and wccode = #{roomcode}
+	</delete>
+	<delete id="erpInterface_confirm_summary_st_if_delete">
+		DELETE FROM T_ST_CHANGE WHERE
+			condate = #{condate}
+			and roomcode = #{roomcode}
+	</delete>
+
+	<insert id="stockCountPurWIPListIntf_if" parameterType="map">
+		INSERT INTO T_MM_CHANGESUB (
+		    GUBUN, CONDATE, WCCODE, ITEMCODE,
+		    LOTNO,  MANCODE, TESTATE, GSTOCK,
+		    
+		    BSTOCK, STOCK, GQTY, BQTY, QTY,
+		    REMARK,  BRANCH, 
+		    
+		     WGQTY, WBQTY
+		)
+		VALUES (
+		    '01', #{condate} ,#{roomcode}, #{itemcode},
+		    ' ',  'ZZ99', '001', #{qty},
+		    
+		    #{bqty}, 0, 0, 0, 0,
+		    'WMS - ',  '000', 
+		    
+		    0, 0
+		)
+<!-- 		INSERT INTO T_MM_CHANGESUB (
+		    IFNO, GUBUN, CONDATE, WCCODE, ITEMCODE,
+		    LOTNO,  MANCODE, TESTATE, GSTOCK,
+		    
+		    BSTOCK, STOCK, GQTY, BQTY, QTY,
+		    REMARK,  BRANCH, 
+		    
+		     WGQTY, WBQTY, ERP_TRANSFER_FLAG,
+		    ERP_RESULT_FLAG, ERP_RESULT_REMARK, IFDATE, INSUSER, INSDATE,
+		    
+		    UPDUSER, UPDDATE, CUD_DIV, DATA_DIV, MES_KEY,
+		    DELETE_GUBUN, MES_SEQ, UPDATE_GUBUN
+		)
+		VALUES (
+		    #{ifno_if}, '01', '20251205',#{roomcode}, #{itemcode},
+		    ' ',  'ZZ99', '001', #{qty},
+		    
+		    #{bqty}, 0, 0, 0, 0,
+		    ' ',  '000', 
+		    
+		    0, 0, 'N',
+		    'N', ' ', ' ', 'ZZ99', TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI'),
+		    
+		    ' ', ' ', 'I', 'SCM', #{mes_key},
+		    ' ', '1', ' '
+		) -->
+	</insert>	
+	
+	<insert id="erpInterface_confirm_summary_cancel_if" parameterType="map">
+	    INSERT INTO T_ST_CHANGESUB_IF (
+		    IFNO, GUBUN, CONDATE, ROOMCODE, ITEMCODE,
+		    LOTNO, BUCODE, MANCODE, TESTATE, GSTOCK,
+		    
+		    BSTOCK, STOCK, GQTY, BQTY, QTY,
+		    REMARK, GMAKE, BRANCH, PACKING, SAUP,
+		    
+		    CMB_ITEMTYPE, TINSPECT, RGQTY, RBQTY, ERP_TRANSFER_FLAG,
+		    ERP_RESULT_FLAG, ERP_RESULT_REMARK, IFDATE, INSUSER, INSDATE,
+		    
+		    UPDUSER, UPDDATE, CUD_DIV, DATA_DIV, MES_KEY,
+		    DELETE_GUBUN, MES_SEQ, UPDATE_GUBUN
+		)
+		VALUES (
+		    #{ifno_if}, '01', #{condate}, #{roomcode}, #{itemcode},
+		    ' ', ' ', 'ZZ99', '001', #{qty},
+		    
+		    0, #{qty}, 0, 0, #{qty},
+		    'WMS - ', '0', '000', ' ', ' ',
+		    
+		    ' ', '001', #{qty}, 0, 'N',
+		    'N', ' ', ' ', 'ZZ99', TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI'),
+		    
+		    ' ', ' ', 'D', 'SCM', #{mes_key},
+		    'A', '1', ' '
+		)
+	</insert>	
+	
+	<!-- 영업이송 생산실적할때 사용 -->
+	<insert id="transfer_confirm_summary_if" parameterType="map">
+		INSERT INTO T_MM_ENTERSUB_IF (
+		    IFNO, GUBUN, BRANCH, CONDATE, MENO,
+		    MESUBNO, ITEMCODE, WCCODE, MANCODE, ROOMCODE,
+		    GTEST, QTY, REMARK, ERP_TRANSFER_FLAG, ERP_RESULT_FLAG,
+		    ERP_RESULT_REMARK, INSUSER, INSDATE, UPDUSER, UPDDATE,
+		    MWNO, MWSUBNO, MONO, MOSUBNO, CUD_DIV,
+		    DATA_DIV, MES_KEY, DELETE_GUBUN, MES_SEQ, MAKEQTY,
+		    GQTY
+		)
+		VALUES (
+		    #{ifno_if}, '01', '000', #{condate}, ' ',
+		    ' ', #{itemcode}, #{wccode}, 'ZZ99', #{roomcode},
+		    1, #{qty}, ' ', 'N', 'N',
+		    ' ', 'ZZ99', TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI'), ' ', ' ',
+		    ' ', ' ', ' ', ' ', 'I',
+		    'SCM', #{mes_key}, ' ', 1, #{qty},
+		    0
+		)
+	</insert>	
+	
+	<!-- 영업이송 생산실적 취소 할때 사용 -->
+	<insert id="transfer_confirm_summary_cancel_if" parameterType="map">
+		INSERT INTO T_MM_ENTERSUB_IF (
+		    IFNO, GUBUN, BRANCH, CONDATE, MENO,
+		    MESUBNO, ITEMCODE, WCCODE, MANCODE, ROOMCODE,
+		    GTEST, QTY, REMARK, ERP_TRANSFER_FLAG, ERP_RESULT_FLAG,
+		    ERP_RESULT_REMARK, INSUSER, INSDATE, UPDUSER, UPDDATE,
+		    MWNO, MWSUBNO, MONO, MOSUBNO, CUD_DIV,
+		    DATA_DIV, MES_KEY, DELETE_GUBUN, MES_SEQ, MAKEQTY,
+		    GQTY
+		)
+		VALUES (
+		    #{ifno_if}, '01', '000', #{condate}, ' ',
+		    ' ', #{itemcode}, #{wccode}, 'ZZ99', #{roomcode},
+		    1, #{qty}, ' ', 'N', 'N',
+		    ' ', 'ZZ99', TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI'), ' ', ' ',
+		    ' ', ' ', ' ', ' ', 'D',
+		    'SCM', #{mes_key}, ' ', 1, #{qty},
+		    0
+		)
+	</insert>	
+	
+	<!-- 공장 이동 등록 -->
+	<insert id="factoryReceiving_confirm_summary_if" parameterType="map">
+		INSERT INTO T_ST_Movesub_IF (
+			IFNO, GUBUN, SMNO, SMSUBNO, MANCODE, CONDATE, OUTROOM, OUTBUCODE, ITEMCODE, QTY,
+			GQTY, BQTY, TESTATE, INROOM, INBUCODE, TREASON, LOTNO, REMARK, CF, CONTENTS,
+			
+			EFLAG, BRANCH, PACKING, OUTBRANCH, SAUP, OUTSAUP, UNITPRICE, SCNO, SCSUBNO,
+			
+			ERP_TRANSFER_FLAG, ERP_RESULT_FLAG, ERP_RESULT_REMARK, IFDATE, INSUSER,
+			INSDATE, UPDUSER, UPDDATE, CUD_DIV, DATA_DIV,
+			
+			MES_KEY, DELETE_GUBUN, MES_SEQ, MES_SEQ1
+		) VALUES (
+		    #{ifno_if}, '01', ' ', ' ', 'ZZ99', #{condate}, #{outroom}, ' ', #{itemcode}, 0,
+			#{qty}, 0, '001', #{inroom}, ' ', '006', ' ', ' ', 0, ' ',
+			
+			0, '000', ' ', ' ', ' ', ' ', 0, ' ', ' ',
+			
+			'N', 'N', ' ', ' ', 'ZZ99',
+			TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI'), ' ', ' ', 'I', 'SCM',
+			
+			#{mes_key}, ' ', 1, 0
+		)
+    </insert>
+    
+    <!-- 공장 이동 취소 -->
+	<insert id="factoryReceiving_confirm_summary_cancel_if" parameterType="map">
+		INSERT INTO T_ST_Movesub_IF (
+		    IFNO, GUBUN, SMNO, SMSUBNO, MANCODE, CONDATE, OUTROOM, OUTBUCODE, ITEMCODE, QTY,
+			GQTY, BQTY, TESTATE, INROOM, INBUCODE, TREASON, LOTNO, REMARK, CF, CONTENTS,
+			
+			EFLAG, BRANCH, PACKING, OUTBRANCH, SAUP, OUTSAUP, UNITPRICE, SCNO, SCSUBNO,
+			
+			ERP_TRANSFER_FLAG, ERP_RESULT_FLAG, ERP_RESULT_REMARK, IFDATE, INSUSER,
+			INSDATE, UPDUSER, UPDDATE, CUD_DIV, DATA_DIV,
+			
+			MES_KEY, DELETE_GUBUN, MES_SEQ, MES_SEQ1
+		) VALUES (
+		    #{ifno_if}, '01', ' ', ' ', 'ZZ99', #{condate}, #{outroom}, ' ', #{itemcode}, 0,
+			#{qty}, 0, '001', #{inroom}, ' ', '006', ' ', ' ', 0, ' ',
+			
+			0, '000', ' ', ' ', ' ', ' ', 0, ' ', ' ',
+			
+			'N', 'N', ' ', ' ', 'ZZ99',
+			TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI'), ' ', ' ', 'D', 'SCM',
+			
+			#{mes_key}, 'A', 1, 0
+		)
+    </insert>
+	
+	
+	
+	<update id = "load_confirm_summary_updateYn">
+		update T_WMS_OUTBOUND
+			set intf_yn = 'Y',
+			ifno = #{ifno_if},
+			mes_key = #{mes_key},
+			intf_ymdhms = TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+		where factory = #{factory}
+			and storage = #{storage}
+			and itemcode = #{itemcode}
+			and outdate = #{date}
+			and useyn = 'Y'
+			and source = 'LOAD'
+			and (INTF_YN = 'N' or INTF_YN ='W') 
+	</update>	
+	
+	<update id = "load_confirm_summary_cancel_updateYn">
+		update T_WMS_OUTBOUND
+			set intf_yn = 'N',
+			ifno = '',
+			mes_key = '',
+			mes_seq = '',
+			intf_ymdhms_d = TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+		where iid = #{iid}
+	</update>	
+	
+	<update id = "loadReturn_confirm_summary_updateYn">
+		update T_WMS_OUTBOUND
+			set intf_yn = 'Y',
+			ifno = #{ifno_if},
+			mes_key = #{mes_key},
+			intf_ymdhms = TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+		where factory = #{factory}
+			and storage = #{storage}
+			and itemcode = #{itemcode}
+			and outdate = #{date}
+		 	and source = 'LOADRETURN'
+	</update>	
+	
+	<update id = "loadReturn_confirm_summary_cancel_updateYn">
+		update T_WMS_OUTBOUND
+			set intf_yn = 'N',
+			ifno = '',
+			mes_key = '',
+			mes_seq = '',
+			intf_ymdhms_d = TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+		where factory = #{factory}
+			and storage = #{storage}
+			and itemcode = #{itemcode}
+			and outdate = #{date}
+			and source = 'LOADRETURN'
+	</update>	
+
+	<update id = "loadReturn_confirm_detail_cancel_updateYn">
+		update T_WMS_OUTBOUND
+			set intf_yn = 'N',
+			ifno = '',
+			mes_key = '',
+			mes_seq = '',
+			intf_ymdhms_d = TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+		where factory = #{factory}
+			and storage = #{storage}
+			and itemcode = #{itemcode}
+			and mes_key = #{mes_key}
+			and source = 'LOADRETURN'
+	</update>	
+	
+	<update id = "erpInterface_confirm_summary_updateYn">
+		update t_wms_locationbackup
+			set intf_yn = 'Y',
+			mes_key = #{mes_key},
+			intf_ymdhms = TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+		where factory = #{factory}
+			and storage = #{storage}
+			and itemcode = #{itemcode}
+			and sdate = #{date}
+			and intf_yn = 'N'
+	</update>	
+	
+	<update id = "erpInterface_confirm_summary_cancel_updateYn">
+		update T_WMS_locationbackup
+			set intf_yn = 'N',
+			mes_key = '',
+			wms_seq = '',
+			intf_ymdhms = '',
+			intf_ymdhms_d = TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+		where factory = #{factory}
+			and storage = #{storage}
+			and itemcode = #{itemcode}
+			and sdate = #{date}
+			and intf_yn = 'Y'
+			and mes_key = #{mes_key}
+	</update>	
+	
+	<update id = "transfer_confirm_summary_updateYn">
+		update T_WMS_SEMIWORK
+			set intf_yn = 'Y',
+			ifno = #{ifno_if},
+			mes_key = #{mes_key},
+			intf_ymdhms = TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS') 
+		where itemcode = #{itemcode}
+			and sdate = #{date}
+	</update>	
+	
+	<update id = "transfer_confirm_summary_cancel_updateYn">
+		update T_WMS_SEMIWORK
+			set intf_yn = 'N',
+			ifno = '',
+			mes_key = '',
+			mes_seq = '',
+			wms_seq = '',
+			wms_seq1 = '',
+			intf_ymdhms = '',
+			intf_ymdhms_d = TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+		where itemcode = #{itemcode}
+			and sdate = #{sdate}
+	</update>	
+	
+	<select id="selectWmskey_loadSummary" parameterType="map" resultType="string">
+		SELECT NVL(
+		    (SELECT DISTINCT mes_key 
+		     FROM t_wms_outbound
+		     WHERE factory = #{factory}
+				and storage = #{storage}
+				and itemcode = #{itemcode}
+				and sdate = #{date}
+		       AND mes_key IS NOT NULL
+		       AND ROWNUM = 1), 
+		    'none'
+		) AS mes_key
+		FROM dual
+	</select>
+	
+	<select id="selectWmskey_loadReturnSummary" parameterType="map" resultType="string">
+		SELECT NVL(
+		    (SELECT DISTINCT mes_key 
+		     FROM t_wms_outbound
+		     WHERE factory = #{factory}
+				and storage = #{storage}
+				and itemcode = #{itemcode}
+				and outdate = #{date}
+				and source = 'LOADRETURN'
+		       AND mes_key IS NOT NULL
+		       AND ROWNUM = 1), 
+		    'none'
+		) AS mes_key
+		FROM dual
+	</select>
+	
+	<select id="selectWmskey_stockCountSummary" parameterType="map" resultType="string">
+		select max(mes_key) from t_st_changesub_if where condate= #{condate} and itemcode = #{itemcode} and cud_div = 'I' and insuser = 'ZZ99'
+		<!-- SELECT NVL(
+		    (SELECT DISTINCT mes_key 
+		     FROM t_wms_realstock
+		     WHERE factory = #{factory}
+				and storage = #{storage}
+				and itemcode = #{itemcode}
+				and sdate = #{date}
+		       AND mes_key IS NOT NULL
+		       AND ROWNUM = 1), 
+		    'none'
+		) AS mes_key
+		FROM dual -->
+	</select>
+	
+	<select id="selectWmskey_transferSummary" parameterType="map" resultType="string">
+		SELECT NVL(
+		    (SELECT DISTINCT mes_key 
+		     FROM t_wms_semiwork
+		     WHERE itemcode = #{itemcode}
+				and sdate = #{date}
+		       AND mes_key IS NOT NULL
+		       AND ROWNUM = 1), 
+		    'none'
+		) AS mes_key
+		FROM dual
+	</select>
+	
+	<insert id="unreceivedItemDeliveryConfirm" useGeneratedKeys="false">
+	    <!-- INSERT INTO T_PM_NON_ARRIVALSUB_IF (
+			IFNO,    GUBUN,    BRANCH,    CONDATE,    CFNO,
+			CFSUBNO,     MANCODE,    BUCODE,   CUSTCODE,
+			
+			GORDER,GSALE,GPAY,GMONEY,EXRATE,
+			INPUTDATE,ITEMCODE,QTY,UNITPRICE,WONAMT,VATAMT,
+			
+			TOTAMT,COSTAMT,REMARK,ORDERIDX,NOINVOICE,
+			BRNO,BRSUBNO,    ERP_TRANSFER_FLAG,    ERP_RESULT_FLAG,    ERP_RESULT_REMARK,      INSUSER,
+			
+			INSDATE,    UPDUSER,    UPDDATE,    CUD_DIV,    DATA_DIV,
+			MES_KEY,    DELETE_GUBUN,    MES_SEQ,    PENO,    PESUBNO
+		)
+		values(
+			#{ifno},'01','000',#{condate},' ',
+			' ',' ',' ',' ',
+			
+			' ',' ',' ',' ',0,
+			' ', ' ', 0,0,0,0,
+			
+			0,0,' ',0, #{invoice_no},
+			' ',' ', 'N','N',' ','ZZ99',
+			
+			TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI'),' ',' ','D','SCM',
+			#{mes_key},'A','1',' ',' '
+		) -->
+		
+		INSERT INTO T_PM_NON_ARRIVALSUB_IF (
+	        IFNO,    GUBUN,    BRANCH,    CONDATE,    CFNO,
+	        CFSUBNO, MANCODE,  BUCODE,    CUSTCODE,
+	
+	        GORDER,  GSALE,    GPAY,      GMONEY,    EXRATE,
+	        INPUTDATE,ITEMCODE,QTY,       UNITPRICE,WONAMT, VATAMT,
+	
+	        TOTAMT,  COSTAMT,  REMARK,    ORDERIDX,  NOINVOICE,
+	        BRNO,    BRSUBNO,  ERP_TRANSFER_FLAG, ERP_RESULT_FLAG, ERP_RESULT_REMARK, INSUSER,
+	
+	        INSDATE, UPDUSER,  UPDDATE,   CUD_DIV,   DATA_DIV,
+	        MES_KEY, DELETE_GUBUN, MES_SEQ, PENO, PESUBNO
+	    )
+	    SELECT
+		    'D' || SUBSTR(A.IFNO, 2) AS IFNO,	
+		    '01', '000', A.CONDATE, ' ',
+		    ' ', ' ', ' ', ' ',
+		
+		    ' ', ' ', ' ', ' ', 0, 
+		    ' ', A.ITEMCODE, A.QTY, 0, 0, 0,
+		
+		    0, 0, ' ', 0, A.NOINVOICE,
+		    ' ', ' ', 'N', 'N', ' ', 'ZZ99',
+		
+		    TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI') AS INSDATE,
+		    ' ', ' ', 'D', 'SCM',	
+		    A.IFNO AS MES_KEY, 'A', '1', ' ', ' '
+		FROM T_PM_NON_ARRIVALSUB_IF A
+		WHERE A.NOINVOICE = #{invoice_no}
+		  AND A.CUD_DIV = 'I'
+		  AND NOT EXISTS (
+		      SELECT 1
+		      FROM T_PM_NON_ARRIVALSUB_IF d
+		      WHERE d.IFNO = ('D' || SUBSTR(A.IFNO, 2))
+		  )
+	</insert>
+	
+	<insert id="deleteWorksub">
+		INSERT INTO T_MM_WORKSUB_IF(IFNO,MES_KEY,MES_SEQ,DATA_DIV,CUD_DIV,DELETE_GUBUN) VALUES(#{ifno_if},#{meskey},'1','SCM','D','A')	
+	</insert>
+	
+	<insert id="deleteWorkInput">	
+		INSERT INTO T_MM_Work_Input_IF(IFNO,MES_KEY,MES_SEQ,DATA_DIV,CUD_DIV,DELETE_GUBUN) VALUES(#{ifno_if},#{meskey},'1','SCM','D','A')	
+	</insert>
+	
+	<insert id="deleteEntersub">	
+		INSERT INTO T_MM_ENTERSUB_IF(IFNO,MES_KEY,MES_SEQ,DATA_DIV,CUD_DIV,DELETE_GUBUN) VALUES(#{ifno_if},#{meskey},'1','SCM','D','A')	
+	</insert>
+	
+	<select id="selectInvoiceIntfList">
+		SELECT
+		    'D' || SUBSTR(ifno, 2) AS ifno,
+		    mes_key as mes_key
+		FROM t_pm_non_arrivalsub_if a
+		WHERE condate   = #{condate}
+		  AND noinvoice = #{invoice_no}
+		  and cud_div = 'I'
+		  and not exists (
+		    select 1
+		    from t_pm_non_arrivalsub_if b
+		    where b.mes_key = a.mes_key
+		    and b.cud_div = 'D'
+		  )
+		order by mes_key
+	</select>
+
+	<!-- 반품검사 인터페이스 삭제-->
+	<insert id = "returnInspection_intf_delete1">
+		insert into T_QC_BACKTESTSUB_IF (
+		IFNO, MES_KEY, MES_SEQ, DATA_DIV, CUD_DIV, DELETE_GUBUN,
+		GUBUN, BRANCH, CONDATE, BTNO, BTSUBNO,
+		ITEMCODE, MANCODE, CUSTCODE, SBNO, BRSUBNO,
+		GQTY, BQTY, QTY, LOTNO, REMARK,
+		ERP_RESULT_REMARK, IFDATE, INSUSER, INSDATE, UPDUSER,
+		UPDDATE)
+		select
+		#{ifno}, #{mes_key}, 1, 'SCM', 'D', 'A',
+		GUBUN, BRANCH, CONDATE, BTNO, BTSUBNO,
+		ITEMCODE, MANCODE, CUSTCODE, SBNO, BRSUBNO,
+		GQTY, BQTY, QTY, LOTNO, REMARK,
+		ERP_RESULT_REMARK, IFDATE, INSUSER, INSDATE, UPDUSER,
+		UPDDATE
+		from T_QC_BACKTESTSUB_IF where mes_key = #{mes_key}
+	</insert>
+
+	<insert id = "returnInspection_intf_delete2">
+		insert into T_QC_BACKTEST_POORINFO_IF (
+		IFNO, MES_KEY, MES_SEQ, DATA_DIV, CUD_DIV, DELETE_GUBUN,
+		GUBUN, BRANCH, CONDATE, BTNO, BTSUBNO,
+		BTSUBNO3, ITEMCODE, CUSTCODE, AQTY, QTY, GQTY,BQTY,
+		TPOORTYPE, DECISION, TPOORREASON, REMARK, BRNO,
+		BRSUBNO, ERP_RESULT_REMARK, IFDATE, INSUSER, INSDATE,
+		UPDUSER, UPDDATE
+		)
+		select
+		#{ifno}, #{mes_key}, 1, 'SCM', 'D', 'A',
+		GUBUN, BRANCH, CONDATE, BTNO, BTSUBNO,
+		BTSUBNO3, ITEMCODE, CUSTCODE, AQTY, QTY, GQTY,BQTY,
+		TPOORTYPE, DECISION, TPOORREASON, REMARK, BRNO,
+		BRSUBNO, ERP_RESULT_REMARK, IFDATE, INSUSER, INSDATE,
+		UPDUSER, UPDDATE
+		from T_QC_BACKTEST_POORINFO_IF where mes_key = #{mes_key}
+	</insert>
+
+	<update id = "returnInspection_intf_wms_delete">
+		update t_wms_inspection set intf_yn = 'N',
+		mes_key = ''
+		WHERE IID = #{iid}
+	</update>
+
+	<!-- 창고검사 인터페이스 삭제-->
+	<insert id = "storageInspection_intf_delete">
+		insert into T_MM_DELIVERYTESTSUB_if (
+		IFNO, MES_KEY, MES_SEQ, DATA_DIV, CUD_DIV, DELETE_GUBUN,
+		GUBUN, BRANCH, CONDATE, DTNO, DTSUBNO,
+		ITEMCODE, MANCODE, ROOMCODE, LOTNO, QTY,
+		REMARK, DECISION, SMNO, SMSUBNO, GQTY, BQTY,
+		ERP_RESULT_REMARK, IFDATE, INSUSER, INSDATE, UPDUSER,
+		UPDDATE)
+		select
+		#{ifno}, #{mes_key}, 1, 'SCM', 'D', 'A',
+		GUBUN, BRANCH, CONDATE, DTNO, DTSUBNO,
+		ITEMCODE, MANCODE, ROOMCODE, LOTNO, QTY,
+		REMARK, DECISION, SMNO, SMSUBNO, GQTY, BQTY,
+		ERP_RESULT_REMARK, IFDATE, INSUSER, INSDATE, UPDUSER,
+		UPDDATE
+		from T_MM_DELIVERYTESTSUB_if where mes_key = #{mes_key}
+	</insert>
+
+	<update id = "storageInspection_intf_wms_delete">
+		update t_wms_inspection set intf_yn = 'N',
+		mes_key = ''
+		WHERE IID = #{iid}
+	</update>
+
+	<!-- 폐기 인터페이스 삭제-->
+	<insert id = "scrap_intf_delete">
+		insert into T_ST_Destroysub_IF (
+		IFNO, MES_KEY, MES_SEQ, DATA_DIV, CUD_DIV, DELETE_GUBUN,
+		GUBUN, SDNO, SDSUBNO, MANCODE, BUCODE,
+		CONDATE, DRNO, DRSUBNO, ITEMCODE, LOTNO,
+		ROOMCODE, QTY, TREASON, GMAKE, REMARK,
+		BRANCH, BQTY, ERP_RESULT_REMARK, IFDATE, INSUSER,
+		INSDATE, UPDUSER, UPDDATE)
+		select
+		#{ifno}, #{mes_key}, 1, 'SCM', 'D', 'A',
+		GUBUN, SDNO, SDSUBNO, MANCODE, BUCODE,
+		CONDATE, DRNO, DRSUBNO, ITEMCODE, LOTNO,
+		ROOMCODE, QTY, TREASON, GMAKE, REMARK,
+		BRANCH, BQTY, ERP_RESULT_REMARK, IFDATE, INSUSER,
+		INSDATE, UPDUSER, UPDDATE
+		from T_ST_Destroysub_IF where mes_key = #{mes_key}
+	</insert>
+
+	<update id = "scrap_intf_wms_delete">
+		update t_wms_inspection set intf_yn2 = 'N',
+		mes_key2 = ''
+		WHERE IID = #{iid}
+	</update>
+	
+	<!-- JW  -->
+
+	<!-- ============================================================
+	     재고조정 - ERP 재고 반영 (erpInterface_confirm_summary 후처리)
+	     ============================================================ -->
+
+	<!-- 초기화: 조정 전 수량 0으로 리셋 -->
+	<update id="updateStockChangeSubInit" parameterType="map">
+		UPDATE T_ST_CHANGESUB
+		SET qty=0, gqty=0, bqty=0, rgqty=0, rbqty=0
+		WHERE condate  = #{dateTo}
+		  AND roomcode = #{roomcode}
+	</update>
+
+	<!-- MERGE: ERP 재고값 -> T_ST_CHANGESUB 반영 (VIEW 대신 WITH 절 인라인) -->
+	<update id="mergeStockChangeSub" parameterType="map">
+		MERGE INTO T_ST_CHANGESUB t
+		USING (
+		  WITH BASE_STOCK AS (
+		    -- 101 기초재고
+		    SELECT branch, gubun, roomcode, itemcode,
+		           gQty AS inqty, bQty AS binqty, 0 AS outqty, 0 AS boutqty
+		    FROM T_ST_Closesub
+		    WHERE gubun    = #{gubun}
+		      AND chmonth2 = #{baseMonth}
+		    UNION ALL
+		    -- 102 입고
+		    SELECT branch, gubun, roomcode, itemcode,
+		           qty, bqty, 0, 0
+		    FROM T_PM_Entersub
+		    WHERE gubun = #{gubun}
+		      AND condate BETWEEN #{dateFrom} AND #{dateTo}
+		    UNION ALL
+		    -- 103 입고반품
+		    SELECT branch, gubun, roomcode, itemcode,
+		           -1*gqty, -1*bqty, 0, 0
+		    FROM T_PM_EnterBacksub
+		    WHERE gubun = #{gubun}
+		      AND condate BETWEEN #{dateFrom} AND #{dateTo}
+		    UNION ALL
+		    -- 104 생산입고
+		    SELECT branch, gubun, roomcode, itemcode,
+		           gqty, bqty, 0, 0
+		    FROM T_MM_EnterSub
+		    WHERE gubun = #{gubun}
+		      AND condate BETWEEN #{dateFrom} AND #{dateTo}
+		    UNION ALL
+		    -- 105 생산입고취소
+		    SELECT branch, gubun, roomcode, itemcode,
+		           -1*gqty, -1*bqty, 0, 0
+		    FROM T_MM_EnterBackSub
+		    WHERE gubun = #{gubun}
+		      AND condate BETWEEN #{dateFrom} AND #{dateTo}
+		    UNION ALL
+		    -- 106 재공->창고 입고
+		    SELECT branch, gubun, roomcode, itemcode,
+		           gqty, bqty, 0, 0
+		    FROM T_MM_MoveWIPtoRoomsub
+		    WHERE gubun = #{gubun}
+		      AND condate BETWEEN #{dateFrom} AND #{dateTo}
+		    UNION ALL
+		    -- 107 예외입고
+		    SELECT branch, gubun, roomcode, itemcode,
+		           qty, 0, 0, 0
+		    FROM T_ST_ExceptEntersub
+		    WHERE gubun = #{gubun}
+		      AND condate BETWEEN #{dateFrom} AND #{dateTo}
+		    UNION ALL
+		    -- 108 출하시험
+		    SELECT branch, gubun, roomcode, itemcode,
+		           -1*qty, qty, 0, 0
+		    FROM T_MM_DeliverytestSub
+		    WHERE gubun = #{gubun}
+		      AND condate BETWEEN #{dateFrom} AND #{dateTo}
+		    UNION ALL
+		    -- 108 무상출고취소(입고)
+		    SELECT a.branch, a.gubun, a.roomcode, a.itemcode,
+		           a.gqty, a.bqty, 0, 0
+		    FROM T_MM_OUTREQUEST_FREE_BACKSUB a
+		    LEFT JOIN T_MM_OUTREQUEST_FREE_BACK b ON a.mbno = b.mbno
+		    WHERE a.gubun = #{gubun}
+		      AND a.condate BETWEEN #{dateFrom} AND #{dateTo}
+		    UNION ALL
+		    -- 201 실출고
+		    SELECT branch, gubun, roomcode, childcode,
+		           0, 0, qty, 0
+		    FROM T_MM_DeliverySub_Real
+		    WHERE gubun = #{gubun}
+		      AND condate BETWEEN #{dateFrom} AND #{dateTo}
+		    UNION ALL
+		    -- 202 출고반품
+		    SELECT branch, gubun, roomcode, itemcode,
+		           0, 0, -1*gqty, -1*bqty
+		    FROM T_MM_DeliveryBacksub
+		    WHERE gubun = #{gubun}
+		      AND condate BETWEEN #{dateFrom} AND #{dateTo}
+		    UNION ALL
+		    -- 201 출고요청
+		    SELECT branch, gubun, roomcode, childcode,
+		           0, 0, outqty, 0
+		    FROM T_MM_OutRequestsub
+		    WHERE gubun = #{gubun}
+		      AND condate BETWEEN #{dateFrom} AND #{dateTo}
+		    UNION ALL
+		    -- 210 무상출고요청
+		    SELECT branch, gubun, roomcode, childcode,
+		           0, 0, outqty, 0
+		    FROM T_MM_OutRequestsub_Free
+		    WHERE gubun = #{gubun}
+		      AND condate BETWEEN #{dateFrom} AND #{dateTo}
+		    UNION ALL
+		    -- 203 판매출고
+		    SELECT branch, gubun, roomcode,
+		           CASE WHEN itemcode != pitemcode THEN pitemcode ELSE itemcode END,
+		           0, 0, qty, 0
+		    FROM T_SM_DeliverySub
+		    WHERE gubun = #{gubun}
+		      AND condate BETWEEN #{dateFrom} AND #{dateTo}
+		    UNION ALL
+		    -- 206 판매반품(입고)
+		    SELECT branch, gubun, roomcode,
+		           CASE WHEN itemcode != pcode THEN pcode ELSE itemcode END,
+		           qty, bqty, 0, 0
+		    FROM T_SM_DeliveryBackSub
+		    WHERE gubun = #{gubun}
+		      AND condate BETWEEN #{dateFrom} AND #{dateTo}
+		    UNION ALL
+		    -- 207 예외출고
+		    SELECT branch, gubun, roomcode,
+		           CASE WHEN pcode = ' ' THEN itemcode WHEN itemcode != pcode THEN pcode ELSE itemcode END,
+		           0, 0, qty, 0
+		    FROM T_ST_ExceptDeliverySub
+		    WHERE gubun = #{gubun}
+		      AND condate BETWEEN #{dateFrom} AND #{dateTo}
+		    UNION ALL
+		    -- 208 폐기
+		    SELECT branch, gubun, roomcode, itemcode,
+		           0, 0, qty, bqty
+		    FROM T_ST_DestroySub
+		    WHERE gubun = #{gubun}
+		      AND condate BETWEEN #{dateFrom} AND #{dateTo}
+		    UNION ALL
+		    -- 209 상태변경(출고측)
+		    SELECT branch, gubun, roomcode, itemcode,
+		           0, 0, gqty, bqty
+		    FROM T_ST_ChangeSub
+		    WHERE gubun = #{gubun}
+		      AND condate BETWEEN #{dateFrom} AND #{dateTo}
+		    UNION ALL
+		    -- 301 공정 실출고(자재)
+		    SELECT branch, gubun, outroom AS roomcode, childcode,
+		           0, 0, qty, 0
+		    FROM T_PM_DeliverySub_Real
+		    WHERE gubun  = #{gubun}
+		      AND branch = #{branch}
+		      AND condate BETWEEN #{dateFrom} AND #{dateTo}
+		    UNION ALL
+		    -- 302 공정반품
+		    SELECT branch, gubun, inroom AS roomcode, itemcode,
+		           0, 0, -1*gqty, -1*bqty
+		    FROM t_pm_deliverybacksub
+		    WHERE gubun = #{gubun}
+		      AND condate BETWEEN #{dateFrom} AND #{dateTo}
+		    UNION ALL
+		    -- 304 창고이동(입고측)
+		    SELECT branch, gubun, inroom AS roomcode, itemcode,
+		           gqty, bqty, 0, 0
+		    FROM t_st_movesub
+		    WHERE gubun = #{gubun}
+		      AND condate BETWEEN #{dateFrom} AND #{dateTo}
+		    UNION ALL
+		    -- 304 창고이동(출고측)
+		    SELECT branch, gubun, outroom AS roomcode, itemcode,
+		           0, 0, gqty, bqty
+		    FROM t_st_movesub
+		    WHERE gubun = #{gubun}
+		      AND condate BETWEEN #{dateFrom} AND #{dateTo}
+		    UNION ALL
+		    -- 305 상태변경 양->불
+		    SELECT branch, gubun, roomcode, itemcode,
+		           0, -1*qty, -1*qty, 0
+		    FROM T_ST_ConditionChangeSub
+		    WHERE gubun = #{gubun}
+		      AND condate BETWEEN #{dateFrom} AND #{dateTo}
+		      AND AfterYangBul = '001'
+		    UNION ALL
+		    -- 305 상태변경 불->양
+		    SELECT branch, gubun, roomcode, itemcode,
+		           -1*qty, 0, 0, -1*qty
+		    FROM T_ST_ConditionChangeSub
+		    WHERE gubun = #{gubun}
+		      AND condate BETWEEN #{dateFrom} AND #{dateTo}
+		      AND AfterYangBul = '002'
+		    UNION ALL
+		    -- 106 상태변경(생산->창고 입고 간주)
+		    SELECT a.branch, a.gubun, a.roomcode, a.itemcode,
+		           a.qty, 0, 0, 0
+		    FROM T_MM_ConditionChangeSub a
+		    JOIN t_mi_item b ON a.gubun = b.gubun
+		                    AND a.itemcode = b.itemcode
+		                    AND b.cmb_itemtype IN ('001','002')
+		    WHERE a.gubun = #{gubun}
+		      AND a.condate BETWEEN #{dateFrom} AND #{dateTo}
+		      AND a.tConditionAft = '001'
+		      AND LENGTH(a.ptno) != 0
+		      AND LENGTH(a.roomcode) = 4
+		  ),
+		  TOTAL AS (
+		    SELECT itemcode,
+		           SUM(inqty)  - SUM(outqty)  AS gqty,
+		           SUM(binqty) - SUM(boutqty) AS bqty
+		    FROM BASE_STOCK
+		    WHERE gubun    = #{gubun}
+		      AND branch   = #{branch}
+		      AND roomcode = #{roomcode}
+		    GROUP BY itemcode
+		  )
+		  SELECT itemcode, gqty, bqty FROM TOTAL
+		) s
+		ON (
+		    t.itemcode = s.itemcode
+		    AND t.condate  = #{dateTo}
+		    AND t.roomcode = #{roomcode}
+		)
+		WHEN MATCHED THEN
+		  UPDATE SET
+		    t.rgQty = TO_NUMBER(s.gqty),
+		    t.rbQty = TO_NUMBER(s.bqty)
+		WHEN NOT MATCHED THEN
+		  INSERT (itemcode, condate, roomcode, rgQty, rbQty, branch, remark, testate, mancode, gubun, ifno)
+		  VALUES (s.itemcode, #{dateTo}, #{roomcode}, 0, 0, #{branch}, 'WMS -', '001', 'ZZ99', #{gubun}, '0')
+	</update>
+
+	<!-- 조정수량 계산: gQty = rgQty - gSTOCK, bQty = rbQty - bStock -->
+	<update id="updateStockChangeSubQty1" parameterType="map">
+		UPDATE T_ST_CHANGESUB t
+		SET t.gQty = TRUNC(NVL(t.rgQty, 0) - NVL(t.gSTOCK, 0), 2),
+		    t.bQty = TRUNC(NVL(t.rbQty, 0) - NVL(t.bStock, 0), 2)
+		WHERE t.condate  = #{dateTo}
+		  AND t.roomcode = #{roomcode}
+	</update>
+
+	<!-- QTY = GQTY + BQTY -->
+	<update id="updateStockChangeSubQty2" parameterType="map">
+		UPDATE T_ST_CHANGESUB t
+		SET t.QTY = t.GQTY + t.BQTY
+		WHERE t.condate  = #{dateTo}
+		  AND t.roomcode = #{roomcode}
+	</update>
+
+	<!-- STOCK = GSTOCK + BSTOCK -->
+	<update id="updateStockChangeSubQty3" parameterType="map">
+		UPDATE T_ST_CHANGESUB t
+		SET t.STOCK = t.GSTOCK + t.BSTOCK
+		WHERE t.condate  = #{dateTo}
+		  AND t.roomcode = #{roomcode}
+	</update>
+
+	<!-- ============================================================
+	     재공재고 조정 - 재공재고실사 인터페이스 후처리 (stockCountPurWIPListIntf)
+	     ============================================================ -->
+
+	<!-- 초기화: 수량 0으로 리셋 -->
+	<update id="updateWipStockChangeSubInit" parameterType="map">
+		UPDATE T_MM_CHANGESUB
+		SET WGQTY=0, WBQTY=0, GQTY=0, BQTY=0, QTY=0
+		WHERE condate = #{dateTo}
+		  AND WCcode  = #{wccode}
+	</update>
+
+	<!-- MERGE: ERP 재공재고값 -> T_MM_CHANGESUB 반영 (VIEW 대신 WITH 절 인라인) -->
+	<update id="mergeWipStockChangeSub" parameterType="map">
+		MERGE INTO T_MM_CHANGESUB t
+		USING (
+		  WITH RAW_DATA AS (
+		    -- 101 기초재고
+		    SELECT branch, gubun, wccode, itemcode,
+		           gqty AS inqty, bqty AS binqty, 0 AS outqty, 0 AS boutqty
+		    FROM T_MM_CloseSub
+		    WHERE gubun = #{gubun} AND chmonth2 = #{baseMonth}
+		    UNION ALL
+		    -- 102 공정실출고(자재투입)
+		    SELECT branch, gubun, wccode, childcode AS itemcode,
+		           qty AS inqty, 0 AS binqty, 0 AS outqty, 0 AS boutqty
+		    FROM T_MM_DeliverySub_Real
+		    WHERE gubun = #{gubun} AND condate BETWEEN #{dateFrom} AND #{dateTo}
+		    UNION ALL
+		    -- 102 출고요청
+		    SELECT branch, gubun, wccode, childcode AS itemcode,
+		           outqty AS inqty, 0 AS binqty, 0 AS outqty, 0 AS boutqty
+		    FROM T_MM_OutRequestsub
+		    WHERE gubun = #{gubun} AND condate BETWEEN #{dateFrom} AND #{dateTo}
+		    UNION ALL
+		    -- 106 무상출고요청
+		    SELECT branch, gubun, wccode, childcode AS itemcode,
+		           outqty AS inqty, 0 AS binqty, 0 AS outqty, 0 AS boutqty
+		    FROM T_MM_OutRequestsub_Free
+		    WHERE gubun = #{gubun} AND condate BETWEEN #{dateFrom} AND #{dateTo}
+		    UNION ALL
+		    -- 103 출고반품
+		    SELECT branch, gubun, wccode, itemcode,
+		           -1*gqty AS inqty, -1*bqty AS binqty, 0 AS outqty, 0 AS boutqty
+		    FROM T_MM_DeliveryBacksub
+		    WHERE gubun = #{gubun} AND condate BETWEEN #{dateFrom} AND #{dateTo}
+		    UNION ALL
+		    -- 107 예외입고
+		    SELECT branch, gubun, wccode, itemcode,
+		           qty AS inqty, 0 AS binqty, 0 AS outqty, 0 AS boutqty
+		    FROM T_MM_ExceptEntersub
+		    WHERE gubun = #{gubun} AND condate BETWEEN #{dateFrom} AND #{dateTo}
+		    UNION ALL
+		    -- 207 예외출고
+		    SELECT branch, gubun, wccode, itemcode,
+		           0 AS inqty, 0 AS binqty, qty AS outqty, 0 AS boutqty
+		    FROM T_MM_ExceptDeliverySub
+		    WHERE gubun = #{gubun} AND condate BETWEEN #{dateFrom} AND #{dateTo}
+		    UNION ALL
+		    -- 104 생산실적
+		    SELECT branch, gubun, wccode, itemcode,
+		           gqty AS inqty, bqty AS binqty, 0 AS outqty, 0 AS boutqty
+		    FROM T_MM_WorkSub
+		    WHERE gubun = #{gubun} AND condate BETWEEN #{dateFrom} AND #{dateTo}
+		    UNION ALL
+		    -- 105 분해
+		    SELECT branch, gubun, wccode, itemcode,
+		           -1*gqtyin AS inqty, -1*bqtyin AS binqty, 0 AS outqty, 0 AS boutqty
+		    FROM T_MM_DisAssemble
+		    WHERE gubun = #{gubun} AND condate BETWEEN #{dateFrom} AND #{dateTo}
+		    UNION ALL
+		    -- 201 공정투입(작업지시 자재소요)
+		    SELECT a.branch, a.gubun, a.wccode, a.childcode AS itemcode,
+		           0 AS inqty, 0 AS binqty, a.inqty AS outqty, 0 AS boutqty
+		    FROM T_MM_Work_Input a
+		    LEFT JOIN T_MM_Worksub c ON a.gubun = c.gubun AND a.mwno = c.mwno AND a.mwsubno = c.mwsubno
+		    WHERE a.gubun = #{gubun} AND c.condate BETWEEN #{dateFrom} AND #{dateTo}
+		    UNION ALL
+		    -- 202 생산입고
+		    SELECT branch, gubun, wccode, itemcode,
+		           0 AS inqty, 0 AS binqty, gqty AS outqty, bqty AS boutqty
+		    FROM T_MM_Entersub
+		    WHERE gubun = #{gubun} AND condate BETWEEN #{dateFrom} AND #{dateTo}
+		    UNION ALL
+		    -- 203 생산입고취소
+		    SELECT branch, gubun, wccode, itemcode,
+		           0 AS inqty, 0 AS binqty, -1*gqty AS outqty, -1*bqty AS boutqty
+		    FROM T_MM_EnterBacksub
+		    WHERE gubun = #{gubun} AND condate BETWEEN #{dateFrom} AND #{dateTo}
+		    UNION ALL
+		    -- 205 분해소요
+		    SELECT branch, gubun, wccode, childcode AS itemcode,
+		           0 AS inqty, 0 AS binqty, -1*gqtyout AS outqty, -1*bqtyout AS boutqty
+		    FROM T_MM_DisAssemblesub
+		    WHERE gubun = #{gubun} AND condate BETWEEN #{dateFrom} AND #{dateTo}
+		    UNION ALL
+		    -- 206 상태변경
+		    SELECT branch, gubun, wccode, itemcode,
+		           0 AS inqty, 0 AS binqty, gqty AS outqty, bqty AS boutqty
+		    FROM T_MM_Changesub
+		    WHERE gubun = #{gubun} AND condate BETWEEN #{dateFrom} AND #{dateTo}
+		    UNION ALL
+		    -- 207 재공->창고이동(출고측)
+		    SELECT branch, gubun, outwc AS wccode, itemcode,
+		           0 AS inqty, 0 AS binqty, gqty AS outqty, bqty AS boutqty
+		    FROM T_MM_MoveWIPtoRoomsub
+		    WHERE gubun = #{gubun} AND condate BETWEEN #{dateFrom} AND #{dateTo}
+		    UNION ALL
+		    -- 208 폐기
+		    SELECT branch, gubun, wccode, itemcode,
+		           0 AS inqty, 0 AS binqty, qty AS outqty, bqty AS boutqty
+		    FROM T_MM_DestroySub
+		    WHERE gubun = #{gubun} AND condate BETWEEN #{dateFrom} AND #{dateTo}
+		    UNION ALL
+		    -- 209 재작업
+		    SELECT branch, gubun, wccode, childcode AS itemcode,
+		           0 AS inqty, 0 AS binqty, gqtyout AS outqty, bqtyout AS boutqty
+		    FROM T_MM_Reworksub
+		    WHERE gubun = #{gubun} AND condate BETWEEN #{dateFrom} AND #{dateTo}
+		    UNION ALL
+		    -- 302 공정검사
+		    SELECT branch, gubun, wccode, itemcode,
+		           0 AS inqty, pqty AS binqty, pqty AS outqty, 0 AS boutqty
+		    FROM T_QC_ProcTestsub
+		    WHERE gubun = #{gubun} AND condate BETWEEN #{dateFrom} AND #{dateTo} AND mwno = ' '
+		    UNION ALL
+		    -- 303 완성검사
+		    SELECT branch, gubun, wccode, mpsitem AS itemcode,
+		           0 AS inqty, pqty AS binqty, pqty AS outqty, 0 AS boutqty
+		    FROM T_QC_FinishTest
+		    WHERE gubun = #{gubun} AND condate BETWEEN #{dateFrom} AND #{dateTo}
+		    UNION ALL
+		    -- 304 작업장이동(입고측)
+		    SELECT branch, gubun, inwc AS wccode, itemcode,
+		           gqty AS inqty, bqty AS binqty, 0 AS outqty, 0 AS boutqty
+		    FROM T_MM_MoveSub
+		    WHERE gubun = #{gubun} AND condate BETWEEN #{dateFrom} AND #{dateTo}
+		    UNION ALL
+		    -- 304 작업장이동(출고측)
+		    SELECT branch, gubun, outwc AS wccode, itemcode,
+		           0 AS inqty, 0 AS binqty, gqty AS outqty, bqty AS boutqty
+		    FROM T_MM_MoveSub
+		    WHERE gubun = #{gubun} AND condate BETWEEN #{dateFrom} AND #{dateTo}
+		    UNION ALL
+		    -- 305 상태변경 양->불 (ptno 없음)
+		    SELECT branch, gubun, wccode, itemcode,
+		           qty AS inqty, -1*qty AS binqty, 0 AS outqty, 0 AS boutqty
+		    FROM T_MM_ConditionChangeSub
+		    WHERE gubun = #{gubun} AND condate BETWEEN #{dateFrom} AND #{dateTo}
+		      AND tConditionAft = '001' AND LENGTH(ptno) = 0
+		    UNION ALL
+		    -- 305 상태변경 불->양 (ptno 없음)
+		    SELECT branch, gubun, wccode, itemcode,
+		           -1*qty AS inqty, qty AS binqty, 0 AS outqty, 0 AS boutqty
+		    FROM T_MM_ConditionChangeSub
+		    WHERE gubun = #{gubun} AND condate BETWEEN #{dateFrom} AND #{dateTo}
+		      AND tConditionAft = '002' AND LENGTH(ptno) = 0
+		    UNION ALL
+		    -- 306 작업완료(toWccode 있음, 출고측)
+		    SELECT branch, gubun, wccode, itemcode,
+		           0 AS inqty, 0 AS binqty, gqty AS outqty, 0 AS boutqty
+		    FROM T_MM_WorkSub
+		    WHERE gubun = #{gubun} AND condate BETWEEN #{dateFrom} AND #{dateTo}
+		      AND LENGTH(towccode) = 5
+		    UNION ALL
+		    -- 307 작업완료(toWccode 있음, 입고측)
+		    SELECT branch, gubun, towccode AS wccode, itemcode,
+		           gqty AS inqty, 0 AS binqty, 0 AS outqty, 0 AS boutqty
+		    FROM T_MM_WorkSub
+		    WHERE gubun = #{gubun} AND condate BETWEEN #{dateFrom} AND #{dateTo}
+		      AND LENGTH(towccode) = 5
+		    UNION ALL
+		    -- 308 상태변경 양->불 (ptno 있음)
+		    SELECT branch, gubun, wccode, itemcode,
+		           qty AS inqty, -1*qty AS binqty, 0 AS outqty, 0 AS boutqty
+		    FROM T_MM_ConditionChangeSub
+		    WHERE gubun = #{gubun} AND condate BETWEEN #{dateFrom} AND #{dateTo}
+		      AND tConditionAft = '001' AND LENGTH(ptno) != 0
+		    UNION ALL
+		    -- 308 상태변경 불->양 (ptno 있음)
+		    SELECT branch, gubun, wccode, itemcode,
+		           -1*qty AS inqty, qty AS binqty, 0 AS outqty, 0 AS boutqty
+		    FROM T_MM_ConditionChangeSub
+		    WHERE gubun = #{gubun} AND condate BETWEEN #{dateFrom} AND #{dateTo}
+		      AND tConditionAft = '002' AND LENGTH(ptno) != 0
+		    UNION ALL
+		    -- 304 상태변경->창고이동(ptno 있고 roomcode 4자리)
+		    SELECT a.branch, a.gubun, a.wccode, a.itemcode,
+		           0 AS inqty, 0 AS binqty, a.qty AS outqty, 0 AS boutqty
+		    FROM T_MM_ConditionChangeSub a
+		    JOIN t_mi_item b ON a.gubun = b.gubun AND a.itemcode = b.itemcode
+		                    AND b.cmb_itemtype IN ('001', '002')
+		    WHERE a.gubun = #{gubun} AND a.condate BETWEEN #{dateFrom} AND #{dateTo}
+		      AND a.tConditionAft = '001' AND LENGTH(a.ptno) != 0
+		      AND LENGTH(a.roomcode) = 4
+		    UNION ALL
+		    -- 311 무상출고취소
+		    SELECT a.branch, a.gubun, a.wccode, a.itemcode,
+		           0 AS inqty, 0 AS binqty, a.gqty AS outqty, a.bqty AS boutqty
+		    FROM T_MM_OUTREQUEST_FREE_BACKSUB a
+		    WHERE a.gubun = #{gubun} AND a.condate BETWEEN #{dateFrom} AND #{dateTo}
+		  ),
+		  TOTAL AS (
+		    SELECT gubun, branch, itemcode, wccode,
+		           SUM(inqty) AS inqty1, SUM(binqty) AS binqty1,
+		           SUM(outqty) AS outqty1, SUM(boutqty) AS boutqty1
+		    FROM RAW_DATA
+		    GROUP BY gubun, branch, itemcode, wccode
+		  )
+		  SELECT itemcode,
+		         inqty1 - outqty1 AS jegoqty1,
+		         binqty1 - boutqty1 AS bjegoqty1
+		  FROM TOTAL
+		  WHERE gubun = #{gubun}
+		    AND branch IN (' ', '000')
+		    AND wccode = #{wccode}
+		) s
+		ON (
+		    t.itemcode = s.itemcode
+		    AND t.condate = #{dateTo}
+		    AND t.WCcode  = #{wccode}
+		)
+		WHEN MATCHED THEN
+		  UPDATE SET
+		    t.wgQty = s.jegoqty1,
+		    t.wbQty = s.bjegoqty1
+		WHEN NOT MATCHED THEN
+		  INSERT (itemcode, condate, WCcode, wgQty, wbQty, BRANCH, REMARK, TESTATE, MANCODE, GUBUN, IFNO)
+		  VALUES (s.itemcode, #{dateTo}, #{wccode}, 0, 0, #{branch}, 'WMS -', '001', 'ZZ99', #{gubun}, '0')
+	</update>
+
+	<!-- 조정수량 계산: gQty = wgQty - gSTOCK, bQty = wbQty - bStock -->
+	<update id="updateWipStockChangeSubQty1" parameterType="map">
+		UPDATE T_MM_CHANGESUB t
+		SET t.gQty = TRUNC(NVL(t.wgQty, 0) - NVL(t.gSTOCK, 0), 2),
+		    t.bQty = TRUNC(NVL(t.wbQty, 0) - NVL(t.bStock, 0), 2)
+		WHERE t.condate = #{dateTo}
+		  AND t.WCcode  = #{wccode}
+	</update>
+
+	<!-- QTY = GQTY + BQTY -->
+	<update id="updateWipStockChangeSubQty2" parameterType="map">
+		UPDATE T_MM_CHANGESUB t
+		SET t.QTY = t.GQTY + t.BQTY
+		WHERE t.condate = #{dateTo}
+		  AND t.WCcode  = #{wccode}
+	</update>
+
+	<!-- STOCK = GSTOCK + BSTOCK -->
+	<update id="updateWipStockChangeSubQty3" parameterType="map">
+		UPDATE T_MM_CHANGESUB t
+		SET t.STOCK = t.GSTOCK + t.BSTOCK
+		WHERE t.condate = #{dateTo}
+		  AND t.WCcode  = #{wccode}
+	</update>
+
+	<update id="stockClosePro" parameterType="map" statementType="CALLABLE">
+		{CALL SP_IF_WMS_ERP_CLOSE_ADJUST(#{condate})}
+	</update>
+</mapper>

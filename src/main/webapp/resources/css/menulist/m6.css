@@ -1,0 +1,1052 @@
+/* ============================================
+   대시보드 전체 래퍼
+   ============================================ */
+#dashboard-wrapper {
+    padding: 20px;
+    background: linear-gradient(135deg, #046565 0%, #046565 100%);
+}
+
+/* ============================================
+   KPI 카드 영역
+   ============================================ */
+.kpi-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.kpi-card {
+    padding: 13px 0px;
+    border-radius: 10px;
+    color: white;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.kpi-card:hover {
+    /* transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3); */
+}
+
+.kpi-card-blue {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.kpi-card-pink {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.kpi-card-cyan {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.kpi-card-green {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+
+.kpi-title {
+    font-size: 14px;
+    opacity: 0.9;
+    margin-bottom: 10px;
+}
+
+.kpi-value {
+    font-size: 32px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+/* ============================================
+   차트 영역
+   ============================================ */
+.chart-container {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr)); /* ✅ 핵심 */
+    gap: 15px;
+
+    width: 100%;
+    max-width: 100%;
+}
+
+/* 화면 좁으면 1열 (선택) */
+@media (max-width: 1100px){
+    .chart-container{
+        grid-template-columns: 1fr;
+    }
+}
+
+.chart-box {
+    background: white;
+    padding: 13px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;      /* ✅ 핵심: 줄어들 때 깨짐 방지 */
+    overflow: hidden;  /* ✅ 캔버스/내부가 튀어나오는 것 방지 */
+}
+
+.chart-box:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.chart-title {
+    margin: 0 0 9px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+.chart-box canvas {
+    display: block;
+    width: 100% !important;   /* ✅ 부모 폭 따라감 */
+    height: 278px !important;
+}
+
+
+/* ============================================
+   반응형 디자인
+   ============================================ */
+@media (max-width: 1200px) {
+    .kpi-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .chart-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .kpi-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .kpi-value {
+        font-size: 24px;
+    }
+    
+    #dashboard-wrapper {
+        padding: 10px;
+    }
+}
+
+/* ============================================
+   로딩 애니메이션
+   ============================================ */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.loading-spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #3b82f6;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ============================================
+   빈 데이터 메시지
+   ============================================ */
+.empty-data-message {
+    text-align: center;
+    padding: 50px;
+    color: #666;
+    font-size: 18px;
+    background: white;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+.content-body.dashboard {
+	padding:0px !important;
+	
+}
+
+
+
+/* 생산 대시보드 */
+
+
+/* ============================================
+생산 대시보드 전용 CSS
+다른 대시보드와 충돌 방지를 위해 production- 접두사 사용
+============================================ */
+
+/* ============================================
+대시보드 전체 래퍼
+============================================ */
+#dashboard-production-wrapper {
+    padding: 20px;
+    background: linear-gradient(135deg, #EFF6FF 0%, #E0E7FF 100%);
+}
+
+.content-body.dashboard-production {
+    padding: 0px !important;
+}
+
+/* ============================================
+헤더
+============================================ */
+.production-dashboard-header {
+    margin-bottom: 16px;
+}
+
+.production-dashboard-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #1f2937;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* ============================================
+필터 및 KPI 카드 영역
+============================================ */
+.production-filter-kpi-container {
+    display: grid;
+    grid-template-columns: 0.4fr 0.25fr 0.25fr 0.25fr 0.25fr;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+/* 필터 카드 */
+.production-filter-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    padding: 12px 16px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.production-filter-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 25%;
+}
+
+.production-filter-buttons {
+    display: flex;
+    gap: 8px;
+    /* margin-bottom: 8px; */
+    width: 100%;
+}
+
+.production-filter-btn {
+    flex: 1;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    background: #f3f4f6;
+    color: #6b7280;
+    transition: all 0.2s;
+}
+
+.production-filter-btn.active {
+    background: #2563eb;
+    color: white;
+}
+
+.production-filter-select {
+    width: 100%;
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    outline: none;
+}
+
+.production-filter-select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* KPI 카드 */
+.production-kpi-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    padding: 13px;
+    color: white;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.production-kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+.production-kpi-blue {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+}
+
+.production-kpi-indigo {
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+}
+
+.production-kpi-purple {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+}
+
+.production-kpi-teal {
+    background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
+}
+
+.production-kpi-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.production-kpi-label {
+    font-size: 12px;
+    opacity: 0.9;
+}
+
+.production-kpi-value {
+    font-size: 28px;
+    font-weight: bold;
+    margin-top: 44px;
+    
+}
+
+.production-kpi-unit {
+    font-size: 12px;
+    opacity: 0.9;
+    margin-top: 4px;
+}
+
+/* ============================================
+차트 영역
+============================================ */
+.production-chart-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr)); /* ✅ 핵심 */
+    gap: 16px;
+    margin-bottom: 16px;
+
+    width: 100%;
+    max-width: 100%;
+}
+
+/* 화면 좁으면 1열 (선택) */
+@media (max-width: 1100px){
+    .production-chart-grid{
+        grid-template-columns: 1fr;
+    }
+}
+
+.production-chart-box {
+    background: white;
+    padding: 16px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;      /* ✅ 핵심 */
+    overflow: hidden;  /* ✅ 핵심 */
+}
+
+.production-chart-box:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.production-chart-title {
+    margin: 0 0 12px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+.production-chart-box canvas {
+    display: block;
+    width: 100% !important;   /* ✅ 핵심 */
+    height: 220px !important;
+}
+
+
+/* ============================================
+테이블 영역
+============================================ */
+.production-table-container {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.production-table-header {
+    padding: 4px 16px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.production-table-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #1f2937;
+    margin: 0;
+}
+
+.production-table-scroll {
+    max-height: 223px;
+    overflow-y: auto;
+}
+
+.production-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.production-table thead {
+    position: sticky;
+    top: 0;
+    background: #f9fafb;
+    z-index: 10;
+}
+
+.production-table th {
+    padding: 12px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 600;
+    color: #374151;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.production-table td {
+    padding: 5px 5px;
+    font-size: 12px;
+    color: #374151;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.production-table tbody tr:hover {
+    background: #eff6ff;
+}
+
+.production-table tbody tr:nth-child(even) {
+    background: #f9fafb;
+}
+
+.production-line-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    background: #dbeafe;
+    color: #1e40af;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+.production-status-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.production-status-complete {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.production-status-progress {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.production-table-footer {
+    padding: 8px 16px;
+    background: #f9fafb;
+    border-top: 1px solid #e5e7eb;
+    font-size: 12px;
+    color: #6b7280;
+    text-align: right;
+}
+
+/* ============================================
+유틸리티 클래스
+============================================ */
+.production-text-right {
+    text-align: right;
+}
+
+.production-text-center {
+    text-align: center;
+}
+
+/* ============================================
+반응형 디자인
+============================================ */
+@media (max-width: 1200px) {
+    .production-filter-kpi-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .production-chart-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .production-filter-kpi-container {
+        grid-template-columns: 1fr;
+    }
+
+    .production-kpi-value {
+        font-size: 24px;
+    }
+
+    #dashboard-production-wrapper {
+        padding: 10px;
+    }
+}
+
+/* ============================================
+로딩 애니메이션
+============================================ */
+.production-loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.production-loading-spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #3b82f6;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: production-spin 1s linear infinite;
+}
+
+@keyframes production-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ============================================
+   (유지) 빈 데이터 메시지 - 그대로 두셔도 됩니다
+============================================ */
+.production-empty-data-message {
+	text-align: center;
+	padding: 50px;
+	color: #666;
+	font-size: 18px;
+	background: white;
+	border-radius: 10px;
+	margin-top: 20px;
+}
+
+
+/* ============================================
+   ✅ 생산 대시보드 필터 카드 v2 (통째 교체용)
+   - 이미지처럼: 1줄(날짜/공장/공정) + 2줄(버튼3개+셀렉트) + 우측 새로고침
+============================================ */
+
+/* v2 카드 기본 */
+.production-filter-card-v2{
+	border:1px solid #e6eaf0;
+	border-radius:12px;
+	background:#fff;
+	padding:14px;
+}
+
+/* ----------------------------
+   상단 1줄: 날짜 / 공장 / 공정
+---------------------------- */
+.production-filter-card-v2 .production-top-row{
+	display:grid;
+	grid-template-columns: 1fr 1fr 1.2fr;
+	gap:14px;
+	align-items:end;
+}
+
+.production-filter-card-v2 .production-field-label{
+	font-size:12px;
+	font-weight:700;
+	color:#1f2937;
+	margin-bottom:6px;
+}
+
+/* 날짜 input */
+.production-filter-card-v2 #dashboard_production_date{
+    width: 100%;
+    height: 32px;
+    padding: 0 10px;
+    border: 1px solid #d7dde6;
+    border-radius: 5px;
+    background: #fff;
+    outline: none;
+    font-size: 11pt;
+}
+
+/* 공장/공정 select */
+.production-filter-card-v2 #production-factory-select,
+.production-filter-card-v2 #production-process-select{
+    width: 100%;
+    height: 32px;
+    padding: 0 10px;
+    border: 1px solid #d7dde6;
+    border-radius: 5px;
+    background: #fff;
+    outline: none;
+    font-size: 10pt;
+}
+
+.production-filter-card-v2 #production-factory-select:hover{
+	cursor:pointer;
+}
+.production-filter-card-v2 #production-process-select:hover{
+	cursor:pointer;
+}
+
+
+/* -----------------------------------------
+   하단 2열: (왼쪽=버튼+셀렉트) (오른쪽=새로고침)
+----------------------------------------- */
+.production-filter-card-v2 .production-bottom-grid{
+    margin-top: 12px;
+    display: grid;
+    grid-template-columns: 1fr 140px;
+    gap: 12px;
+    align-items: stretch;
+    width: 100%;
+}
+
+/* 왼쪽 영역: 버튼 1줄 + select 1줄 */
+.production-filter-card-v2 .production-left-area{
+	display:grid;
+	grid-template-rows:auto auto;
+	gap:10px;
+	min-width:0;
+}
+
+/* 버튼 3개 */
+.production-filter-card-v2 .production-filter-buttons{
+	display:grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	gap:10px;
+}
+
+.production-filter-card-v2 .production-filter-btn{
+    height: 36px;
+    border-radius: 5px;
+    border: 1px solid #d7dde6;
+    background: #f3f5f8;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.production-filter-card-v2 .production-filter-btn.active{
+	background:#2563eb;
+	border-color:#2563eb;
+	color:#fff;
+}
+
+/* 전체 select (아래줄) */
+.production-filter-card-v2 #production-filter-select{
+	width:100%;
+	height:40px;
+	padding:0 10px;
+	border:1px solid #d7dde6;
+	border-radius:5px;
+	background:#fff;
+	outline:none;
+}
+
+/* 우측 새로고침 큰 버튼(2줄 높이) */
+.production-filter-card-v2 #production-refresh-btn.production-refresh-btn-big,
+.production-filter-card-v2 .production-refresh-btn-big{
+	width:100%;
+	height:100%;
+	min-height:92px; /* 버튼3개줄+셀렉트줄 합 느낌 */
+	border-radius:5px;
+	border:1px solid #d7dde6;
+	background:#ffffff;
+	font-weight:900;
+	cursor:pointer;
+}
+
+.production-filter-card-v2 .production-refresh-btn-big:hover{
+	background:#f3f5f8;
+}
+
+
+/* ----------------------------
+   반응형: 좁아지면 세로로 쌓기
+---------------------------- */
+@media (max-width: 900px){
+	.production-filter-card-v2 .production-top-row{
+		grid-template-columns: 1fr;
+	}
+	.production-filter-card-v2 .production-bottom-grid{
+		grid-template-columns: 1fr;
+	}
+	.production-filter-card-v2 .production-refresh-btn-big{
+		min-height:44px;
+		height:44px;
+	}
+}
+
+
+.production-table-header{
+	display:flex;
+	align-items:center;
+	justify-content:space-between;
+	gap:12px;
+}
+
+.production-excel-btn:hover{
+	background:#1d6d43;
+	color:white;
+	cursor:pointer
+}
+.production-table-actions{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 10pt;
+}
+
+.production-excel-btn{
+    height: 36px;
+    padding: 6px 14px;
+    border: 1px solid #d7dde6;
+    background: #ffffff;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+
+
+
+
+
+
+/* ============================================
+   ✅ Sales Dashboard 전용 CSS (production 톤/크기 맞춤)
+   - (요청) sale 부분만 통으로
+============================================ */
+
+/* ===== Sales Dashboard Wrapper ===== */
+.salesDash{
+	padding: 20px;
+	background: linear-gradient(135deg, #EFF6FF 0%, #E0E7FF 100%);
+}
+
+.content-body.dashboard-sales{
+	padding: 0px !important;
+}
+
+/* ===== TOP AREA (Filter + KPI) ===== */
+.salesDashTop{
+	display: flex;
+	gap: 12px;
+	align-items: stretch;
+	margin-bottom: 16px;
+}
+
+/* ===== Filter Card ===== */
+.salesDashFilterCard{
+	flex: 1 1 auto;
+	background: #ffffff;
+	border-radius: 8px;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.10);
+	padding: 12px 16px;
+	display: flex;
+	align-items: center;
+}
+
+/* 필터 그리드: production 느낌 */
+.filterGrid{
+    display: grid;
+    grid-template-columns: repeat(4, minmax(160px, 1fr));
+    gap: 12px;
+    align-items: end;
+}
+
+/* 라벨 */
+.filterField .filterLabel{
+	font-size: 12px;
+	font-weight: 600;
+	color: #374151;
+	margin-bottom: 6px;
+}
+
+/* input/select 공통 */
+.filterInput,
+.filterSelect{
+	width: 100%;
+	height: 32px;
+	padding: 0 10px;
+	border: 1px solid #d1d5db;
+	border-radius: 6px;
+	background: #fff;
+	outline: none;
+	font-size: 10pt;
+}
+
+.filterInput:focus,
+.filterSelect:focus{
+	border-color: #2563eb;
+	box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
+}
+
+.filterSelect:hover{
+	cursor: pointer;
+}
+
+.filterAction{
+    grid-column: 4;
+    grid-row: 1 / span 2;
+    justify-self: end;
+    align-self: center;
+    display: flex;
+    width: 69%;
+    height: 100%;
+    margin: auto;
+    margin-top: 13%;
+}
+
+/* ===== KPI ROW ===== */
+.salesDashKpiRow{
+    display: flex;
+    gap: 10px;
+    width: 70%;
+}
+
+/* KPI 카드: production kpi-card와 동일 톤 */
+.kpiCard{
+	flex: 1 1 0;
+	border-radius: 8px;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.20);
+	padding: 13px;
+	color: #fff;
+	text-align: center;
+	transition: transform 0.3s ease, box-shadow 0.3s ease;
+	min-height: 110px;
+	display: flex;
+	flex-direction: column;
+}
+
+.kpiCard:hover{
+	transform: translateY(-2px);
+	box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+.kpiTitle{
+	font-size: 12px;
+	opacity: 0.9;
+	text-align: left;
+}
+
+.kpiValue{
+	font-size: 28px;       /* production-kpi-value와 통일 */
+	font-weight: bold;
+	margin-top: 18px;      /* 너무 위로 붙는 것 방지 */
+}
+
+/* KPI 컬러는 기존 유지 */
+.kpiDark{ background: linear-gradient(135deg, #111827 0%, #0b1220 100%); }
+.kpiNavy{ background: linear-gradient(135deg, #1f2937 0%, #111827 100%); }
+.kpiBlue{ background: linear-gradient(135deg, #1e4e79 0%, #2563eb 100%); }
+
+
+/* ===== CHART STACK ===== */
+.salesDashCharts{
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+/* 차트 박스: production-chart-box 톤 */
+.chartBox{
+    background: #fff;
+    padding: 16px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.10);
+    transition: box-shadow 0.3s ease;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow: hidden;
+    height: 20vh;
+}
+
+.chartBox:hover{
+	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.chartTitle{
+	margin: 0 0 12px 0;
+	font-size: 16px;
+	font-weight: 600;
+	color: #333;
+}
+
+.chartCanvasWrap{
+	height: 137px; /* production-chart-box canvas height 맞춤 */
+}
+
+.chartCanvasWrap canvas{
+	display: block;
+	width: 100% !important;
+	height: 100% !important;
+}
+
+
+/* ===== 반응형 ===== */
+@media (max-width: 1200px){
+	.salesDashTop{
+		flex-direction: column;
+	}
+	.salesDashKpiRow{
+		flex: 1 1 auto;
+		width: 100%;
+	}
+}
+
+@media (max-width: 900px){
+	.filterGrid{
+		grid-template-columns: 1fr;
+	}
+	.filterRefreshBtn{
+		height: 44px;
+		min-width: 100%;
+	}
+}
+
+@media (max-width: 768px){
+	.salesDash{
+		padding: 10px;
+	}
+	.salesDashKpiRow{
+		flex-direction: column;
+	}
+	.kpiValue{
+		font-size: 24px;
+	}
+}
+.content-body.dashboard-sales{
+	width: 100%;
+}
+/* ================================
+   ✅ 새로고침 버튼 디자인 (filterRefreshBtn)
+================================ */
+/* ================================
+   ✅ 새로고침 버튼 (안전/과하지 않게)
+   - hover 시 안 사라짐 (transform/filter 제거)
+================================ */
+.filterRefreshBtn{
+    width: 100%;
+    min-width: 120px;
+    height: 98px;
+    padding: 10px 16px;
+
+    border-radius: 10px;
+    border: 1px solid #cfe0ff;
+    background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+    color: #ffffff;
+
+    font-weight: 900;
+    font-size: 13px;
+    letter-spacing: 0.2px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    box-shadow: 0 6px 14px rgba(37, 99, 235, 0.18);
+    cursor: pointer;
+    user-select: none;
+
+    /* ✅ hover 사라짐 방지(특히 overflow 상황에서 안전) */
+    position: relative;
+    z-index: 1;
+
+    transition: box-shadow 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+}
+
+/* Hover: 과하지 않게 테두리/그림자만 살짝 */
+.filterRefreshBtn:hover{
+    border-color: #9fc2ff;
+    box-shadow: 0 8px 18px rgba(37, 99, 235, 0.22);
+}
+
+/* Active: 눌림 느낌만 약하게 */
+.filterRefreshBtn:active{
+    opacity: 0.95;
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.18);
+}
+
+/* Focus */
+.filterRefreshBtn:focus{
+    outline: none;
+}
+.filterRefreshBtn:focus-visible{
+    outline: 3px solid rgba(37, 99, 235, 0.22);
+    outline-offset: 2px;
+}
+
+/* Disabled */
+.filterRefreshBtn:disabled{
+    background: #e5e7eb;
+    border-color: #d1d5db;
+    color: #9ca3af;
+    cursor: not-allowed;
+    box-shadow: none;
+    opacity: 1;
+}
+
+/* (선택) 아이콘 */
+.filterRefreshBtn .btnIcon{
+    font-size: 16px;
+    line-height: 1;
+    opacity: 0.95;
+}
+
+

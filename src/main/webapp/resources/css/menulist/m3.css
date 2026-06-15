@@ -1,0 +1,35 @@
+#productionStockCountWIPListWorkshop {
+	background: white;
+    margin-right: 4px;
+}
+
+#productionStockCountWIPListDate {
+    background: white;
+    padding: 4px;
+}
+
+
+#view_mBasicData_magam table.data-table.mBasicData_magam {
+    margin-top: 0;
+}
+
+
+#view_mBasicData_magam #magamTableBody{
+	min-width: 100%;
+    width: max-content;
+    display: block;
+    min-height: 590px;
+    max-height: 590px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+#view_mBasicData_magam .table-container{
+	max-height: 631px !important;
+    min-height: 631px !important;
+}
+#purchaseStockCountWIPListWorkshop,
+#purchaseStockCountWIPListDate{
+	background:white;
+	padding:4px;
+}

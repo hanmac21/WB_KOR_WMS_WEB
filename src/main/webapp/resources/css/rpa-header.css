@@ -1,0 +1,29 @@
+body > div.header-wrap > div > span.btn-home {
+	color: #fff;
+	position: absolute;
+    top: 20%;
+    right: 4%;
+}
+body > div.header-wrap > div > span.btn-logout{
+	color: #fff;
+    position: absolute;
+    right: 1.3%;
+    top: 20%;
+}
+body > div.header-wrap > div > span.middleDOT{
+	color: #fff;
+    position: absolute;
+    right: 3.3%;
+    top: 20%;
+}
+body > div.header-wrap > div > div.headerFrontIcon{
+    width: 29px;
+    height: 26px;
+    position: absolute;
+    top: 5%;
+    left: 15px;
+}
+body > div.header-wrap > div > div.headerFrontIcon > img{
+	width:inherit;
+	height:inherit;
+}

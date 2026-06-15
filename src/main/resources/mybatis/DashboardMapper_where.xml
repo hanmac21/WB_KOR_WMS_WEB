@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.wbusa.DashboardMapper">
+	
+	
+	<sql id="commonFilters_partsRequirement_incoming">
+		AND a.source <![CDATA[<>]]> 'INCOMINGRETURN'
+	    <if test="month != null and month != '' and month != 'all'">
+	        AND a.indate between #{startDate} and #{endDate}
+	    </if>
+	    <if test="factory != null and factory != '' and factory != 'all'">
+	        AND UPPER(REPLACE(a.factory, ' ', '')) = UPPER(REPLACE(#{factory}, ' ', ''))
+	    </if>
+	    <!-- storage -->
+	    <choose>
+	
+	        <!-- ✅ storage가 지정된 경우 -->
+	        <when test="storage != null and storage != '' and storage != 'all'">
+	            <choose>
+	                <when test="storage == 'MATERIAL+SIDESEAT+OUTSIDE'">
+	                    AND UPPER(REPLACE(a.storage, ' ', '')) IN ('MATERIAL', 'SIDESEAT', 'OUTSIDE')
+	                </when>
+	                <otherwise>
+	                    AND UPPER(REPLACE(a.storage, ' ', '')) = UPPER(REPLACE(#{storage}, ' ', ''))
+	                </otherwise>
+	            </choose>
+	        </when>
+	
+	        <!-- ✅ storage = all 인 경우: factory별 허용 창고만 -->
+	        <otherwise>
+	            <choose>
+	                <when test="factory != null and (factory == 'SALTILLO' or factory == 'saltillo')">
+	                    AND UPPER(REPLACE(a.storage, ' ', '')) IN ('MATERIAL', 'FABRIC', 'SIDESEAT', 'OUTSIDE')
+	                </when>
+	
+	                <when test="factory != null and (factory == 'PUEBLA' or factory == 'puebla')">
+	                    AND UPPER(REPLACE(a.storage, ' ', '')) IN ('MATERIAL')
+	                </when>
+	
+	                <!-- factory가 all/미지정이면(안전장치): 둘 다 합집합 -->
+	                <otherwise>
+	                    AND UPPER(REPLACE(a.storage, ' ', '')) IN ('MATERIAL', 'FABRIC', 'SIDESEAT', 'OUTSIDE')
+	                </otherwise>
+	            </choose>
+	        </otherwise>
+	
+	    </choose>
+	    <if test="partNumber != null and partNumber != '' and partNumber != 'all'">
+	        AND UPPER(REPLACE(a.itemcode, ' ', '')) LIKE '%' || UPPER(REPLACE(#{partNumber}, ' ', '')) || '%'
+	    </if>
+	    <if test="partName != null and partName != '' and partName != 'all'">
+	        AND UPPER(REPLACE(b.itemname, ' ', '')) LIKE '%' || UPPER(REPLACE(#{partName}, ' ', '')) || '%'
+	    </if>
+	</sql>
+	
+	<sql id="commonFilters_partsRequirement_stock">
+		<if test="month != null and month != '' and month != 'all'">
+	        AND a.indate <![CDATA[<]]> #{endDate}
+	    </if>
+	    <if test="factory != null and factory != '' and factory != 'all'">
+	        AND UPPER(REPLACE(a.factory, ' ', '')) = UPPER(REPLACE(#{factory}, ' ', ''))
+	    </if>
+	    <!-- storage -->
+	    <choose>
+	
+	        <!-- ✅ storage가 지정된 경우 -->
+	        <when test="storage != null and storage != '' and storage != 'all'">
+	            <choose>
+	                <when test="storage == 'MATERIAL+SIDESEAT+OUTSIDE'">
+	                    AND UPPER(REPLACE(a.storage, ' ', '')) IN ('MATERIAL', 'SIDESEAT', 'OUTSIDE')
+	                </when>
+	                <otherwise>
+	                    AND UPPER(REPLACE(a.storage, ' ', '')) = UPPER(REPLACE(#{storage}, ' ', ''))
+	                </otherwise>
+	            </choose>
+	        </when>
+	
+	        <!-- ✅ storage = all 인 경우: factory별 허용 창고만 -->
+	        <otherwise>
+	            <choose>
+	                <when test="factory != null and (factory == 'SALTILLO' or factory == 'saltillo')">
+	                    AND UPPER(REPLACE(a.storage, ' ', '')) IN ('MATERIAL', 'FABRIC', 'SIDESEAT', 'OUTSIDE')
+	                </when>
+	
+	                <when test="factory != null and (factory == 'PUEBLA' or factory == 'puebla')">
+	                    AND UPPER(REPLACE(a.storage, ' ', '')) IN ('MATERIAL')
+	                </when>
+	
+	                <!-- factory가 all/미지정이면(안전장치): 둘 다 합집합 -->
+	                <otherwise>
+	                    AND UPPER(REPLACE(a.storage, ' ', '')) IN ('MATERIAL', 'FABRIC', 'SIDESEAT', 'OUTSIDE')
+	                </otherwise>
+	            </choose>
+	        </otherwise>
+	
+	    </choose>
+	    <if test="partNumber != null and partNumber != '' and partNumber != 'all'">
+	        AND UPPER(REPLACE(a.itemcode, ' ', '')) LIKE '%' || UPPER(REPLACE(#{partNumber}, ' ', '')) || '%'
+	    </if>
+	    <if test="partName != null and partName != '' and partName != 'all'">
+	        AND UPPER(REPLACE(b.itemname, ' ', '')) LIKE '%' || UPPER(REPLACE(#{partName}, ' ', '')) || '%'
+	    </if>
+	</sql>
+	
+	<!-- <sql id="commonFilters_partsRequirement_stock_customer">
+		AND a.indate <![CDATA[<]]> #{startDate_jan} 
+	    <if test="factory != null and factory != '' and factory != 'all'">
+	        AND UPPER(REPLACE(a.factory, ' ', '')) = UPPER(REPLACE(#{factory}, ' ', ''))
+	    </if>
+	    <if test="storage != null and storage != '' and storage != 'all'">
+	        AND UPPER(REPLACE(a.storage, ' ', '')) = UPPER(REPLACE(#{storage}, ' ', ''))
+	    </if>
+	    <if test="partNumber != null and partNumber != '' and partNumber != 'all'">
+	        AND UPPER(REPLACE(a.itemcode, ' ', '')) LIKE '%' || UPPER(REPLACE(#{partNumber}, ' ', '')) || '%'
+	    </if>
+	    <if test="partName != null and partName != '' and partName != 'all'">
+	        AND UPPER(REPLACE(b.itemname, ' ', '')) LIKE '%' || UPPER(REPLACE(#{partName}, ' ', '')) || '%'
+	    </if>
+	    <if test="custname != null and custname != '' and custname != 'all'">
+			AND UPPER(REPLACE(c.CUSTNAME, ' ', ''))
+			    LIKE '%' || UPPER(REPLACE(#{custname}, ' ', '')) || '%'
+		</if>
+	</sql> -->
+	
+	<sql id="commonFilters_partsRequirement_basic">
+	    <if test="factory != null and factory != '' and factory != 'all'">
+	        AND UPPER(REPLACE(a.factory, ' ', '')) = UPPER(REPLACE(#{factory}, ' ', ''))
+	    </if>
+	    <if test="storage != null and storage != '' and storage != 'all'">
+	        <choose>
+	            <when test="storage == 'MATERIAL+SIDESEAT+OUTSIDE'">
+	                AND UPPER(REPLACE(a.storage, ' ', '')) IN ('MATERIAL', 'SIDESEAT', 'OUTSIDE')
+	            </when>
+	            <otherwise>
+	                AND UPPER(REPLACE(a.storage, ' ', '')) = UPPER(REPLACE(#{storage}, ' ', ''))
+	            </otherwise>
+	        </choose>
+	    </if>
+	    <if test="partNumber != null and partNumber != '' and partNumber != 'all'">
+	        AND UPPER(REPLACE(a.itemcode, ' ', '')) LIKE '%' || UPPER(REPLACE(#{partNumber}, ' ', '')) || '%'
+	    </if>
+	    <if test="partName != null and partName != '' and partName != 'all'">
+	        AND UPPER(REPLACE(b.itemname, ' ', '')) LIKE '%' || UPPER(REPLACE(#{partName}, ' ', '')) || '%'
+	    </if>
+	    <!-- <if test="custname != null and custname != '' and custname != 'all'">
+			AND UPPER(REPLACE(c.custcode, ' ', ''))
+			    LIKE '%' || UPPER(REPLACE(#{custcode}, ' ', '')) || '%'
+		</if> -->
+	</sql>
+	
+	<sql id="commonFilters_partsRequirement_outbound">
+		<if test="startDate != null and startDate != '' and startDate != 'all'">
+	        AND a.outdate between #{startDate} and #{endDate}
+	    </if>
+	    <if test="factory != null and factory != '' and factory != 'all'">
+	        AND UPPER(REPLACE(a.factory, ' ', '')) = UPPER(REPLACE(#{factory}, ' ', ''))
+	    </if>
+	    <!-- storage -->
+	    <choose>
+	
+	        <!-- ✅ storage가 지정된 경우 -->
+	        <when test="storage != null and storage != '' and storage != 'all'">
+	            <choose>
+	                <when test="storage == 'MATERIAL+SIDESEAT+OUTSIDE'">
+	                    AND UPPER(REPLACE(a.storage, ' ', '')) IN ('MATERIAL', 'SIDESEAT', 'OUTSIDE')
+	                </when>
+	                <otherwise>
+	                    AND UPPER(REPLACE(a.storage, ' ', '')) = UPPER(REPLACE(#{storage}, ' ', ''))
+	                </otherwise>
+	            </choose>
+	        </when>
+	
+	        <!-- ✅ storage = all 인 경우: factory별 허용 창고만 -->
+	        <otherwise>
+	            <choose>
+	                <when test="factory != null and (factory == 'SALTILLO' or factory == 'saltillo')">
+	                    AND UPPER(REPLACE(a.storage, ' ', '')) IN ('MATERIAL', 'FABRIC', 'SIDESEAT', 'OUTSIDE')
+	                </when>
+	
+	                <when test="factory != null and (factory == 'PUEBLA' or factory == 'puebla')">
+	                    AND UPPER(REPLACE(a.storage, ' ', '')) IN ('MATERIAL')
+	                </when>
+	
+	                <!-- factory가 all/미지정이면(안전장치): 둘 다 합집합 -->
+	                <otherwise>
+	                    AND UPPER(REPLACE(a.storage, ' ', '')) IN ('MATERIAL', 'FABRIC', 'SIDESEAT', 'OUTSIDE')
+	                </otherwise>
+	            </choose>
+	        </otherwise>
+	
+	    </choose>
+	    <if test="partNumber != null and partNumber != '' and partNumber != 'all'">
+	        AND UPPER(REPLACE(a.itemcode, ' ', '')) LIKE '%' || UPPER(REPLACE(#{partNumber}, ' ', '')) || '%'
+	    </if>
+	    <if test="partName != null and partName != '' and partName != 'all'">
+	        AND UPPER(REPLACE(b.itemname, ' ', '')) LIKE '%' || UPPER(REPLACE(#{partName}, ' ', '')) || '%'
+	    </if>
+	    <!-- <if test="custname != null and custname != '' and custname != 'all'">
+			AND UPPER(REPLACE(c.custcode, ' ', ''))
+			    LIKE '%' || UPPER(REPLACE(#{custcode}, ' ', '')) || '%'
+		</if> -->
+	</sql>
+	
+	
+	<sql id="commonFilters_partsRequirement_outbound_workmove">
+		<if test="startDate != null and startDate != '' and startDate != 'all'">
+	        AND a.indate between #{startDate} and #{endDate}
+	    </if>
+	    <if test="factory != null and factory != '' and factory != 'all'">
+	        AND UPPER(REPLACE(a.factory, ' ', '')) = UPPER(REPLACE(#{factory}, ' ', ''))
+	    </if>
+	    <!-- storage -->
+	    <choose>
+	
+	        <!-- ✅ storage가 지정된 경우 -->
+	        <when test="storage != null and storage != '' and storage != 'all'">
+	            <choose>
+	                <when test="storage == 'MATERIAL+SIDESEAT+OUTSIDE'">
+	                    AND UPPER(REPLACE(a.storage, ' ', '')) IN ('MATERIAL', 'SIDESEAT', 'OUTSIDE')
+	                </when>
+	                <otherwise>
+	                    AND UPPER(REPLACE(a.storage, ' ', '')) = UPPER(REPLACE(#{storage}, ' ', ''))
+	                </otherwise>
+	            </choose>
+	        </when>
+	
+	        <!-- ✅ storage = all 인 경우: factory별 허용 창고만 -->
+	        <otherwise>
+	            <choose>
+	                <when test="factory != null and (factory == 'SALTILLO' or factory == 'saltillo')">
+	                    AND UPPER(REPLACE(a.storage, ' ', '')) IN ('MATERIAL', 'FABRIC', 'SIDESEAT', 'OUTSIDE')
+	                </when>
+	
+	                <when test="factory != null and (factory == 'PUEBLA' or factory == 'puebla')">
+	                    AND UPPER(REPLACE(a.storage, ' ', '')) IN ('MATERIAL')
+	                </when>
+	
+	                <!-- factory가 all/미지정이면(안전장치): 둘 다 합집합 -->
+	                <otherwise>
+	                    AND UPPER(REPLACE(a.storage, ' ', '')) IN ('MATERIAL', 'FABRIC', 'SIDESEAT', 'OUTSIDE')
+	                </otherwise>
+	            </choose>
+	        </otherwise>
+	
+	    </choose>
+	    <if test="partNumber != null and partNumber != '' and partNumber != 'all'">
+	        AND UPPER(REPLACE(a.itemcode, ' ', '')) LIKE '%' || UPPER(REPLACE(#{partNumber}, ' ', '')) || '%'
+	    </if>
+	    <if test="partName != null and partName != '' and partName != 'all'">
+	        AND UPPER(REPLACE(b.itemname, ' ', '')) LIKE '%' || UPPER(REPLACE(#{partName}, ' ', '')) || '%'
+	    </if>
+	    <!-- <if test="custname != null and custname != '' and custname != 'all'">
+			AND UPPER(REPLACE(c.custcode, ' ', ''))
+			    LIKE '%' || UPPER(REPLACE(#{custcode}, ' ', '')) || '%'
+		</if> -->
+	</sql>
+	
+	<sql id="commonFilters_partsRequirement_list">
+	    <if test="partNumber != null and partNumber != '' and partNumber != 'all'">
+	        AND UPPER(REPLACE(itemcode, ' ', '')) LIKE '%' || UPPER(REPLACE(#{partNumber}, ' ', '')) || '%'
+	    </if>
+	    <if test="partName != null and partName != '' and partName != 'all'">
+	        AND UPPER(REPLACE(itemname, ' ', '')) LIKE '%' || UPPER(REPLACE(#{partName}, ' ', '')) || '%'
+	    </if>
+	    <if test="custname != null and custname != '' and custname != 'all'">
+			AND UPPER(REPLACE(SANGHO, ' ', ''))
+			    LIKE '%' || UPPER(REPLACE(#{custname}, ' ', '')) || '%'
+		</if>
+	</sql>
+	
+	<sql id="commonFilters_partsRequirement_list_t">
+	    <if test="partNumber != null and partNumber != '' and partNumber != 'all'">
+	        AND UPPER(REPLACE(t.itemcode, ' ', '')) LIKE '%' || UPPER(REPLACE(#{partNumber}, ' ', '')) || '%'
+	    </if>
+	    <if test="partName != null and partName != '' and partName != 'all'">
+	        AND UPPER(REPLACE(m.itemname, ' ', '')) LIKE '%' || UPPER(REPLACE(#{partName}, ' ', '')) || '%'
+	    </if>
+	    <if test="custname != null and custname != '' and custname != 'all'">
+			AND UPPER(REPLACE(cu.CU_SANGHO, ' ', ''))
+			    LIKE '%' || UPPER(REPLACE(#{custname}, ' ', '')) || '%'
+		</if>
+	</sql>
+	
+	<sql id="qualityDashboardCommonWhere">
+		WHERE factory IS NOT NULL
+		AND useyn = 'Y'
+		<if test="factory != null and factory != '' and factory != 'ALL'">
+			AND UPPER(factory) = UPPER(#{factory})
+		</if>
+		<if test="sdate != null and sdate != ''">
+			AND sdate = #{sdate}
+		</if>
+		<if test="source != null and source != '' and source != 'ALL'">
+			AND UPPER(source) = UPPER(#{source})
+		</if>
+	</sql>
+
+	<sql id="qualityDashboardCommonWhereForSummary">
+		WHERE factory IS NOT NULL
+		AND useyn = 'Y'
+		<if test="factory != null and factory != '' and factory != 'ALL'">
+			AND UPPER(factory) = UPPER(#{factory})
+		</if>
+		<if test="sdate != null and sdate != ''">
+			AND sdate = #{sdate}
+		</if>
+	</sql>
+	<!-- ============================================================
+     안전 숫자 변환
+		============================================================ -->
+	<sql id="qualitySafeQty">
+		CASE
+			WHEN TRIM(qty) IS NOT NULL
+				AND REGEXP_LIKE(TRIM(qty), '^-?\d+(\.\d+)?$')
+			THEN TO_NUMBER(TRIM(qty))
+			ELSE 0
+		END
+	</sql>
+
+	<sql id="qualitySafeOkQty">
+		CASE
+			WHEN TRIM(okqty) IS NOT NULL
+				AND REGEXP_LIKE(TRIM(okqty), '^-?\d+(\.\d+)?$')
+			THEN TO_NUMBER(TRIM(okqty))
+			ELSE 0
+		END
+	</sql>
+
+	<sql id="qualitySafeNgQty">
+		CASE
+			WHEN TRIM(ngqty) IS NOT NULL
+				AND REGEXP_LIKE(TRIM(ngqty), '^-?\d+(\.\d+)?$')
+			THEN TO_NUMBER(TRIM(ngqty))
+			ELSE 0
+		END
+	</sql>
+	
+	
+</mapper>  

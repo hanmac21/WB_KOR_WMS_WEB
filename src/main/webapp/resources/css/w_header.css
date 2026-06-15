@@ -1,0 +1,1477 @@
+body {
+	/* background-image: url("../images/rpa-main-bg.png");
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: cover;
+	background-attachment: fixed; */
+	/* background:#036564; */
+	/* This makes the background image fixed while scrolling */
+}
+
+body>div.header-wrap>div>span.btn-settings {
+	color: #fff;
+	position: absolute;
+	top: 24%;
+	right: 4%;
+}
+
+body>div.header-wrap>div>span.btn-logout {
+    color: #fff;
+    position: absolute;
+    right: 1.3%;
+    top: 24%;
+}
+
+body>div.header-wrap>div>span.middleDOT {
+	color: #fff;
+	position: absolute;
+	right: 3.3%;
+	top: 9%;
+}
+
+body>div.header-wrap>div>div.headerFrontIcon {
+    width: 15%;
+    height: 86%;
+    position: absolute;
+    top: 5%;
+    left: 1%;
+}
+
+body>div.header-wrap>div>div.headerFrontIcon>img:hover {
+	cursor:pointer;
+}
+body>div.header-wrap>div>div.headerFrontIcon>img {
+    width: 78%;
+	height: 68%;
+}
+
+/* schedule */
+body>div>div>div.insert-modal.setDateArea {
+	left: 9px;
+	top: -3px;
+	border-bottom: 3px solid #3a4556;
+	padding-top: 9px;
+	padding-bottom: 9px;
+	width: 99%;
+	max-height: 72px;
+}
+
+[type="radio"] {
+	/* appearance:none; */
+	
+}
+
+body>div>div>div.insert-modal.setDateArea>div {
+	display: flex;
+}
+
+body>div>div>div.insert-modal.setDateArea>div>div.date-wrap {
+	display: flex;
+}
+
+body>div>div>div.insert-modal.setDateArea>div>div.date-wrap>input {
+	display: none;
+}
+
+body>div>div>div.insert-modal.setDateArea>div>div.date-wrap>label {
+	border: 1px solid black;
+}
+
+body>div>div>div.insert-modal.setDateArea>div>div.date-wrap>div>label.dayLabel:hover
+	{
+	/* font-size:17pt; */
+	cursor: pointer;
+}
+
+body>div>div>div.insert-modal.setDateArea>div>div.date-wrap>div>label.dayLabel
+	{
+	height: 41px;
+	text-align: center;
+	font-size: 16pt;
+	font-weight: 700;
+	width: -webkit-fill-available;
+}
+
+body>div>div>div.insert-modal.setDateArea>div>div.date-wrap>div>input.data-wrap-input:hover
+	{
+	background: gray;
+	cursor: pointer;
+}
+
+body>div>div>div.insert-modal.setDateArea>div>div.date-wrap>div>input.data-wrap-input
+	{
+	display: none;
+	width: 16px;
+	height: 16px;
+}
+
+body>div.serviceView>div.contentArea>div.insert-modal.setDateArea>div>div.jobName-wrap>label
+	{
+	text-align: left !important;
+	margin-left: 0 !important;
+	width: 106px !important;
+}
+
+body>div>div>div.insert-modal.setDateArea>div>div.start-wrap>label, body>div.serviceView>div.contentArea>div.insert-modal.setDateArea>div>div.jobName-wrap>label,
+	#updateBtn, #deleteBtn {
+	font-size: 14pt;
+	width: 89px;
+	font-weight: 700;
+	letter-spacing: 3px;
+	margin: 0px 0px 0px 8px;
+}
+
+body>div>div.insert-modal.setDateArea>div>div.jobName-wrap>label {
+	font-size: 18pt;
+	/* border: 1px solid gray; */
+	width: 108px;
+	text-align: center;
+	font-weight: 700;
+	letter-spacing: 3px;
+	margin-left: 0px;
+}
+
+select#scheduleJobName:hover {
+	cursor: pointer;
+	border: 2px solid;
+}
+
+#scheduleJobName {
+	height: 33px;
+	width: 192px;
+	font-weight: 700;
+}
+
+#scheduleStart:hover {
+	cursor: pointer;
+	border: 2px solid;
+}
+
+#scheduleStart {
+	width: 135px;
+	font-weight: 700;
+	font-size: 14pt;
+}
+
+#addBtn, #updateBtn, #clearBtn, #deleteBtn {
+	display: block;
+	font-size: 14pt;
+	font-weight: 700;
+	letter-spacing: 4px;
+	width: 114px;
+	margin-top: 2px;
+}
+
+#clearBtn {
+	margin-left: 15px;
+	font-size: 11pt;
+	font-weight: 700;
+	letter-spacing: 1px;
+	display: block;
+	width: 114px;
+	line-height: 17px;
+}
+
+#calendar>div.fc-toolbar.fc-header-toolbar {
+	margin-bottom: 2.5em;
+	width: 91%;
+	margin-left: 4.5em;
+	margin-top: 7px;
+}
+
+#calendar {
+	max-width: 94%;
+	margin-left: 10px;
+	display: inline-block;
+}
+
+#calendar>div.fc-view-container>div>table>tbody>tr>td>div>div>div>div.fc-bg>table>tbody>tr>td.fc-day.fc-widget-content,
+	#calendar>div.fc-view-container>div>table>thead>tr>td>div>table>thead>tr>th.fc-day-header.fc-widget-header
+	{
+	width: 251px;
+}
+
+#calendar>div.fc-view-container>div>table>thead>tr>td {
+	width: 1763px;
+}
+
+#calendar>div.fc-toolbar.fc-header-toolbar>div.fc-center {
+	font-size: 18pt;
+	letter-spacing: 2px;
+}
+
+#holidayDate {
+	display: inline-block;
+	border: 2px solid black;
+	margin-left: 7px;
+	width: 131px;
+	font-weight: 700;
+	margin-top: 2px;
+	border-radius: 4px;
+}
+
+#calendar>div.fc-toolbar.fc-header-toolbar>div.fc-left {
+	position: relative;
+	top: 26px;
+	right: 71px;
+}
+
+#calendar>div.fc-toolbar.fc-header-toolbar>div.fc-right {
+	position: relative;
+	top: 26px;
+	left: 67px;
+}
+
+#calendar>div.fc-view-container>div>table>tbody>tr>td>div>div>div>div.fc-content-skeleton>table
+	{
+	width: 100%;
+}
+
+#calendar>div.fc-view-container>div>table>tbody>tr>td>div {
+	max-height: 630px;
+}
+
+body>div>div.menuListArea>div.menuTap {
+	display: flex;
+	border: 1px solid;
+	padding: 7px;
+	flex-wrap: wrap;
+}
+
+body>div.serviceView {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+body>div.serviceView>div.menuListArea>div.menuTap>div.menuTitle {
+	font-size: 13pt;
+	font-weight: 700;
+	margin-left: 8px;
+	width: 90%;
+}
+
+body>div.serviceView>div.menuListArea>div.menuTap.mTap1>i {
+	position: relative;
+	top: 10px !important;
+	height: 23px;
+}
+
+body>div.serviceView>div.menuListArea>div.menuTap>i {
+	position: relative;
+	top: 4px;
+}
+
+body>div.serviceView>div.menuListArea>div.menuTap.mTap1>div {
+	margin-left: 19px;
+	width: 85%;
+	padding: 5px;
+}
+
+body>div.serviceView>div.menuListArea>div.menuTap>div>span {
+	font-size: 12pt;
+	font-weight: 700;
+	letter-spacing: 1px;
+	margin-left: 4px;
+}
+
+body>div.serviceView>div.menuListArea>div.menuTap.mTap1>div.menuTitle {
+	margin-left: 5px !important;
+}
+
+/* �븘肄붾뵒�뼵 */
+input[class="answer"] {
+	display: none;
+}
+/* body > div.serviceView > div.menuListArea > div.menuLinkBox:hover,
+input[class="answer"] + label:hover {
+	background:#8dffff;
+} */
+body > div.serviceView > div.menuListArea > div.accordion > div > div > label {
+    padding: 0px 9px;
+}
+input[class="answer"]+label {
+	
+}
+input[class="answer"]+label {
+	display: block;
+	padding: 10px;
+	border-bottom: 0;
+	font-weight: 900;
+	cursor: pointer;
+	margin-bottom: 0;
+	font-size: 13pt;
+	position: relative;
+	background:#308b81;
+	width: 100%;
+	border-top:1px solid white;
+}
+
+input[class="answer"]+label em {
+	position: absolute;
+	right: 10px;
+	width: 21px;
+	height: 21px;
+	margin-top: 2px;
+	display: inline-block;
+	background: url('../images/plus.png') 0 0 no-repeat;
+	background-size: contain;
+}
+
+input[class="answer"]+label+div {
+	max-height: 0;
+	transition: all .35s;
+	overflow: hidden;
+	background: white;
+	font-size: 11px;
+}
+
+input[class="answer"]+label+div p:hover {
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+.menuListCallBack_5 > div.menuCommon > label > span,
+.menuListCallBack_4 > div.menuCommon > label > span,
+.menuListCallBack_3 > div.menuCommon > label > span,
+.menuListCallBack_2 > div.menuCommon > label > span{
+	margin-left: 5px !important;
+}
+input[class="answer"]+label+div span,
+input[class="answer"]+label+div p {
+    display: inline-block;
+    padding: 6px 5px;
+    font-size: 11pt;
+    font-weight: 500;
+    margin-bottom: 0px;
+    margin-left: 3px;
+}
+
+input[class="answer"]+label+div {
+	display: flex;
+	flex-direction: column;
+}
+/* �깉硫붾돱 異붽��떆 利앷컯 */
+input[class="answer"]:checked+label+div {
+	max-height: fit-content;
+}
+
+body>div.serviceView>div.menuListArea>div>div>div label > i{
+    margin-left: 7px;
+    position: relative;
+    width: 7%;
+}
+body>div.serviceView>div.menuListArea>div>div>div div i {
+    margin-left: 25px;
+    position: relative;
+    bottom: 1px;
+}
+body>div.serviceView>div.menuListArea>div>div>div>i {
+	margin-left: 22px;
+}
+
+body>div.serviceView>div.menuListArea>div.menuLinkBox {
+	padding: 10px;
+	background: #1a202c;
+}
+
+body>div.serviceView>div.menuListArea>div.menuLinkBox>a.normalLink, body>div.serviceView>div.menuListArea>div.accordion>label>span.normalLink
+	{
+	color: white;
+	font-weight: 600;
+	font-size: 12pt;
+	margin-left:5px;
+}
+
+/* body>div.serviceView>div.contentArea {
+    width: 100%;
+    background: #ffffff;
+    min-width:0px;
+    margin-left: 0;
+    transition: margin-left 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    padding-left: 0;
+}
+.contentArea.menu-open {
+    margin-left: 230px;
+} */
+
+body>div.header-wrap>div>span.rpaMainTitle_3 {
+	position: absolute;
+	top: 3%;
+	font-size: 15pt;
+	left: 11%;
+	font-weight: 700;
+	color: white;
+	letter-spacing: 4px;
+	padding-left: 5px;
+}
+
+body>div.header-wrap>div>span.rpaMainTitle_2 {
+	position: absolute;
+	top: 3%;
+	font-size: 15pt;
+	left: 7.3%;
+	font-weight: 700;
+	color: white;
+	letter-spacing: 4px;
+	padding-left: 5px;
+}
+
+body>div.header-wrap>div>span.rpaMainTitle_1 {
+	position: absolute;
+	top: 3%;
+	font-size: 15pt;
+	left: 2.3%;
+	font-weight: 700;
+	color: white;
+	letter-spacing: 4px;
+	padding-left: 5px;
+}
+
+a:has(div>span.fc-title) {
+	border: 0px solid;
+	background: red;
+}
+
+body>div.serviceView>div.contentArea>div.insert-modal.setDateArea>div>div.start-wrap>label
+	{
+	display: inline-block;
+}
+
+body>div.serviceView>div.contentArea>div.insert-modal.setDateArea>div>div.start-wrap>div
+	{
+	border: 1px solid gray;
+	border-radius: 3px;
+	display: inline-block;
+	padding: 3px 5px;
+	font-weight: 700;
+	height: 35px;
+	margin-top: 2px;
+	margin-right: 2px;
+}
+
+#hours {
+	margin-right: 2px;
+}
+
+#minutes:hover, #hours:hover {
+	cursor: pointer;
+	font-weight: 700;
+	text-decoration: underline;
+}
+
+#hours, #minutes, #m_hours, #m_minutes {
+	-webkit-appearance: none;
+	font-size: 14pt;
+	width: 54px;
+	letter-spacing: 1px;
+	border: 0px;
+	text-align: center;
+}
+/* .fc-title{
+    font-size: 15pt !important;
+    text-align: center;
+    display: block;
+    letter-spacing: 5px;
+    font-weight: 700;
+    background: white;
+    color: black !important;
+    border: 2px solid red;	
+} */
+/* #calendar > div.fc-view-container > div > table > tbody > tr > td > div > div > div > div.fc-content-skeleton > table > tbody > tr > td > a > div > span{
+    font-size: 15pt;
+    text-align: center;
+    display: block;
+    letter-spacing: 5px;
+    font-weight: 700;
+    background: white;
+    color: black;
+    border: 2px solid red;	
+} */
+body>div.serviceView>div.menuListArea>div.profileArea {
+	height: 68px;
+	display: flex;
+}
+
+body>div.serviceView>div.menuListArea>div.profileArea>div.imageArea>div
+	{
+	width: 76px;
+	margin: 12px;
+	border-radius: 36px;
+	height: 72px;
+}
+
+body>div.serviceView>div.menuListArea>div.profileArea>div.userInfoArea {
+	display: flex;
+	width: -webkit-fill-available;
+	flex-wrap: wrap;
+}
+
+body>div.serviceView>div.menuListArea>div.profileArea>div.userInfoArea>div.userNameArea
+	{
+	border-bottom: 3px solid teal;
+	width: -webkit-fill-available;
+	height: 68px;
+	max-width: -webkit-fill-available;
+}
+
+body>div.serviceView>div.menuListArea>div.profileArea>div.userInfoArea>div.userIdArea
+	{
+	width: -webkit-fill-available;
+	height: 37px;
+	font-size: 13pt;
+	color: gray;
+}
+
+body>div.serviceView>div.menuListArea>div.profileArea>div.userInfoArea>div.userNameArea>p.userName
+	{
+	font-size: 18pt;
+	font-weight: 700;
+	margin-top: 14px;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	text-align: center;
+}
+
+body>div.serviceView>div.menuListArea>div.profileArea>div.userInfoArea>div.userIdArea>p.userId
+	{
+	margin-right: 13px;
+	float: right;
+}
+
+body>div.serviceView>div.menuListArea>div.accordion {
+	flex-grow: 1;
+}
+
+body>div.serviceView>div.menuListArea>div.menuListFooterArea {
+	align-self: flex-end;
+}
+
+body>div.serviceView>div.menuListArea>div.menuListFooterArea {
+	width: -webkit-fill-available;
+	height: 64px;
+}
+
+body>div.serviceView>div.menuListArea>div.menuListFooterArea>div>a {
+	font-size: 14pt;
+	border: 0px solid;
+	background: none;
+	font-weight: 600;
+	color: white;
+	margin-left: 3px;
+}
+
+body>div.serviceView>div.menuListArea>div.menuListFooterArea>div.copyRight>p
+	{
+	text-align: center;
+	font-size: 9pt;
+	color: white;
+}
+
+body>div.serviceView>div.menuListArea>div.menuListFooterArea>div.btnLogoutArea>a:hover
+	{
+	text-decoration: underline;
+}
+
+body>div.serviceView>div.menuListArea>div.menuListFooterArea>div.btnLogoutArea
+	{
+	display: flex;
+	justify-content: center;
+}
+
+body>div.serviceView>div.menuListArea>div.menuListFooterArea>div.btnLogoutArea>span>#logout
+	{
+	color: white;
+	font-size: 18px;
+}
+body>div.header-wrap>div>div.loginUserArea {
+    position: absolute;
+    left: 14%;
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    top: 3px;
+    gap: 3px;
+}
+
+.loginUserArea span.loginId  {
+	color:white;
+    font-size: 13pt;
+    font-weight: 600;
+}
+.loginUserArea span.loginText  {
+    color: #e5e5e5;
+    font-size: 8pt;
+    margin-left: 10px;
+    font-weight: 500;	
+}
+.loginUserArea span.loginFactory  {
+    color: #046565;
+    font-weight: 600;
+    font-size: 16pt;
+    background-color: white;
+    border-radius: 5px;
+    padding: 2px 8px 2px 8px;
+}
+
+
+body>div.serviceView>div.contentArea>div.insert-modal.setDateArea>div>div.date-wrap>div.dayBox:hover
+	{
+	background: #3a4556;
+	color: white
+}
+
+body>div.serviceView>div.contentArea>div.insert-modal.setDateArea>div>div.date-wrap>div.dayBox
+	{
+	border: 2px solid #1a202c;
+	width: 68px;
+	height: 45px;
+	border-radius: 3px;
+	margin: 0px 3px;
+}
+
+body>div.serviceView>div.contentArea>div.insert-modal.setDateArea>div>div.date-wrap>div:nth-child(1):hover
+	{
+	background: red;
+	color: white !important;
+}
+
+body>div.serviceView>div.contentArea>div.insert-modal.setDateArea>div>div.date-wrap>div:nth-child(1)
+	{
+	border: 2px solid red;
+}
+
+body>div.serviceView>div.contentArea>div.insert-modal.setDateArea>div>div.date-wrap>div:nth-child(7):hover
+	{
+	background: blue;
+	color: white !important;
+}
+
+body>div.serviceView>div.contentArea>div.insert-modal.setDateArea>div>div.date-wrap>div:nth-child(7)
+	{
+	border: 2px solid blue;
+}
+
+body>div.serviceView>div.contentArea>div.insert-modal.setDateArea>div>div.jobName-wrap
+	{
+	margin-left: 11px;
+	border: 3px solid #3a4556;
+	border-radius: 5px;
+}
+
+div.menuCommon{
+	background: #e8f0ed !important ;
+}
+div.menuCommon > label > span,
+div.menuCommon > label > i{
+	color:white !important;
+}
+div.menuCommon > label{
+	background: #6fb2a7;
+	color:white !important;
+}
+div.menuCommon > label{
+    box-shadow: 
+        0 1px 0 0 #308b81,
+        0 -1px 0 0 #308b81;	
+}
+
+body>div.serviceView>div.contentArea>div.contentTitle {
+	font-size: 20pt;
+	letter-spacing: 1px;
+	background: #f5f7fa;
+	color: #7e81a2;
+	padding: 5px;
+	font-weight: 700;
+	width: 100%;
+	height: 6%;
+}
+
+body>div.serviceView>div.contentArea>div.insert-modal.setDateArea>div>div.start-wrap
+	{
+	border: 3px solid #3a4556;
+	border-radius: 5px;
+	margin-left: 10px;
+}
+
+body>div.serviceView>div.contentArea>div.insert-modal.setDateArea>div>div.btn-scheduleArea
+	{
+	position: absolute;
+	right: 10px;
+}
+
+body>div.serviceView>div.contentArea>div.insert-modal.setDateArea>div>span.holidayGuide:hover
+	{
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+body>div.serviceView>div.contentArea>div.insert-modal.setDateArea>div>span.holidayGuide
+	{
+	font-size: 11pt;
+	color: red;
+	margin-top: 12px;
+	margin-left: 4px;
+	font-weight: 700;
+}
+
+#calendar>div.fc-view-container>div>table>tbody>tr>td>div>div>div>div.fc-bg>table>tbody>tr>td.fc-day.fc-widget-content:hover
+	{
+	background: gray;
+	opacity: 0.1;
+	cursor: crosshair;
+}
+
+#calendar>div.fc-view-container>div>table>tbody>tr>td>div>div>div>div.fc-bg>table>tbody>tr>td.fc-day.fc-widget-content.fc-sat.fc-future:hover
+	{
+	background: blue;
+	opacity: 0.1;
+}
+
+#calendar>div.fc-view-container>div>table>tbody>tr>td>div>div>div>div.fc-bg>table>tbody>tr>td.fc-day.fc-widget-content.fc-sun.fc-past:hover
+	{
+	background: red;
+	opacity: 0.1
+}
+
+.fc-event-container>.fc-day-grid-event>.btn-danger {
+	/* display: none; */
+	position: absolute;
+	z-index: 9999;
+	bottom: 2px;
+	right: 1px;
+}
+
+#calendar>div.fc-view-container>div>table>tbody>tr>td>div>div>div>div.fc-content-skeleton>table>tbody>tr>td>a.holidayCommon>div:hover
+	{
+	
+}
+
+#calendar>div.fc-view-container>div>table>tbody>tr>td>div>div>div>div.fc-content-skeleton>table>tbody>tr>td>a.holidayCommon>div>span
+	{
+	margin-left: 5px;
+	font-weight: 700;
+}
+
+body div.serviceView div.modal_calendar_edit div.m_calendar_btnArea {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+body div.serviceView div.modal_calendar_edit div.m_calendar_btnArea>div.m_btnUpdateArea input:hover
+	{
+	border: 2px solid #2379e9;
+}
+
+body div.serviceView div.modal_calendar_edit div.m_calendar_btnArea>div.m_btnUpdateArea input
+	{
+	background: #2379e9;
+	border: 2px solid lightgray;
+	color: white;
+}
+
+body div.serviceView div.modal_calendar_edit div.m_calendar_btnArea>div.m_btnUpdateArea
+	{
+	/* margin-left:2%; */
+	height: 50%;
+}
+
+body div.serviceView div.modal_calendar_edit div.m_calendar_btnArea>div.m_btnCancelArea input:hover
+	{
+	border: 2px solid lightgray;
+}
+
+body div.serviceView div.modal_calendar_edit div.m_calendar_btnArea>div.m_btnCancelArea input
+	{
+	background: white;
+	border: 1px solid lightgray;
+	color: #2379e9;
+}
+
+body div.serviceView div.modal_calendar_edit div.m_calendar_btnArea>div.m_btnCancelArea
+	{
+	/* margin-right:2%; */
+	height: 50%;
+	color: #2379e9;
+}
+
+body div.serviceView div.modal_calendar_edit div.m_calendar_btnArea>div.m_btnDeleteArea input:hover
+	{
+	border: 2px solid #ff4141;
+}
+
+body div.serviceView div.modal_calendar_edit div.m_calendar_btnArea>div.m_btnDeleteArea input.pointer-block
+	{
+	pointer-events: none;
+	background: lightgray !important;
+}
+
+body div.serviceView div.modal_calendar_edit div.m_calendar_btnArea>div.m_btnDeleteArea input
+	{
+	color: white;
+	border: 2px solid lightgray;
+	background: #ff4141;
+}
+
+body div.serviceView div.modal_calendar_edit div.m_calendar_btnArea>div.m_btnDeleteArea
+	{
+	height: 50%;
+}
+
+body div.serviceView div.modal_calendar_edit div.m_calendar_btnArea>div input
+	{
+	width: 85%;
+	border-radius: 6px;
+	background: none;
+	font-size: 11pt;
+	letter-spacing: 1px;
+}
+
+body div.serviceView div.modal_calendar_edit div.m_calendar_btnArea>div
+	{
+	width: 25%;
+	display: flex;
+	justify-content: center;
+}
+
+body div.serviceView div.modal_calendar_edit {
+	width: 100%;
+	height: 96%;
+	background: rgba(0, 0, 0, 0.5);
+	position: absolute;
+	z-index: 1;
+	visibility: hidden;
+}
+
+.modal::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	opacity: 0.3; /* 배경 이미지의 opacity만 조절 */
+	z-index: -1; /* 내부 내용 위에 영향을 미치지 않게 설정 */
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_btnArea
+	{
+	/* border-top: 1px solid lightgray; */
+	width: 100%;
+	height: 15%;
+	margin-top: auto;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area {
+	border: 3px solid #3a4556;
+	width: 42%;
+	margin: auto;
+	height: 52%;
+	margin-top: 6%;
+	background: white;
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: column;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_TitleArea
+	{
+	background: #f5f7fa;
+	z-index: 3;
+	width: 100%;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea div.m_calendar_contentRow10 select.pointer-block
+	{
+	opacity: 0.6;
+	pointer-events: none;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea div.m_calendar_contentRow9 select,
+	body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea div.m_calendar_contentRow10 select
+	{
+	width: 50%;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea div.contentCommon div.m_contentCommon
+	{
+	display: flex;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea div.contentCommon div.m_contentCommon div.inputValue
+	{
+	border-left: 1px solid lightgray;
+	border-right: 1px solid lightgray;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea div.contentCommon div.m_contentCommon input
+	{
+	width: 17px;
+	height: 17px;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea div.m_calendar_checkArea div.contentCommon div select.compareStatusCommon.compareStatus_1:hover,
+	body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea div.m_calendar_checkArea div.contentCommon div select.compareStatusCommon.compareStatus_2:hover,
+	body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea div.m_calendar_checkArea div.contentCommon div select.compareStatusCommon.compareStatus_3:hover
+	{
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea div.m_calendar_checkArea div.contentCommon div select.compareStatusCommon.compareStatus_1
+	{
+	border-top: 3px solid #4464ad;
+	border-bottom: 3px solid #4464ad;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea div.m_calendar_checkArea div.contentCommon div select.compareStatusCommon.compareStatus_2
+	{
+	border-top: 3px solid #A4B0F5;
+	border-bottom: 3px solid #a4b0f5;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea div.m_calendar_checkArea div.contentCommon div select.compareStatusCommon.compareStatus_3
+	{
+	border-top: 3px solid #f58f29;
+	border-bottom: 3px solid #f58f29;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea div.m_calendar_checkArea div.contentCommon div select.compareStatusCommon
+	{
+	width: 27% !important;
+	margin: 0 3px;
+	border: 0px solid;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea div.m_calendar_checkArea div.contentCommon div select
+	{
+	width: 40%;
+	font-weight: 700;
+	text-align: center;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea div.contentCommon div select.include_keywordCommon_select
+	{
+	width: 40%;
+	text-align: center;
+	font-weight: 700;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea div.contentCommon div input.include_keywordCommon
+	{
+	width: 82%;
+	height: 29px;
+	font-size: 13pt;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea div.contentCommon div.m_compareStatus_title div.status_title_sub
+	{
+	font-size: 8pt;
+	width: 57%;
+	color: red;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea div.contentCommon div.m_compareStatus_title div.status_title_main
+	{
+	width: 45%;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea div.contentCommon div.m_compareStatus_title
+	{
+	width: 92%;
+	font-size: 12pt;
+	text-align: justify;
+	margin: auto;
+	display: flex;
+	align-items: center;
+	height: 39%;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea div.contentCommon div.m_compare_status_content
+	{
+	width: 100% !important;
+	font-size: 10pt;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea div.contentCommon div
+	{
+	width: 50%;
+	font-size: 15pt;
+	font-weight: 700;
+	letter-spacing: 1px;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea div.contentCommon div.titleCommon
+	{
+	border-right: 1px solid lightgray;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea div.contentCommon
+	{
+	width: 100%;
+	height: 20%;
+	align-items: center;
+	text-align: center;
+	display: flex;
+	border-bottom: 1px solid lightgray;
+	flex-wrap: wrap;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea div.m_calendar_contentRow10
+	{
+	width: 100%;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea div.m_calendar_contentRow11
+	{
+	width: 100%;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea div.m_calendar_selectRow div
+	{
+	font-size: 14pt;
+	font-weight: 700;
+	text-align: center;
+	color: red;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea div.m_calendar_selectRow div.m_calendar_selectDate
+	{
+	width: 26%;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea div.m_calendar_selectRow div.m_calendar_selectTime
+	{
+	width: 25%;
+	border-left: 1px solid lightgray;
+	border-right: 1px solid lightgray;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea div.m_calendar_selectRow div.m_calendar_selectTitle
+	{
+	width: 50%;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea div div.m_calendar_selectRow
+	{
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: space-around;
+	justify-content: center;
+	align-items: center;
+	border-top: 2px solid #3a4556;
+	border-bottom: 2px solid #3a4556;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea .m_calendar_selectArea
+	{
+	width: 50%;
+	height: 100%;
+	border-right: 2px solid black;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea .m_calendar_selectRowArea
+	{
+	display: flex;
+	width: 100%;
+	height: 15%;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea .m_calendar_includeAreaCommon div.include_titleArea div.include_listArea .include_listBoxCommon
+	{
+	border: 3px solid lightgray;
+	margin: 5px;
+	height: 70%;
+	border-radius: 4px;
+	display: flex;
+	flex-wrap: wrap;
+	overflow: scroll;
+	overflow-x: hidden;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea .m_calendar_includeAreaCommon div.include_titleArea div.include_listArea
+	{
+	width: 100%;
+	height: 40%;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea .m_calendar_includeAreaCommon div.include_titleArea
+	{
+	width: 100%;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea .m_calendar_includeAreaCommon
+	{
+	width: 50%;
+	height: 100%;
+	display: flex;
+	border-right: 3px solid #dfdfdf;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea .m_calendar_checkArea div.blockDiv
+	{
+	display: none;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea .m_calendar_checkArea
+	{
+	width: 50%;
+	height: 100%;
+	border-right: 2px solid black;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea .m_calendar_editArea
+	{
+	width: 100%;
+	height: 83%;
+	display: flex;
+	border-bottom: 2px solid black;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea
+	{
+	display: flex;
+	width: 100%;
+	height: 72%;
+	flex-wrap: wrap;
+	flex-direction: column;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea div.m_calendar_ContentBox_left
+	{
+	width: 50%;
+	height: 100%;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea div.m_calendar_ContentBox_left>div
+	{
+	width: 100%;
+	border: 1px solid;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea div.m_calendar_ContentBox_left div.m_calendar_contentRow1
+	{
+	height: 12%;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea div.m_calendar_ContentBox_left div.m_calendar_contentRow2
+	{
+	height: 12%;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea div.m_calendar_ContentBox_left div.m_calendar_contentRow3
+	{
+	height: 12%;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea div.m_calendar_ContentBox_left div.m_calendar_contentRow4
+	{
+	height: 12%;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea div.m_calendar_ContentBox_left div.m_calendar_contentRow5
+	{
+	height: 12%;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea div.m_calendar_ContentBox_left div.m_calendar_contentRow6
+	{
+	height: 12%;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea div.m_calendar_ContentBox_left div.m_calendar_contentRow7
+	{
+	height: 12%;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea div.m_calendar_ContentBox_left div.m_calendar_contentRow8
+	{
+	height: 12%;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_ContentArea div.m_calendar_ContentBox_right
+	{
+	width: 50%;
+	height: 100%;
+}
+
+body div.serviceView div.modal_calendar_edit div.modal_calendar_area div.m_calendar_TitleArea div.m_calendar_title
+	{
+	font-size: 20pt;
+	letter-spacing: 1px;
+	background: #f5f7fa;
+	color: #7e81a2;
+	padding: 6px 15px;
+	font-weight: 700;
+	display: block;
+}
+
+#modal-toggle {
+	display: none;
+}
+
+/* ==================================  */
+.fc-content span.fc-time, .fc-content span.fc-title {
+	line-height: 29px !important;
+}
+
+.fc-content span, .fc-time {
+	font-size: 10pt !important;
+}
+
+.fc-content span.fc-title {
+	margin-left: 4px;
+}
+
+tr>td>.fc-day-grid-event {
+	height: 33px !important;
+}
+
+#customAlert {
+	position: absolute;
+	margin: auto;
+	width: 100%;
+	text-align: center;
+	margin-top: 2px;
+	font-weight: 700;
+	height: 9%;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: wrap;
+	flex-direction: column;
+	display: none;
+}
+
+#customAlert div {
+	width: 14%;
+	color: white;
+	background: green;
+}
+
+#customAlert div.custom-alert-content {
+	font-size: 18pt;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+}
+
+#customAlert div.custom-alert-guide {
+	font-size: 9pt;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+}
+
+.fc-content {
+	display: flex !important;
+}
+
+.fc-content .fc-extra-print {
+	width: 6%;
+	margin-left: auto;
+	height: 76%;
+	display: flex;
+	flex-wrap: wrap;
+	font-weight: 700;
+}
+
+.fc-content .fc-extra-info {
+	width: 12%;
+	/* margin-left: auto; */
+	height: 76%;
+	display: flex;
+	flex-wrap: wrap;
+	font-weight: 700;
+}
+
+.fc-content .fc-extra-print span, .fc-content .fc-extra-info span {
+	width: 100%;
+	height: 45%;
+	color: white;
+	line-height: 16px !important;
+}
+
+body div.serviceView div.menuListArea div.accordion div{
+	background:#457d85;
+}
+body div.serviceView div.menuListArea div.accordion {
+	/* max-height: 802px; */ /* 260109  좌측 메측 화면 꽉차도록*/
+	overflow: hidden;
+	overflow-y: auto;
+	width:100%;
+}
+
+.accordion {
+	width: 250px;
+	height: 140px;
+	overflow: auto;
+}
+
+.fa-solid.fa-magnifying-glass-chart.fa-lg,
+p.divBlockTrigger{
+	color:#046565 !important;
+}
+.menuCommon {
+    box-shadow: 
+        0 1px 0 0 #308b81,
+        0 -1px 0 0 #308b81;
+}
+.menuIconCommon{
+	width: 10%;
+    margin-left: 5px;
+}
+
+
+
+/* 메뉴 토글 버튼 
+.menu-toggle-btn {
+    position: fixed;
+    left: 10px;
+    top: 10px;
+    z-index: 1000;
+    width: 50px;
+    height: 50px;
+    background: #308b81;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 20px;
+    transition: all 0.3s ease;
+} */
+
+/* 메뉴 리스트 */
+div.menuListArea {
+    display: flex;
+    width: 13%;
+    background: #308b81;
+    height: 95vh;
+    max-width: 230px;
+    flex-direction: column;
+    min-width: 230px;
+    left: 0;
+    top: 0;
+    z-index: 999;
+    transform: translateX(0%);
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
+}
+
+div.menuListArea.active {
+    transform: translateX(-100%);
+}
+
+/* 메뉴 토글 버튼 - 메뉴 옆에 붙음 */
+.menu-toggle-btn {
+    position: fixed;
+    left: 0;
+    top: 49%;
+    z-index: 1000;
+    width: 26px;
+    height: 60px;
+    background: #308b81;
+    color: white;
+    border: none;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateX(230px);
+}
+
+.menu-toggle-btn.active {
+    transform: translateX(0);
+}
+
+.menu-toggle-btn:hover {
+    background: #246b62;
+}
+
+/* 콘텐츠 영역 */
+.contentArea {
+    margin-left: 0;
+    transition: margin-left 0.3s ease-in-out;
+}
+
+.contentArea.menu-open {
+    margin-left: 230px;
+}
+
+body > div.serviceView > div.contentArea {
+    width: calc(100% - 0px);
+    background: #ffffff;
+    min-width: 0px;
+    margin-left: 0;
+    transition: margin-left 0.5s cubic-bezier(0.4, 0, 0.2, 1), width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    padding-left: 0;
+}
+
+body > div.serviceView > div.contentArea.menu-open {
+    margin-left:-12%;
+}
+/* 메뉴 닫힐 때 */
+div.w_contentArea > div.divBlockControl .table-info {
+    width: 84.8vw;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 메뉴 열릴 때 */
+body > div.serviceView > div.contentArea.menu-open div.w_contentArea > div.divBlockControl .table-info {
+    width: 96.8vw;
+}
+
+/* 캐시 초기화 버튼 */
+.cacheReLoadBtn{
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px;
+    border-radius: 3px;
+    border: 1px solid #d0d7de;
+    background: none;
+    cursor: pointer;
+    user-select: none;
+    font-size: 12px;
+    font-weight: 600;
+    color: white;
+    transition: background-color 0.15s ease,
+                border-color 0.15s ease,
+                box-shadow 0.15s ease,
+                transform 0.08s ease;
+}
+
+/* 이미지 아이콘 */
+.cacheReLoadBtn .cacheReLoad{
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+}
+
+/* 텍스트 */
+.cacheReLoadBtn .cacheText{
+    line-height: 1;
+    white-space: nowrap;
+}
+
+/* hover */
+.cacheReLoadBtn:hover{
+    background-color: #f3f6f9;
+    border-color: #b6c0c9;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    color:black;
+}
+
+/* active (눌렀을 때) */
+.cacheReLoadBtn:active{
+    transform: translateY(1px);
+    box-shadow: 0 0 2px rgba(0,0,0,0.15) inset;
+}
+
+/* focus outline 제거 */
+.cacheReLoadBtn:focus{
+    outline: none;
+}
+
+
+

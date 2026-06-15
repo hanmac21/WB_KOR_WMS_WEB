@@ -1,0 +1,295 @@
+body {
+ 	/* background-image: url("../images/rpa_main_bg.png");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    background-attachment: fixed; This makes the background image fixed while scrolling */
+    background: #0c1018;
+}
+body > div.loginBox > div > div{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+body > div.title > div.titleHanmac{
+    display: inline-block;
+    float: right;
+    margin-top: 47px;
+    font-size: 14pt;
+    font-style: italic;
+    color: cornflowerblue;
+    opacity: 0.4;	
+    font-weight:700;
+}
+body > div.loginBox > div > div > div.loginForm > div.loginFormTitle{
+    margin-top: 11%;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    font-size: 33pt;
+    letter-spacing: 3px;
+}
+
+
+
+
+
+body > div.loginBox div.content-wrap{
+    width: 50%;
+    background: #e9f2f0;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+body > div.loginBox{
+    height: 509px;
+    width: 1000px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #c8f1e8;
+    position: fixed;
+    box-shadow: 0 1px 7px rgba(0, 0, 0, 0.2);
+}
+body > div{
+    width: 996px;
+    margin-left: 464px;
+    margin: auto;
+}
+h1.mainTitle {
+    width: 254px;
+    height: 99px;
+    position: relative;
+    top: 71px;
+    right: 17px;
+    padding: 14px;
+    color: black;
+    font-weight: 700;
+    border-radius: 5px;	
+}
+body > div > div > div > div.loginBoxImg{
+    display: inline-block;
+    width: 644px;
+    height: 460px;
+    /* background-image: url("../images/rpaBackground.png"); */
+    background-image: url("../images/rpa-main-login-bg.png");
+    background-size: cover;
+    border-top-left-radius: 13px;
+    border-bottom-left-radius: 13px;
+}
+body > div > div > div > div.loginForm{
+    height: 100%;
+    position: absolute;
+    width: 27%;
+    display: flex;
+    flex-direction: column;
+}
+body > div > div > div > div.loginForm > h1{
+	color:white;
+    font-size: 26pt;
+    font-weight: 700;	
+}
+body > div > div > div > div.loginForm > div.input-box > input{
+    width: 70%;
+    height: 27px;
+    border-radius: 2px;
+    font-size: 11pt;
+    /* border: 0px solid; */
+    border: 1px solid #ccc;
+    margin-top: 9px;
+    /* background: rgba(0, 127, 128, 0.3); */
+    border-radius: 6px;
+    padding: 3px 10px;
+}
+body > div > div > div > div.loginForm > div.idCookieDiv{
+	
+}
+body > div > div > div > div.loginForm > div.idCookieDiv{
+    font-size: 14px;
+    font-weight: 700;
+    padding:5px;
+    float:right;
+}
+body > div > div > div > div.loginForm > div.idCookieDiv > span{
+	font-size: 10pt;
+}
+body > div > div > div > div.loginForm > div.btn-box > button:hover{
+	cursor:pointer;
+	text-decoration:underline;
+}
+body > div > div > div > div.loginForm > div.btn-box > button{
+    width: 100%;
+    height: 86%;
+    background: #11b793;
+    border: none;
+    color: white;
+    font-size: 12pt;
+    font-weight: 700;
+    border-radius: 4px;
+}
+
+body > div.title > div.titleFront > img{
+    width: 64px;
+    height: 64px;	
+}
+body > div > div.title{
+	height:76px;
+}
+.title{
+	padding-left:10px;
+	padding-top:8%;
+}
+body > div.title > div.titleFront > span{
+    border-right: 1px solid gray;
+    padding: 7px 28px 7px 17px;
+    font-weight: 700;
+    color: midnightblue;
+    font-size: 16.4pt;
+    position: relative;
+    bottom: 21px;
+}
+body > div.title > div.titleBack{
+    display: inline-block;
+    padding-left: 18px;
+    position: relative;
+    bottom: 12px;
+    color: white;
+    border-left: 1px solid gray;
+    margin-left: 9px;
+}
+body > div.title > div.titleFront{
+	display:inline-block;
+}
+body > div.title > div.titleBack > p:nth-child(1){
+    font-size: 15pt;
+    font-weight: 700;
+}
+body > div.title > div.titleBack > p{
+    margin: 0;
+    opacity: 0.8;	
+}
+body > div.footer-wrap{
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+    font-size: 9pt;
+    color: black;
+    opacity: 0.2;
+}
+body > div.footer-wrap span:first-child{
+    margin-left:18px;
+}
+
+body div.loginBox div.content-wrap div.loginBox div.loginForm div.loginFormTitle div.w_mainTitle_2  {
+	font-family: "Kanit", sans-serif;
+	font-weight: 500;
+	font-style: normal;	
+	margin-left:16px;
+	color:#fefefe;
+}
+body div.loginBox div.content-wrap div.loginBox div.loginForm div.loginFormTitle div.w_mainTitle_1  {
+	font-family: "Kanit", sans-serif;
+	font-weight: 500;
+	font-style: normal;	
+	color:#2b8496;
+}
+body div.loginBox div.content-wrap div.loginBox div.loginForm div.input-box input#userId  {
+}
+body div.loginBox div.content-wrap div.loginBox div.loginForm div.input-box input#userId:-webkit-autofill  {
+}
+
+/* .form-group input{
+    background: #131924;
+    border: none;	
+    padding: 20px;
+    font-size: 13pt;
+    color: white;    
+} */
+
+.loginBox_imgArea{
+	width:50%;
+}
+.loginBox_imgArea img{
+    height: auto;
+    width: 100%;
+    margin-top: 5px;
+    margin-left: 0px;
+}
+
+.form-group input.btn_factory{
+	
+}
+.form-group input.btn_factory{
+    width: 100%;
+    background: white;
+    font-weight: 700;
+    font-size: 10pt;
+    padding: 9px 0px;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    color: #777777;	
+}
+.loginFormTitle > img {
+    height: auto;
+    width: 39%;
+}
+.input-box {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;	
+}
+.input-box span.titleArea {
+    width: 20%;
+    font-size: 16pt;
+    font-weight: 700;
+    text-align: center;	
+    color:#006463;
+}
+
+/* 기존 스타일 유지하면서 라디오 버튼 숨기기 */
+.form-group input.btn_factory {
+    display: none; /* 라디오 버튼 숨김 */
+}
+
+/* 라벨을 버튼처럼 스타일링 */
+.form-group .factory-label {
+    display: inline-block;
+    width: 100%;
+    background: white;
+    font-weight: 700;
+    font-size: 10pt;
+    padding: 9px 0px;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    color: #777777;
+    cursor: pointer;
+    text-align: center;
+    margin-bottom: 5px;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+/* 호버 효과 */
+.form-group .factory-label:hover {
+    border-color: #999;
+    background-color: #f8f9fa;
+}
+
+/* 선택된 상태 */
+.form-group input.btn_factory:checked + .factory-label {
+    background: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+/* 선택된 상태에서 호버 */
+.form-group input.btn_factory:checked + .factory-label:hover {
+    background: #0056b3;
+    border-color: #0056b3;
+}
+
+

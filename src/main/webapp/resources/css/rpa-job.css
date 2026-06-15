@@ -1,0 +1,1091 @@
+body > div.serviceView > div.contentArea > div {
+	max-width:1920px;
+}
+body > div.serviceView > div.contentArea > div.container > div > div.col-md-6.jobListArea > table > thead > tr > th > input.jobSearchText{
+    width: 242px;
+    height: 29px;
+    font-size: 12pt;
+    margin-left: 37%;
+    float: right;
+    margin: 14px 12px 0px 0px;
+}
+body > div.serviceView > div.contentArea > div > div > div > table > thead > tr > th > input.jobSearchBtn{
+    width: 103px;
+    height: 28px;
+    font-size: 12pt;
+    border: 0px solid;
+    border-radius: 3px;
+    color: white;
+    font-weight: 700;
+    letter-spacing: 1px;
+    line-height: 0px;
+    float: right;
+    margin: 14px 8px 0px 0px;
+}
+.copyBtn{
+    float: right;
+    margin-right: 5px;
+    border-radius: 2px;
+    border: 0px solid;
+    width: 72px;
+    height: 31px;
+    font-size: 11pt;	
+}
+body > div.serviceView > div.contentArea > div.container > div > div.jobInsertArea{
+	border: 3px solid #3a4556;
+    border-radius: 5px;
+    margin: 10px 0px 0px 14px;
+    padding: 0;	
+    max-width:97%;
+    height:fit-content;
+    flex:none;
+    display:flex;
+}
+body > div.serviceView > div.contentArea > div.container > div > div.jobListArea{
+    border: 3px solid #3a4556;
+    border-radius: 5px;
+    margin: 10px 0px 0px 14px;
+    padding: 0;	
+    max-width:47%;
+    height:87vh;
+}
+body > div.serviceView > div.contentArea > div.container > div > div > table > thead,
+body > div.serviceView > div.contentArea > div.container > div > div:nth-child(2) > table > tbody > tr:nth-child(0){
+	background:#f5f7fa;
+    color: #1a202c;
+}
+body > div.serviceView > div.contentArea > div.container > div > div.col-md-6.jobListArea > table > tbody > tr > td{
+	padding:8px !important;
+}
+body > div.serviceView > div.contentArea > div.container > div > div:nth-child(2) > table > tbody > tr > td{
+	padding:4px;
+}
+body > div.serviceView > div.contentArea > div.container > div > div:nth-child(2) > table > tbody > tr > td > button.btn-sm{
+	width:72px;
+}
+body > div.serviceView > div.contentArea > div.container > div > div > table > tbody > tr{
+	display:table;
+	width:100%
+}
+body > div.serviceView > div.contentArea > div.container > div > div:nth-child(2) > table > tbody > tr:hover{
+	background:#dee2e6;
+	font-weight:700;
+}
+body > div.serviceView > div.contentArea > div.container > div > div:nth-child(2) > table > tbody.jobBodyControl::-webkit-scrollbar-thumb {
+    background-color: #1a202c;
+    border-radius: 10px;
+    background-clip: padding-box;
+    border: 2px solid transparent;
+}
+body > div.serviceView > div.contentArea > div.container > div > div:nth-child(2) > table > tbody.jobBodyControl::-webkit-scrollbar {
+	width:10px;
+	background-color:#dee2e6;
+}
+body > div.serviceView > div.contentArea > div.container > div > div.col-md-6.jobListArea > table > tbody > tr:hover{
+	background:aliceblue;
+	font-weight:700;
+	cursor:pointer
+}
+body > div.serviceView > div.contentArea > div.container > div > div.col-md-6.jobListArea > table > tbody {
+    overflow-y: auto;
+    display: block;
+    max-height: 80vh;		
+}
+.fsidinput, .fspwinput{
+	width:110px;
+}
+
+#modal > div > table > tbody > tr > th:first-child{
+	background: #f5f7fa;
+}
+#modal-jobName{
+    font-size: 18px;
+    vertical-align: bottom;	
+}
+
+#modal-title {
+	border-right:1px solid lightgray
+}
+#modal > div > table{
+	border: 3px solid #3a4556;
+}
+#btnDiv{
+    display: flex;
+    justify-content: center;	
+}
+#modal > div > table > tbody > tr:first-child > th {
+	font-size:12pt;
+}
+#modal > div > table > tbody > tr > th:first-child {
+	font-size:12pt;
+}
+#modal > div > table > tbody > tr > th:nth-child(3){
+	background: #f5f7fa; 
+}
+#modal > div{
+	top:-12%;
+}
+
+/* 모달 Insert */
+.modalInsert{
+	position:absolute;
+	/* display:flex; */
+	display:none;
+	
+	justify-content: center;
+	top:0;
+	left:0;
+	
+	width:100%;
+	height:100%;
+	
+	background-color: rgba(0,0,0,0.4);
+}
+.contentTitle > .btnJobInsert:hover {
+	background: #004d9f;
+}
+.contentTitle > .btnJobInsert {
+    background: #007bff;
+    color: white;
+    border: 0px solid;
+    font-size: 13pt;
+    padding: 4px 18px;
+    position: absolute;
+    right: 40px;
+    top: 4.4%;
+    border-radius: 4px;
+    letter-spacing: 1px;
+    font-weight: 700;	
+}
+.modalInsert > .modal_Insert_body {
+    border: 3px solid #3a4556;
+    border-radius: 5px;
+    margin: 34px 0px 0px 0px;
+    padding: 0;
+    display: flex;
+    background: white;
+    width: 55%;
+    height: 95%;
+    flex-direction: column;
+}
+
+
+.modal_Insert_body > div{
+	display:flex;
+	align-items:stretch;
+}
+.modal_Insert_body > .jobInsertTitle > .title{
+    font-size: 20pt;
+    letter-spacing: 1px;
+    background: #f5f7fa;
+    color: #7e81a2;
+    padding: 6px 15px;
+    font-weight: 700;
+    display: block;
+}
+	
+.modal_Insert_body > .jobInsertTitle .title_icon_exit .fa-regular:hover{
+	cursor:pointer;
+}
+.modal_Insert_body > .jobInsertTitle .title_icon_exit{
+    margin-left: auto;
+    margin-right: 8px;
+    margin-top: 12px;	
+}
+.modal_Insert_body > .jobInsertTitle {
+	background:#f5f7fa;
+}
+
+.modal_Insert_body > div > .titleFrame.titleFrame_con,
+.modal_Insert_body > div > .titleFrame.titleFrame_label {
+	padding:0px 35px;
+}
+.modal_Insert_body > div.jobInsertName > .titleFrame {
+	padding-bottom:8px;
+}
+.modal_Insert_body > div.jobInsertFS > .titleFrame {
+	padding: 0px 35px;
+}
+.modal_Insert_body > div > .titleFrame {
+    font-weight: 700;
+    padding: 13px 35px;
+    font-size: 12pt;
+    letter-spacing: 7px;
+    width: 23%;	
+}
+.modal_Insert_body > div.jobInsertColor > .titleFrame > .title{
+	border-top:1px solid lightgray;
+	border-bottom: none !important;
+}
+.modal_Insert_body > div.jobInsertName > .titleFrame > .title{
+	border: none !important;
+}
+.modal_Insert_body > div.jobInsertFS > .titleFrame > .title ,
+.modal_Insert_body > div.jobInsertColor > div.titleColorFrame,
+.modal_Insert_body > div.jobInsertSort > .titleFrame > .title,
+.modal_Insert_body > div.jobInsertLabel > .titleFrame > .title,
+.modal_Insert_body > div.jobInsertCon > .titleFrame > .title  {
+	border-top:1px solid lightgray;
+	border-bottom:none !important;
+}
+.modal_Insert_body > div > .titleFrame > .title {
+    border-bottom: 1px solid lightgray;
+    /* border-top: 1px solid lightgray; */
+    padding: 10px 0px;
+    width: 10px;
+    display: block;
+    width: 172px;
+}
+.modal_Insert_body > div.jobInsertName > div.titleTextFrame,
+.modal_Insert_body > div.jobInsertColor > div.titleColorFrame{
+	border-bottom:none !important;
+}
+.modal_Insert_body > div.jobInsertFileOption > div.fileOptionFrame,
+.modal_Insert_body > div.jobInsertName > div.titleTextFrame,
+.modal_Insert_body > div.jobInsertColor > div.titleColorFrame,
+.modal_Insert_body > div.jobInsertFS > div.FSFrame,
+.modal_Insert_body > div.jobInsertCon > div.conFrame,
+.modal_Insert_body > div.jobInsertLabel > div.labelFrame,
+.modal_Insert_body > div.jobInsertSort > div.sortFrame,
+.modal_Insert_body > div.jobInsertPrint > div.printFrame{
+    width: 72%;
+    border-bottom: 1px solid lightgray;
+    height: 82.2%;	
+    display:flex;
+    flex-wrap:wrap;
+}
+.modal_Insert_body > div.jobInsertCon > div.sortFrame,
+.modal_Insert_body > div.jobInsertSort > div.conFrame{
+	border-top:1px solid lightgray;
+	border-bottom:none;
+	padding:4px;
+	height:fit-content;
+}
+.modal_Insert_body > div.jobInsertName > div.titleTextFrame > .titleText {
+    border: 1px solid lightgray;
+    width: 45%;
+    height: 55%;
+    margin-top: 22px;
+    font-size: 11pt;	
+}
+.modal_Insert_body > div.jobInsertColor > div.titleColorFrame > .btn-group{
+    width: 48%;
+    height: 42px;
+    top: 4px;
+}
+.modal_Insert_body > div.jobInsertFS > div.FSFrame > div.FSLoginNameArea{
+    text-align: center;
+    margin-top: 1px;
+}
+.modal_Insert_body > div.jobInsertFS > div.FSFrame > div.FSPwArea > .fsTitle_pw,
+.modal_Insert_body > div.jobInsertFS > div.FSFrame > div.FSIdArea > .fsTitle_id{
+	display:inline-block;
+	width:105px;
+}
+.modal_Insert_body > div.jobInsertFS > div.FSFrame > div.FSIdArea,
+.modal_Insert_body > div.jobInsertFS > div.FSFrame > div.FSPwArea{
+	text-align:center
+}
+.modal_Insert_body > div.jobInsertFS > div.FSFrame > div{
+    display: inline-block;
+    margin-top: 2px;
+    margin-left: 11px;
+    width:23%;	
+}
+.modal_Insert_body > div.jobInsertFS > div.FSFrame > .FSInsertBtn{
+    /* float: right; */
+    /* margin-right: 9px; */
+    margin-top: 26px;
+    width: auto;
+    margin-left: 17px;
+}
+.modal_Insert_body > div.jobInsertCon > div.conFrame > .conInsertBtn > .insertBtn:hover,
+.modal_Insert_body > div.jobInsertFS > div.FSFrame > .FSInsertBtn > .insertBtn:hover{
+    border: 2px solid #3a4556;
+    background:#3a4556;
+    color:white;
+}
+.modal_Insert_body > div.jobInsertCon > div.conFrame > .conInsertBtn > .insertBtn,
+.modal_Insert_body > div.jobInsertFS > div.FSFrame > .FSInsertBtn > .insertBtn{
+    border: 2px solid lightgray;
+    border-radius: 4px;
+    padding: 5px 20px;
+    font-weight: 700;
+    background: #3a4556;
+    color:white;
+    letter-spacing: 1px;	
+}
+.modal_Insert_body > div.jobInsertFS > div.FSFrame > div > .fsTitle {
+    font-weight: 700;
+    letter-spacing: 1px;	
+}
+.modal_Insert_body > div.jobInsertFS > div.FSFrame > div > .fsText.fsText_loginName {
+	margin-top:5.5px;
+}
+.modal_Insert_body > div.jobInsertCon > div.conFrame > div > .fsText_con{
+	width:100%;
+}
+.modal_Insert_body > div.jobInsertCon > div.conFrame > div > .fsText,
+.modal_Insert_body > div.jobInsertFS > div.FSFrame > div > .fsText {
+    border: 1px solid lightgray;
+    width: 90%;
+    font-size: 11pt;
+    padding: 4px;	
+    margin-top:4px;
+}
+.modal_Insert_body > div.jobInsertFS > div.FSFrame {
+    height: fit-content;
+    border: none;
+    border-top: 1px solid lightgray;
+}
+.modal_Insert_body > div.jobInsertFS > div.FSFrame > div.FSInsertList{
+    width: 98%;
+    margin-left: 9px;
+    margin-top: 8px;
+    border: 2px solid lightgray;
+    background: #f5f7fa;
+    height: fit-content;
+	margin-bottom:8px;
+	display:flex;
+	flex-wrap:wrap;
+	border-radius:5px;
+	overflow:auto;
+	max-height:318px;
+}
+/* .modal_Insert_body > div.jobInsertFS > div.FSFrame > div.FSInsertList > div.fsAccount:hover .fsInfo_exit{
+	display:inline;
+    color: #ff0000;
+    position: relative;
+    bottom: 23px;
+    left: 12px;	
+	cursor:pointer;
+} */
+.modal_Insert_body > div.jobInsertFS > div.FSFrame > div.FSInsertList > div.fsAccount:hover{
+	text-decoration:underline;
+}
+.modal_Insert_body > div.jobInsertFS > div.FSFrame > div.FSInsertList > div.fsAccount > i.sortHover{
+	display:none;
+}
+.modal_Insert_body > div.jobInsertFS > div.FSFrame > div.FSInsertList > div.fsAccount:hover i{
+	margin-left:5px;
+	display:inline-block;
+}
+.modal_Insert_body > div.jobInsertFS > div.FSFrame > div.FSInsertList > div.fsAccount{
+	flex: 1 1 60%;
+	border-bottom: 1px dotted lightgray;
+	padding:3px;
+	font-size:10pt;
+}
+
+.modal_Insert_body > div.jobInsertCon > div.conFrame > div.conColumnArea > select.conFilter{
+	padding:5px;
+}	
+.modal_Insert_body > div.jobInsertCon > div.conFrame > div.conTaskArea > select.conFilter,
+.modal_Insert_body > div.jobInsertCon > div.conFrame > div.conColumnArea > select.conFilter{
+    border: 1px solid lightgray;
+    font-size: 11pt;
+    padding: 3px;
+	margin-top:15px;
+}	
+.modal_Insert_body > div.jobInsertCon > div.conFrame > div.conList::-webkit-scrollbar-track {
+    background-color: grey;
+    border-radius: 10px;
+    box-shadow: inset 0px 0px 5px white;	
+}
+.modal_Insert_body > div.jobInsertCon > div.conFrame > div.conList::-webkit-scrollbar-thumb {
+    background-color: #2f3542;
+    border-radius: 10px;	
+}
+.modal_Insert_body > div.jobInsertCon > div.conFrame > div.conList::-webkit-scrollbar {
+    width: 10px;
+}
+	
+.modal_Insert_body > div.jobInsertCon > div.conFrame > div.conList{
+	display:flex;
+	flex-wrap:wrap;
+	overflow:auto;
+	max-height:53px;
+}
+.modal_Insert_body > div.jobInsertCon > div.conFrame > div.conList > span.conCommon .filter_exit{
+    color: #ff0000;
+    float: right;
+    margin-right: 3px;
+    margin-top: 3px;	
+    cursor:pointer;
+}
+.modal_Insert_body > div.jobInsertCon > div.conFrame > div.conList > span.conCommon:hover{
+	text-decoration:underline;
+}
+.modal_Insert_body > div.jobInsertCon > div.conFrame > div.conList > span.conCommon{
+    flex: 1 1 22%;
+    font-size: 9pt;
+    margin: 3px;
+    border-radius: 5px;
+    padding: 1px;
+    background: #f5f7fa;
+    font-weight: 700;
+}
+.modal_Insert_body > div.jobInsertCon > div.conFrame > div.conColumnArea{
+	height:63px;
+}
+.modal_Insert_body > div.jobInsertSort > div.sortFrame > div.sortNameArea,
+.modal_Insert_body > div.jobInsertCon > div.conFrame > div.conNameArea{
+    width: 84%;
+    padding-bottom: 7px;
+}
+.modal_Insert_body > div.jobInsertSort > div.sortFrame > div.sortNameArea > input.sortText_con,
+.modal_Insert_body > div.jobInsertCon > div.conFrame > div.conNameArea > input.fsText_con{
+    padding: 3px 3px;
+    margin-top: 14px;
+    border: 2px solid #3a4556;
+    border-radius: 4px;
+    margin-left: 0px;
+    width: 100%;
+}
+.modal_Insert_body > div.jobInsertCon > div.conFrame > div.conInsertBtn{
+    margin-top: 11px;
+    margin-left: 21px;	
+}
+
+.modal_Insert_body > div.jobInsertFileOption .labelCommon:hover,
+.modal_Insert_body > div.jobInsertLabel .labelCommon:hover,
+.modal_Insert_body > div.jobInsertPrint .labelCommon:hover {
+	cursor:pointer;
+	background:#3a4556;
+	color:white;
+}
+.modal_Insert_body > div.jobInsertPrint .labelCommon_compare,
+.modal_Insert_body > div.jobInsertPrint .labelCommon_deliverConfirm,
+.modal_Insert_body > div.jobInsertPrint .labelCommon_division{
+	margin-left:12px;
+}
+.modal_Insert_body > div.jobInsertPrint .labelCommon_deliverConfirm,
+.modal_Insert_body > div.jobInsertPrint .labelCommon_division{
+	width:141px !important;
+}
+.modal_Insert_body > div.jobInsertPrint .labelCommon,
+.modal_Insert_body > div.jobInsertFileOption .labelCommon,
+.modal_Insert_body > div.jobInsertLabel .labelCommon {
+    border: 2px solid #3a4556;
+    height: auto;
+    text-align: center;
+    width: 60px;
+    font-size: 11pt;
+    font-weight: 700;
+    line-height: 22px;
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.modal_Insert_body > div.jobInsertPrint .labelRdoCommon,
+.modal_Insert_body > div.jobInsertFileOption .labelRdoCommon,
+.modal_Insert_body > div.jobInsertLabel .labelRdoCommon {
+	display:none;
+}
+	
+.modal_Insert_body > div > .titleFrame.titleFrame_label title {
+	padding:22px 0px;
+}	
+.modal_Insert_body > div.jobInsertLabel > div.labelFrame,
+.modal_Insert_body > div.jobInsertFileOption > div.fileOptionFrame,
+.modal_Insert_body > div.jobInsertPrint > div.printFrame {
+	border-bottom:none;
+	border-top:1px solid lightgray;
+	-webkit-user-select:none;
+  	-moz-user-select:none;
+ 	-ms-user-select:none;
+	user-select:none;
+}
+.modal_Insert_body > div.jobInsertFileOption .titleFrame .title,
+.modal_Insert_body > div.jobInsertPrint .titleFrame .title{
+	border-bottom:none;
+	border-top:1px solid lightgray;
+}
+.modal_Insert_body .jobInsertSort {
+	height:10%;
+}
+.modal_Insert_body .jobInsertPrint {
+	height:10%;
+}
+.modal_Insert_body .jobInsertLabel {
+	height:10%;
+}
+.modal_Insert_body .jobInsertFileOption .titleFrame_fileOption,
+.modal_Insert_body .jobInsertPrint .titleFrame_print {
+	padding:0px 35px;
+}
+.modal_Insert_body .jobInsertBtn {
+    justify-content: center;
+    margin-top: auto;
+    margin-bottom: 33px;
+    margin-top: 8px;
+}
+.modal_Insert_body .jobInsertBtn .btnCommon:hover  {
+	cursor:pointer;
+	text-decoration:underline;
+}
+.modal_Insert_body .jobInsertBtn .btnCommon  {
+    text-align: center;
+    font-size: 13pt;
+    font-weight: 700;
+    padding: 4px 18px;
+    letter-spacing: 1px;
+    border-radius: 3px;
+}
+.modal_Insert_body .jobInsertBtn .btnInit:hover  {
+	color:black;
+	border:2px solid;
+}
+.modal_Insert_body .jobInsertBtn .btnClose:hover {
+	background:#c02151;	
+}
+.modal_Insert_body .jobInsertBtn .btnClose  {
+    border: 2px solid #de275e;
+    background: #DE275E;
+    color: white;	
+}
+.modal_Insert_body .jobInsertBtn .btnInsert:hover  {
+	background: #004d9f;
+}
+.modal_Insert_body .jobInsertBtn .btnInsert  {
+    background: #007bff;
+    color: white;
+    border: none;	
+    margin-right:15px;
+}
+.modal_Insert_body .jobInsertBtn .btnInit  {
+    position: absolute;
+    left: 24.4%;
+    background: #f5f7fa;
+    border: 2px solid lightgray;
+    color: gray;
+}
+	
+.modal_Insert_body > div.jobInsertFS > div.FSFrame > div.FSInsertList .fsInfo_exit{
+    color: #ff0000;
+    position: static;
+    cursor: pointer;
+    float: right;
+    margin: 3px 2px 0px 0px;
+}
+
+.modal_Insert_body div.titleFrame_sort{
+	padding:0px 35px;
+}
+.modal_Insert_body div.conFrame,
+.modal_Insert_body div.sortFrame{
+	border-bottom:0px solid !important;
+	border-top:1px solid lightgray;
+	padding-bottom:6px;
+}
+
+.update_body{
+    width: 50%;
+    border: 3px solid #3a4556;
+    border-radius: 5px;
+    padding: 0;
+    height: 83vh;
+    margin: 10px 0 0 7px;
+}
+
+.updateArea > .update_body {
+    border: 3px solid #3a4556;
+    border-radius: 5px;
+    margin: 58px 0px 0px 0px;
+    padding: 0;
+    display: flex;
+    background: white;
+    width: 55%;
+    height: 89%;
+    flex-direction:column;
+}
+
+
+.update_body > div.jobInsertName > div.titleFrame{
+	padding: 6px 35px 0px 35px;
+}
+.update_body > div.jobInsertPrint{
+	margin-bottom:10px;
+}
+.update_body > div{
+	display:flex;
+	align-items:stretch;
+}
+.update_body > .jobInsertTitle > .title{
+    font-size: 20pt;
+    letter-spacing: 1px;
+    background: #f5f7fa;
+    color: #7e81a2;
+    padding: 6px 15px;
+    font-weight: 700;
+    display: block;
+}
+	
+.update_body > .jobInsertTitle .title_icon_exit .fa-regular:hover{
+	cursor:pointer;
+}
+.update_body > .jobInsertTitle .title_icon_exit{
+    margin-left: auto;
+    margin-right: 8px;
+    margin-top: 12px;	
+}
+.update_body > .jobInsertTitle {
+	background:#f5f7fa;
+}
+
+.update_body > div > .titleFrame.titleFrame_fileOption,
+.update_body > div > .titleFrame.titleFrame_label {
+	letter-spacing:2px;
+}
+.update_body > div > .titleFrame.titleFrame_con,
+.update_body > div > .titleFrame.titleFrame_label {
+	padding:0px 35px;
+}
+.update_body > div > .titleFrame {
+    font-weight: 700;
+    padding: 13px 35px;
+    font-size: 12pt;
+    letter-spacing: 7px;
+    width: 23%;	
+}
+.update_body > div.jobInsertFS > .titleFrame > .title  {
+	border:none;
+}
+.update_body > div.jobInsertSort > .titleFrame > .title,
+.update_body > div.jobInsertLabel > .titleFrame > .title,
+.update_body > div.jobInsertCon > .titleFrame > .title  {
+	border-top:1px solid lightgray;
+	border-bottom:none;
+}
+.update_body > div > .titleFrame > .title {
+    border-bottom: 1px solid lightgray;
+    /* border-top: 1px solid lightgray; */
+    padding: 10px 0px;
+    width: 10px;
+    display: block;
+    width: 125px;
+}
+.update_body > div.jobInsertColor > div.titleColorFrame{
+	border-top:1px solid lightgray;
+	border-bottom:0px solid !important;
+}
+.update_body > div.jobInsertName > div.titleTextFrame{
+	border-bottom:0px solid !important;
+}
+.update_body > div.jobInsertFileOption > div.fileOptionFrame,
+.update_body > div.jobInsertName > div.titleTextFrame,
+.update_body > div.jobInsertColor > div.titleColorFrame,
+.update_body > div.jobInsertFS > div.FSFrame,
+.update_body > div.jobInsertCon > div.conFrame,
+.update_body > div.jobInsertLabel > div.labelFrame,
+.update_body > div.jobInsertSort > div.sortFrame,
+.update_body > div.jobInsertPrint > div.printFrame{
+    width: 72%;
+    border-bottom: 1px solid lightgray;
+    height: 82.2%;	
+    display:flex;
+    flex-wrap:wrap;
+}
+.update_body > div.jobInsertCon > div.sortFrame,
+.update_body > div.jobInsertSort > div.conFrame{
+	border-top:1px solid lightgray;
+	border-bottom:none;
+	padding:4px;
+	height:fit-content;
+}
+.update_body > div.jobInsertName > div.titleTextFrame > .titleText {
+    border: 1px solid lightgray;
+    width: 45%;
+    height: 55%;
+    margin-top: 19px;
+    font-size: 11pt;	
+}
+.update_body > div.jobInsertColor > div.titleColorFrame > .btn-group{
+    width: 48%;
+    height: 42px;
+    top: 4px;
+}
+.update_body > div.jobInsertFS > div.FSFrame > div.FSLoginNameArea{
+    text-align: center;
+    margin-top: 1px;
+}
+.update_body > div.jobInsertFS > div.FSFrame > div.FSPwArea > .fsTitle_pw,
+.update_body > div.jobInsertFS > div.FSFrame > div.FSIdArea > .fsTitle_id{
+	display:inline-block;
+	width:105px;
+}
+.update_body > div.jobInsertFS > div.FSFrame > div.FSIdArea,
+.update_body > div.jobInsertFS > div.FSFrame > div.FSPwArea{
+	text-align:center
+}
+.update_body > div.jobInsertFS > div.FSFrame > div{
+    display: inline-block;
+    margin-top: 2px;
+    margin-left: 11px;
+    width:23%;	
+}
+.update_body > div.jobInsertFS > div.FSFrame > .FSInsertBtn{
+    /* float: right; */
+    /* margin-right: 9px; */
+    margin-top: 26px;
+    width: auto;
+    margin-left: 17px;
+}
+.update_body > div.jobInsertCon > div.conFrame > .conInsertBtn > .insertBtn:hover,
+.update_body > div.jobInsertFS > div.FSFrame > .FSInsertBtn > .insertBtn:hover{
+    border: 2px solid #3a4556;
+    background:#3a4556;
+    color:white;
+}
+.update_body > div.jobInsertCon > div.conFrame > .conInsertBtn > .insertBtn,
+.update_body > div.jobInsertFS > div.FSFrame > .FSInsertBtn > .insertBtn{
+    border: 2px solid lightgray;
+    border-radius: 4px;
+    padding: 5px 20px;
+    font-weight: 700;
+    background: #3a4556;
+    color:white;
+    letter-spacing: 1px;	
+}
+.update_body > div.jobInsertFS > div.FSFrame > div > .fsTitle {
+    font-weight: 700;
+    letter-spacing: 1px;	
+}
+.update_body > div.jobInsertFS > div.FSFrame > div > .fsText.fsText_loginName {
+	margin-top:5.5px;
+}
+.update_body > div.jobInsertCon > div.conFrame > div > .fsText_con{
+	width:100%;
+}
+.update_body > div.jobInsertCon > div.conFrame > div > .fsText,
+.update_body > div.jobInsertFS > div.FSFrame > div > .fsText {
+    border: 1px solid lightgray;
+    width: 90%;
+    font-size: 11pt;
+    padding: 4px;	
+    margin-top:4px;
+}
+.update_body > div.jobInsertFS > div.FSFrame {
+    height: fit-content;
+    border: none;
+    border-top: 1px solid lightgray;
+}
+.update_body > div.jobInsertFS > div.FSFrame > div.FSInsertList{
+    width: 98%;
+    margin-left: 9px;
+    margin-top: 8px;
+    border: 2px solid lightgray;
+    background: #f5f7fa;
+    height: fit-content;
+    margin-bottom: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    font-size:10pt;
+    border-radius: 5px;
+    overflow: auto;
+    user-select: none;
+    max-height: 318px;
+}
+/* .update_body > div.jobInsertFS > div.FSFrame > div.FSInsertList > div.fsAccount:hover .fsInfo_exit{
+	display:inline;
+    color: #ff0000;
+    position: relative;
+    bottom: 23px;
+    left: 12px;	
+	cursor:pointer;
+} */
+.update_body > div.jobInsertFS > div.FSFrame > div.FSInsertList > div.fsAccount:hover{
+	text-decoration:underline;
+	background:#eaecef;
+}
+.update_body > div.jobInsertFS > div.FSFrame > div.FSInsertList > div.fsAccount > i.sortHover{
+	display:none;
+}
+.update_body > div.jobInsertFS > div.FSFrame > div.FSInsertList > div.fsAccount:hover i{
+	margin-left:5px;
+	display:inline-block;
+}
+.update_body > div.jobInsertFS > div.FSFrame > div.FSInsertList > div.fsAccount{
+	flex: 1 1 100%;
+	border-bottom: 1px dotted lightgray;
+	padding:3px;
+}
+
+.update_body > div.jobInsertCon > div.conFrame > div.conColumnArea > select.conFilter{
+	padding:5px;
+}	
+.update_body > div.jobInsertCon > div.conFrame > div.conTaskArea > select.conFilter,
+.update_body > div.jobInsertCon > div.conFrame > div.conColumnArea > select.conFilter{
+    border: 1px solid lightgray;
+    font-size: 11pt;
+    padding: 3px;
+	margin-top:15px;
+}	
+.update_body > div.jobInsertCon > div.conFrame > div.conList::-webkit-scrollbar-track {
+    background-color: grey;
+    border-radius: 10px;
+    box-shadow: inset 0px 0px 5px white;	
+}
+.update_body > div.jobInsertCon > div.conFrame > div.conList::-webkit-scrollbar-thumb {
+    background-color: #2f3542;
+    border-radius: 10px;	
+}
+.update_body > div.jobInsertCon > div.conFrame > div.conList::-webkit-scrollbar {
+    width: 10px;
+}
+	
+.update_body > div.jobInsertCon > div.conFrame > div.conList{
+	display:flex;
+	flex-wrap:wrap;
+	overflow:auto;
+	max-height:53px;
+}
+.update_body > div.jobInsertCon > div.conFrame > div.conList > span.conCommon .filter_exit{
+    color: #ff0000;
+    float: right;
+    margin-right: 3px;
+    margin-top: 3px;	
+    cursor:pointer;
+}
+.update_body > div.jobInsertCon > div.conFrame > div.conList > span.conCommon:hover{
+	text-decoration:underline;
+}
+.update_body > div.jobInsertCon > div.conFrame > div.conList > span.conCommon{
+    flex: 1 1 22%;
+    font-size: 9pt;
+    margin: 3px;
+    border-radius: 5px;
+    padding: 1px;
+    background: #f5f7fa;
+    font-weight: 700;
+}
+.update_body > div.jobInsertCon > div.conFrame > div.conColumnArea{
+	height:63px;
+}
+.update_body > div.jobInsertSort > div.sortFrame > div.sortNameArea,
+.update_body > div.jobInsertCon > div.conFrame > div.conNameArea{
+    width: 84%;
+    padding-bottom: 3px;
+}
+.update_body > div.jobInsertSort > div.sortFrame > div.sortNameArea > input.sortText_con,
+.update_body > div.jobInsertCon > div.conFrame > div.conNameArea > input.fsText_con{
+    padding: 3px 3px;
+    margin-top: 7px;
+    border: 2px solid #3a4556;
+    border-radius: 4px;
+    margin-left: 0px;
+    width: 100%;
+}
+.update_body > div.jobInsertCon > div.conFrame > div.conInsertBtn{
+    margin-top: 11px;
+    margin-left: 21px;	
+}
+
+.update_body > div.jobInsertFileOption .labelCommon:hover,
+.update_body > div.jobInsertLabel .labelCommon:hover,
+.update_body > div.jobInsertPrint .labelCommon:hover {
+	cursor:pointer;
+	background:#3a4556;
+	color:white;
+}
+.modal_Insert_body > div.jobInsertFileOption .labelCommon,
+.update_body > div.jobInsertFileOption .labelCommon{
+	width:85px !important; 
+}
+.modal_Insert_body > div.jobInsertFileOption .labelCommon_insert_pin,
+.update_body > div.jobInsertFileOption .labelCommon_chulgo,
+.update_body > div.jobInsertFileOption .labelCommon_edit_pin,
+.update_body > div.jobInsertPrint .labelCommon_compare,
+.update_body > div.jobInsertPrint .labelCommon_division,
+.update_body > div.jobInsertPrint .labelCommon_deliverConfirm{
+	margin-left:12px;
+}
+.update_body > div.jobInsertPrint .labelCommon_deliverConfirm,
+.update_body > div.jobInsertPrint .labelCommon_division{
+	width:141px !important;
+}
+.update_body > div.jobInsertFileOption .labelCommon,
+.update_body > div.jobInsertPrint .labelCommon,
+.update_body > div.jobInsertLabel .labelCommon {
+    border: 2px solid #3a4556;
+    height: 37px;
+    text-align: center;
+    width: 60px;
+    font-size: 11pt;
+    font-weight: 700;
+    line-height: 22px;
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.update_body > div.jobInsertFileOption .labelRdoCommon,
+.update_body > div.jobInsertPrint .labelRdoCommon,
+.update_body > div.jobInsertLabel .labelRdoCommon {
+	display:none;
+}
+	
+.update_body > div > .titleFrame.titleFrame_label title {
+	padding:22px 0px;
+}	
+.update_body > div.jobInsertPrint {
+	height:10%;
+}
+.update_body > div.jobInsertFileOption > div.fileOptionFrame,
+.update_body > div.jobInsertLabel > div.labelFrame,
+.update_body > div.jobInsertPrint > div.printFrame {
+	border-bottom:none;
+	border-top:1px solid lightgray;
+	-webkit-user-select:none;
+  	-moz-user-select:none;
+ 	-ms-user-select:none;
+	user-select:none;
+}
+.update_body > div.jobInsertFileOption .titleFrame .title,
+.update_body > div.jobInsertPrint .titleFrame .title{
+	border-bottom:none;
+	border-top:1px solid lightgray;
+}
+.update_body .jobInsertSort {
+	height:10%;
+}
+.update_body .jobInsertLabel {
+	height:10%;
+}
+.update_body .jobInsertFileOption .titleFrame_fileOption,
+.update_body .jobInsertPrint .titleFrame_print {
+	padding:0px 35px;
+}
+.update_body .jobInsertBtn {
+    justify-content: center;
+    margin-top: auto;
+    margin-bottom: 14px;
+}
+.update_body .jobInsertBtn .btnCommon:hover  {
+	cursor:pointer;
+	text-decoration:underline;
+}
+.update_body .jobInsertBtn .btnCommon  {
+    text-align: center;
+    font-size: 13pt;
+    font-weight: 700;
+    padding: 4px 18px;
+    letter-spacing: 1px;
+    border-radius: 3px;
+}
+.update_body .jobInsertBtn .btnInit:hover  {
+	color:black;
+	border:2px solid;
+}
+.update_body .jobInsertBtn .btnClose:hover {
+	background:#c02151;	
+}
+.update_body .jobInsertBtn .btnClose  {
+    border: 2px solid #de275e;
+    background: #DE275E;
+    color: white;	
+}
+.update_body .jobInsertBtn .btnInsert:hover  {
+	background: #004d9f;
+}
+.update_body .jobInsertBtn input   {
+    border: none;	
+    margin-right:15px;
+}
+.update_body .jobInsertBtn .btnInit  {
+    position: absolute;
+    left: 56%;
+    background: #f5f7fa;
+    border: 2px solid lightgray;
+    color: gray;
+    font-size: 9pt;
+    padding: 2px 10px;
+    margin-top: 17px;
+}
+	
+.update_body > div.jobInsertFS > div.FSFrame > div.FSInsertList .fsInfo_exit{
+    color: #ff0000;
+    position: static;
+    cursor: pointer;
+    float: right;
+    margin: 3px 2px 0px 0px;
+}
+
+.update_body div.titleFrame_sort{
+	padding:0px 35px;
+}
+.update_body div.conFrame,
+.update_body div.sortFrame{
+	border-bottom:0px solid !important;
+	border-top:1px solid lightgray;
+	padding-bottom:6px;
+}
+	
+.updateArea  {
+	width:50%;
+}
+.updateArea > .update_body {
+    border: 3px solid #3a4556;
+    border-radius: 5px;
+    margin: 10px 0px 0px 9px;
+    padding: 0;
+    display: flex;
+    background: white;
+    width: 97%;
+    height: 87vh;
+    flex-direction: column;
+}
+	
+body > div.serviceView > div.contentArea > div.container > div > div.col-md-6.jobListArea > table > thead > tr > th{
+    font-size: 20pt;
+    padding: 4px 0px 6px 18px;
+    color: #7e81a2;	
+}
+
+.update_body > div.jobInsertLabel > div.labelFrame > .labelTitle,
+.update_body > div.jobInsertPrint > div.printFrame > .labelTitle,
+.modal_Insert_body > div.jobInsertLabel > div.labelFrame > .labelTitle,
+.modal_Insert_body > div.jobInsertPrint > div.printFrame > .labelTitle{
+    font-weight: 700;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 14px;	
+}
+
+
+.draggable:last-child {
+    border-bottom: 1px solid #c5cdd7;
+}
+
+.draggable.dragging {
+    border-top: 3px solid #1a202c;
+    border-radius:5px;
+    color:red;
+}
+
+.el {
+    display: inline-block;
+    vertical-align: middle;
+}
+.ico-drag {
+    display: inline-block;
+    vertical-align: inherit;
+    width: 15px;
+    height: 15px;
+    background: url(./menu.png) no-repeat center top;
+    background-size: cover;
+}
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,31 @@
+{
+  "name": "wb_kor_wms_web",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack --mode development",
+    "build:prod": "webpack --mode production",
+    "watch": "webpack --watch --mode development",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hanmac21/WB_KOR_WMS_WEB.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hanmac21/WB_KOR_WMS_WEB/issues"
+  },
+  "homepage": "https://github.com/hanmac21/WB_KOR_WMS_WEB#readme",
+  "description": "",
+  "devDependencies": {
+    "webpack": "^5.99.9",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.3"
+  },
+  "dependencies": {
+    "jquery": "^3.7.1"
+  }
+}

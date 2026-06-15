@@ -1,0 +1,2212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.wbmex.ProductionMapper">
+	<!-- ==================================================================================================================================== -->
+	<select id="getItemName" resultType ="String">
+		SELECT ITEMNAME
+		FROM T_MI_ITEM
+		WHERE ITEMCODE = #{itemcode}
+	</select>
+	<select id="searchStockCountWIPList" resultType = "int">
+		SELECT COUNT(*)
+		FROM T_WMS_WORKREALSTOCK
+		WHERE USEYN ='Y'
+		AND ITEMCODE = #{itemcode}
+		AND QTY = #{qty}
+		AND SDATE = #{date}
+		AND STORAGE = #{workshop}
+	</select>
+	<update id="updateStockCountWIPList">
+		UPDATE T_WMS_WORKREALSTOCK
+		   SET USEYN = 'N'
+		     , YMDHMS_D = TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+		     , MEMO_D = 'FIX QTY'
+		 WHERE SDATE = #{date}
+		   AND ITEMCODE = #{itemcode}
+		   AND STORAGE = #{workshop}
+		   AND USEYN = 'Y'
+	</update>
+	<insert id="insertStockCountWIPList">
+		INSERT INTO T_WMS_WORKREALSTOCK(
+		        SDATE,
+		        YMDHMS,
+		        LOGINID,
+		        
+		        ITEMCODE,
+		        QTY,
+		        
+		        FACTORY,
+		        STORAGE
+		    )
+		    VALUES (
+		        #{date},
+		        TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS'),
+		        #{loginid},
+		        
+		        #{itemcode},
+		        #{qty},
+		        
+		        #{factory},
+		        #{workshop}
+		    )		
+	</insert>
+	
+	<select id="read_stockCountWIPList" parameterType="map" resultType="map">
+	    SELECT 
+		    DISTINCT A.ITEMCODE, B.ITEMNAME,
+		    (SELECT COUNT(DISTINCT ITEMCODE) FROM T_WMS_LOCATION WHERE USEYN = 'Y') AS TOTALCOUNT
+		FROM T_WMS_LOCATION A 
+		LEFT JOIN T_MI_ITEM B ON A.ITEMCODE = B.ITEMCODE 
+		WHERE A.USEYN = 'Y'
+		ORDER BY A.ITEMCODE
+	</select>
+	
+	<!-- ==================================================================================================================================== -->
+	<!-- <select id="read_productionDetail" parameterType="map" resultType="com.example.demo.vo.WorkVO">
+		SELECT *
+		FROM (
+		    SELECT
+		        t.*,
+		        ROW_NUMBER() OVER (ORDER BY sdate desc, ymdhms desc, barcode) AS rn
+		    FROM (
+		        SELECT
+		        	a.intf_yn,
+		        	a.wms_key,
+		        	a.sdate,
+		        	a.factory,
+		        	a.storage,
+		            c.subname_ch as car, 
+					b.itemcode,
+					b.itemname,
+					a.barcode,					
+					CASE WHEN a.okyn = 'Y' THEN NVL(a.qty, 0) ELSE 0 END AS okqty,
+					CASE WHEN a.okyn = 'N' THEN NVL(a.qty, 0) ELSE 0 END AS ngqty,
+					a.loginid,
+					a.ymdhms,
+					substr(ymdhms,9,2)||':'||substr(ymdhms,11,2) as time,
+					d.lineno,
+					d.workplace,
+					d.shift					
+				FROM t_wms_work a 
+		        LEFT JOIN t_mi_item b
+		               ON b.itemcode = a.itemcode
+		        LEFT JOIN t_mi_typesub c
+		               ON c.subcode  = b.carno
+		              AND c.typecode = 'MI041'
+		        LEFT JOIN t_scm_barcode d
+		               ON d.barcode = a.barcode
+		        WHERE 1 = 1
+		          AND a.useyn = 'Y'
+		  	<include refid="where_production"/>	  	
+	        ) t
+        ) 
+        WHERE rn BETWEEN #{offset} + 1 AND #{offset} + #{itemsPerPage}
+        ORDER BY rn
+    </select>
+	
+	<select id="read_productionDetail_all" parameterType="map" resultType="map">
+		SELECT
+        	a.intf_yn,
+        	a.wms_key,
+        	a.sdate,
+        	a.factory,
+        	a.storage,
+            c.subname_ch as car, 
+			b.itemcode,
+			b.itemname,
+			a.barcode,					
+			CASE WHEN a.okyn = 'Y' THEN NVL(a.qty, 0) ELSE 0 END AS okqty,
+			CASE WHEN a.okyn = 'N' THEN NVL(a.qty, 0) ELSE 0 END AS ngqty,
+			a.loginid,
+			a.ymdhms,
+			substr(ymdhms,9,2)||':'||substr(ymdhms,11,2) as time,
+			d.lineno,
+			d.workplace,
+			d.shift					
+		FROM t_wms_work a 
+        LEFT JOIN t_mi_item b
+               ON b.itemcode = a.itemcode
+        LEFT JOIN t_mi_typesub c
+               ON c.subcode  = b.carno
+              AND c.typecode = 'MI041'
+        LEFT JOIN t_scm_barcode d
+               ON d.barcode = a.barcode
+        WHERE 1 = 1
+          AND a.useyn = 'Y'
+            <include refid="where_production"/>
+        ORDER BY a.sdate desc, a.ymdhms desc, a.barcode
+	</select>
+	
+    <select id="getProductionDetailTotalCount" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+	        FROM t_wms_work a
+	        LEFT OUTER JOIN t_mi_item b
+	            ON a.itemcode = b.itemcode
+	        LEFT OUTER JOIN t_mi_typesub c
+	            ON b.carno = c.subcode
+	            AND c.typecode = 'MI041'
+	        LEFT JOIN t_scm_barcode d
+		       ON d.barcode = a.barcode 
+	        WHERE 1=1
+	          AND a.useyn = 'Y'
+	            <include refid="where_production"/>
+    </select> 
+    
+    <select id="getProductionDetailTotalQty" parameterType="map" resultType="java.math.BigDecimal">
+        SELECT NVL(sum(a.qty), 0) as qty
+	        FROM t_wms_work a
+	        LEFT OUTER JOIN t_mi_item b
+	            ON a.itemcode = b.itemcode
+	        LEFT OUTER JOIN t_mi_typesub c
+	            ON b.carno = c.subcode
+	            AND c.typecode = 'MI041'
+	        LEFT JOIN t_scm_barcode d
+		    	ON d.barcode = a.barcode 
+	        WHERE 1=1
+	          AND a.useyn = 'Y'
+	            <include refid="where_production"/>
+    </select> -->     
+	<!-- ==================================================================================================================================== -->
+	<!-- <select id="read_productionSummary" parameterType="map" resultType="com.example.demo.vo.WorkVO">
+		SELECT *
+		FROM (
+		    SELECT
+		        t.*,
+		        ROW_NUMBER() OVER (ORDER BY sdate, itemcode) AS rn
+		    FROM (
+		        SELECT
+		        	a.sdate,
+		        	a.factory,
+		        	a.storage,
+		        	c.subname_ch as car, 
+		        	a.itemcode,
+		        	b.itemname,
+		        	SUM(a.qty) as qty,
+		        	SUM(CASE WHEN a.okyn = 'Y' THEN TO_NUMBER(TRIM(a.qty)) ELSE 0 END) AS okqty,
+		        	SUM(CASE WHEN a.okyn = 'N' THEN TO_NUMBER(TRIM(a.qty)) ELSE 0 END) AS ngqty,
+		        	d.lineno,
+		        	d.workplace,
+		        	d.shift
+				FROM t_wms_work a 
+		        LEFT JOIN t_mi_item b
+		               ON b.itemcode = a.itemcode
+		        LEFT JOIN t_mi_typesub c
+		               ON c.subcode  = b.carno
+		              AND c.typecode = 'MI041'
+		        LEFT JOIN t_scm_barcode d
+		               ON d.barcode = a.barcode
+		        WHERE 1 = 1
+		          AND a.useyn = 'Y'
+		  	<include refid="where_production"/>	
+		  		GROUP BY 
+		  			a.sdate, 
+		  			a.factory, 
+		  			a.storage, 
+		  			c.subname_ch, 
+		  			a.itemcode, 
+		  			b.itemname,
+		  			d.lineno,
+		  			d.workplace,
+		  			d.shift
+	        ) t
+        ) 
+        WHERE rn BETWEEN #{offset} + 1 AND #{offset} + #{itemsPerPage}
+        ORDER BY rn
+    </select>
+	
+	<select id="read_productionSummary_all" parameterType="map" resultType="map">
+		SELECT
+        	a.sdate,
+        	a.factory,
+        	a.storage,
+        	c.subname_ch as car, 
+        	a.itemcode,
+        	b.itemname,
+        	SUM(a.qty) as qty,
+        	SUM(CASE WHEN a.okyn = 'Y' THEN TO_NUMBER(TRIM(a.qty)) ELSE 0 END) AS okqty,
+        	SUM(CASE WHEN a.okyn = 'N' THEN TO_NUMBER(TRIM(a.qty)) ELSE 0 END) AS ngqty,
+        	d.lineno,
+        	d.workplace,
+        	d.shift
+		FROM t_wms_work a 
+        LEFT JOIN t_mi_item b
+               ON b.itemcode = a.itemcode
+        LEFT JOIN t_mi_typesub c
+               ON c.subcode  = b.carno
+              AND c.typecode = 'MI041'
+        LEFT JOIN t_scm_barcode d
+               ON d.barcode = a.barcode
+        WHERE 1 = 1
+          AND a.useyn = 'Y'
+  		<include refid="where_production"/>	
+  		GROUP BY 
+  			a.sdate, 
+  			a.factory, 
+  			a.storage, 
+  			c.subname_ch, 
+  			a.itemcode, 
+  			b.itemname,
+  			d.lineno,
+  			d.workplace,
+  			d.shift
+		ORDER BY
+		       a.sdate,
+		       a.itemcode
+		       
+
+	</select>
+	
+    <select id="getProductionSummaryTotalCount" parameterType="map" resultType="int">
+    	SELECT COUNT(*) 
+        FROM (
+	        SELECT COUNT(*)
+		        FROM t_wms_work a
+		        LEFT OUTER JOIN t_mi_item b
+		            ON a.itemcode = b.itemcode
+		        LEFT OUTER JOIN t_mi_typesub c
+		            ON b.carno = c.subcode
+		            AND c.typecode = 'MI041'
+		        LEFT JOIN t_scm_barcode d
+		               ON d.barcode = a.barcode
+		        WHERE 1=1
+		          AND a.useyn = 'Y'
+		            <include refid="where_production"/>
+	  		GROUP BY a.sdate, a.factory, a.storage, c.subname_ch, a.itemcode, b.itemname, d.lineno, d.workplace, d.shift  
+	  	)
+    </select> 
+    
+    <select id="getProductionSummaryTotalQty" parameterType="map" resultType="java.math.BigDecimal">
+        SELECT sum(qty) 
+          FROM (
+        SELECT NVL(sum(a.qty), 0) as qty
+	        FROM t_wms_work a
+	        LEFT OUTER JOIN t_mi_item b
+	            ON a.itemcode = b.itemcode
+	        LEFT OUTER JOIN t_mi_typesub c
+	            ON b.carno = c.subcode
+	            AND c.typecode = 'MI041'
+	        LEFT JOIN t_scm_barcode d
+		               ON d.barcode = a.barcode
+	        WHERE 1=1
+	          AND a.useyn = 'Y'
+	            <include refid="where_production"/>
+		)
+    </select>    -->  
+	<!-- ==================================================================================================================================== -->
+	<!-- <select id="read_semiProductionDetail" parameterType="map" resultType="com.example.demo.vo.SemiWorkVO">
+		SELECT *
+		FROM (
+		    SELECT
+		        t.*,
+		        ROW_NUMBER() OVER (ORDER BY sdate desc, ymdhms desc, barcode) AS rn
+		    FROM (
+		        SELECT
+		        	a.intf_yn,
+		        	a.wms_key,
+		        	a.sdate,
+		        	a.factory,
+		            c.subname_ch as car, 
+					b.itemcode,
+					b.itemname,
+					a.barcode,
+					qty,
+					CASE WHEN a.okyn = 'Y' THEN a.qty ELSE 0 END AS okqty,
+					CASE WHEN a.okyn = 'N' THEN a.qty ELSE 0 END AS ngqty,
+					sum(qty) as qty,
+					NVL((select lineno from t_scm_barcode aa where a.barcode = aa.barcode and useyn ='Y'), '') as lineno,
+					a.loginid,
+					a.ymdhms,
+					substr(ymdhms,9,2)||':'||substr(ymdhms,11,2) as time
+				FROM t_wms_semiwork a 
+		        LEFT JOIN t_mi_item b
+		               ON b.itemcode = a.itemcode
+		        LEFT JOIN t_mi_typesub c
+		               ON c.subcode  = b.carno
+		              AND c.typecode = 'MI041'
+		        WHERE 1 = 1
+		          AND a.useyn = 'Y'
+		  	<include refid="where_semiProduction"/>
+		  	group by a.sdate, c.subname_ch,b.itemcode,b.itemname,substr(ymdhms,9,2)||':'||substr(ymdhms,11,2) 		  		  	
+	        ) t
+        ) 
+        WHERE rn BETWEEN #{offset} + 1 AND #{offset} + #{itemsPerPage}
+        ORDER BY rn
+    </select>
+	
+	<select id="read_semiProductionDetail_all" parameterType="map" resultType="map">
+		SELECT
+        	a.intf_yn,
+        	a.wms_key,
+        	a.sdate,
+        	a.factory,
+            c.subname_ch as car, 
+			b.itemcode,
+			b.itemname,
+			a.barcode,
+			qty,
+			CASE WHEN a.okyn = 'Y' THEN a.qty ELSE 0 END AS okqty,
+			CASE WHEN a.okyn = 'N' THEN a.qty ELSE 0 END AS ngqty,
+			sum(qty) as qty,
+			NVL((select lineno from t_scm_barcode aa where a.barcode = aa.barcode and useyn ='Y'), '') as lineno,
+			a.loginid,
+			a.ymdhms,
+			substr(ymdhms,9,2)||':'||substr(ymdhms,11,2) as time
+		FROM t_wms_semiwork a 
+        LEFT JOIN t_mi_item b
+               ON b.itemcode = a.itemcode
+        LEFT JOIN t_mi_typesub c
+               ON c.subcode  = b.carno
+              AND c.typecode = 'MI041'
+        WHERE 1 = 1
+          AND a.useyn = 'Y'
+            <include refid="where_semiProduction"/>
+        ORDER BY sdate desc, ymdhms desc, barcode
+	</select>
+
+    <select id="getSemiProductionDetailTotalCount" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+	        FROM t_wms_semiwork a
+	        LEFT OUTER JOIN t_mi_item b
+	            ON a.itemcode = b.itemcode
+	        LEFT OUTER JOIN t_mi_typesub c
+	            ON b.carno = c.subcode
+	            AND c.typecode = 'MI041'
+	        WHERE 1=1
+	          AND a.useyn = 'Y'
+	            <include refid="where_semiProduction"/>
+    </select> 
+
+    <select id="getSemiProductionDetailTotalQty" parameterType="map" resultType="java.math.BigDecimal">
+        SELECT NVL(sum(qty), 0) as qty
+	        FROM t_wms_semiwork a
+	        LEFT OUTER JOIN t_mi_item b
+	            ON a.itemcode = b.itemcode
+	        LEFT OUTER JOIN t_mi_typesub c
+	            ON b.carno = c.subcode
+	            AND c.typecode = 'MI041'
+	        WHERE 1=1
+	          AND a.useyn = 'Y'
+	            <include refid="where_semiProduction"/>
+    </select> --> 
+    <!-- ==================================================================================================================================== -->
+	<!-- <select id="read_semiProductionSummary" parameterType="map" resultType="com.example.demo.vo.SemiWorkVO">
+		SELECT *
+		FROM (
+		    SELECT
+		        t.*,
+		        ROW_NUMBER() OVER (ORDER BY sdate desc, itemcode) AS rn
+		    FROM (
+		    	SELECT
+					a.sdate,
+					c.subname_ch as car, 
+					a.itemcode,
+					b.itemname,
+					sum(a.qty) as qty,
+					SUM(CASE WHEN a.okyn = 'Y' THEN TO_NUMBER(TRIM(a.qty)) ELSE 0 END) AS okqty,
+					SUM(CASE WHEN a.okyn = 'N' THEN TO_NUMBER(TRIM(a.qty)) ELSE 0 END) AS ngqty,
+					a.intf_yn,					
+					a.factory
+				from t_wms_semiwork a 
+		        LEFT JOIN t_mi_item b
+		               ON b.itemcode = a.itemcode
+		        LEFT JOIN t_mi_typesub c
+		               ON c.subcode  = b.carno
+		              AND c.typecode = 'MI041'
+		        LEFT JOIN T_SCM_BARCODE d
+                       on a.barcode = d.barcode
+		        WHERE 1 = 1
+		          AND a.useyn = 'Y'
+		  	<include refid="where_semiProduction"/>
+		  	GROUP BY a.sdate, c.subname_ch, a.itemcode, b.itemname, a.intf_yn,  a.factory
+	        ) t
+        ) 
+        WHERE rn BETWEEN #{offset} + 1 AND #{offset} + #{itemsPerPage}
+        ORDER BY rn  
+    </select>
+	
+	<select id="read_semiProductionSummary_all" parameterType="map" resultType="map">
+		SELECT
+          	a.sdate,
+			c.subname_ch as car, 
+			a.itemcode,
+			b.itemname,
+			sum(a.qty) as qty,
+			SUM(CASE WHEN a.okyn = 'Y' THEN TO_NUMBER(TRIM(a.qty)) ELSE 0 END) AS okqty,
+			SUM(CASE WHEN a.okyn = 'N' THEN TO_NUMBER(TRIM(a.qty)) ELSE 0 END) AS ngqty,
+			a.intf_yn,			
+			a.factory
+        FROM t_wms_semiwork a
+        LEFT JOIN t_mi_item b
+               ON b.itemcode = a.itemcode
+        LEFT JOIN t_mi_typesub c
+               ON c.subcode  = b.carno
+              AND c.typecode = 'MI041'
+		LEFT JOIN T_SCM_BARCODE d
+               on a.barcode = d.barcode
+        WHERE 1 = 1
+          AND a.useyn = 'Y'
+            <include refid="where_semiProduction"/>
+        GROUP BY a.sdate, c.subname_ch, a.itemcode, b.itemname, a.intf_yn,  a.factory
+        ORDER BY a.sdate desc, itemcode
+	</select>
+
+    <select id="getSemiProductionSummaryTotalCount" parameterType="map" resultType="int">
+        SELECT COUNT(*) 
+        FROM (
+	        SELECT COUNT(*)
+		      FROM t_wms_semiwork a
+		      LEFT OUTER JOIN t_mi_item b ON a.itemcode = b.itemcode
+		      LEFT OUTER JOIN t_mi_typesub c ON b.carno = c.subcode AND c.typecode = 'MI041'
+		      LEFT JOIN T_SCM_BARCODE d on a.barcode = d.barcode
+		     WHERE 1=1
+		       AND a.useyn = 'Y'
+		     <include refid="where_semiProduction"/>
+		     GROUP BY a.sdate, c.subname_ch, a.itemcode, b.itemname, a.intf_yn,  a.factory
+		)
+    </select> 
+
+    <select id="getSemiProductionSummaryTotalQty" parameterType="map" resultType="java.math.BigDecimal">
+        SELECT sum(qty) 
+          FROM (
+        	SELECT NVL(sum(a.qty), 0) as qty
+	          FROM t_wms_semiwork a
+	          LEFT OUTER JOIN t_mi_item b ON a.itemcode = b.itemcode
+	          LEFT OUTER JOIN t_mi_typesub c ON b.carno = c.subcode AND c.typecode = 'MI041'
+	          LEFT JOIN T_SCM_BARCODE d on a.barcode = d.barcode
+	         WHERE 1=1	         
+	           AND a.useyn = 'Y'
+	        <include refid="where_semiProduction"/>
+		)
+    </select> --> 
+	<!-- ==================================================================================================================================== -->	
+	<!-- <select id="read_transferDetail" parameterType="map" resultType="com.example.demo.vo.SemiWorkVO">
+		SELECT *
+		FROM (
+		    SELECT
+		        t.*,
+		        ROW_NUMBER() OVER (ORDER BY sdate desc, ymdhms desc, barcode) AS rn
+		    FROM (
+		        SELECT
+		        	a.sdate,
+		        	a.factory,
+		        	a.storage,
+		            c.subname_ch as car, 
+					b.itemcode,
+					b.itemname,
+					a.barcode,
+					a.loginid,
+					qty,
+					ymdhms,
+					substr(ymdhms,9,2)||':'||substr(ymdhms,11,2) as time
+				FROM t_wms_semiwork a 
+		        LEFT JOIN t_mi_item b
+		               ON b.itemcode = a.itemcode
+		        LEFT JOIN t_mi_typesub c
+		               ON c.subcode  = b.carno
+		              AND c.typecode = 'MI041'
+		        WHERE 1 = 1
+		  	<include refid="where_semiProduction"/>
+		  	group by a.sdate, c.subname_ch,b.itemcode,b.itemname,substr(ymdhms,9,2)||':'||substr(ymdhms,11,2) 		  		  	
+	        ) t
+        ) 
+        WHERE rn BETWEEN #{offset} + 1 AND #{offset} + #{itemsPerPage}
+        ORDER BY rn
+    </select>
+	
+	<select id="read_transferDetail_all" parameterType="map" resultType="map">
+		SELECT
+			a.sdate,
+			a.factory,
+			a.storage,
+			c.subname_ch as car, 
+			b.itemcode,
+			b.itemname,
+			a.barcode,
+			a.loginid,
+			qty,
+			ymdhms,
+			substr(ymdhms,9,2)||':'||substr(ymdhms,11,2) as time
+        FROM t_wms_semiwork a
+        LEFT JOIN t_mi_item b
+               ON b.itemcode = a.itemcode
+        LEFT JOIN t_mi_typesub c
+               ON c.subcode  = b.carno
+              AND c.typecode = 'MI041'
+        WHERE 1 = 1
+            <include refid="where_semiProduction"/>
+        order by sdate desc, ymdhms desc, barcode
+	</select>
+
+    <select id="getTransferDetailTotalCount" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+	        FROM t_wms_semiwork a
+	        LEFT OUTER JOIN t_mi_item b
+	            ON a.itemcode = b.itemcode
+	        LEFT OUTER JOIN t_mi_typesub c
+	            ON b.carno = c.subcode
+	            AND c.typecode = 'MI041'
+	        WHERE 1=1
+	            <include refid="where_semiProduction"/>
+    </select> 
+
+    <select id="getTransferDetailTotalQty" parameterType="map" resultType="int">
+        SELECT NVL(sum(qty), 0) as qty
+	        FROM t_wms_semiwork a
+	        LEFT OUTER JOIN t_mi_item b
+	            ON a.itemcode = b.itemcode
+	        LEFT OUTER JOIN t_mi_typesub c
+	            ON b.carno = c.subcode
+	            AND c.typecode = 'MI041'
+	        WHERE 1=1
+	            <include refid="where_semiProduction"/>
+    </select> 
+	====================================================================================================================================	
+	<select id="read_transferSummary" parameterType="map" resultType="com.example.demo.vo.SemiWorkVO">
+		SELECT *
+		FROM (
+		    SELECT
+		        t.*,
+		        ROW_NUMBER() OVER (ORDER BY itemcode desc) AS rn
+		    FROM (
+		    	SELECT
+					a.sdate,
+					a.factory,
+					a.storage,
+					c.subname_ch as car, 
+					a.itemcode,
+					b.itemname,
+					sum(qty) as qty,
+					a.intf_yn
+				from t_wms_semiwork a 
+		        LEFT JOIN t_mi_item b
+		               ON b.itemcode = a.itemcode
+		        LEFT JOIN t_mi_typesub c
+		               ON c.subcode  = b.carno
+		              AND c.typecode = 'MI041'
+		        WHERE 1 = 1
+		  	<include refid="where_semiProduction"/>
+		  	GROUP BY a.sdate, a.factory, a.storage, c.subname_ch, a.itemcode, b.itemname, a.intf_yn
+	        ) t
+        ) 
+        WHERE rn BETWEEN #{offset} + 1 AND #{offset} + #{itemsPerPage}
+        ORDER BY itemcode  
+    </select>
+	
+	<select id="read_transferSummary_all" parameterType="map" resultType="map">
+		SELECT
+          	a.sdate,
+          	a.factory,
+          	a.storage,
+			c.subname_ch as car, 
+			a.itemcode,
+			b.itemname,
+			sum(qty) as qty
+        FROM t_wms_semiwork a
+        LEFT JOIN t_mi_item b
+               ON b.itemcode = a.itemcode
+        LEFT JOIN t_mi_typesub c
+               ON c.subcode  = b.carno
+              AND c.typecode = 'MI041'
+        WHERE 1 = 1
+            <include refid="where_semiProduction"/>
+        GROUP BY a.sdate, a.factory, a.storage, c.subname_ch, a.itemcode, b.itemname
+        ORDER BY sdate desc
+	</select>
+
+    <select id="getTransferSummaryTotalCount" parameterType="map" resultType="int">
+        SELECT COUNT(*) 
+        FROM (
+	        SELECT COUNT(*)
+		      FROM t_wms_semiwork a
+		      LEFT OUTER JOIN t_mi_item b ON a.itemcode = b.itemcode
+		      LEFT OUTER JOIN t_mi_typesub c ON b.carno = c.subcode AND c.typecode = 'MI041'
+		     WHERE 1=1
+		     <include refid="where_semiProduction"/>
+		     GROUP BY a.sdate, a.factory, a.storage, c.subname_ch, a.itemcode, b.itemname
+		)
+    </select> 
+
+    <select id="getTransferSummaryTotalQty" parameterType="map" resultType="int">
+        SELECT sum(qty) 
+          FROM (
+        	SELECT NVL(sum(qty), 0) as qty
+	          FROM t_wms_semiwork a
+	          LEFT OUTER JOIN t_mi_item b ON a.itemcode = b.itemcode
+	          LEFT OUTER JOIN t_mi_typesub c ON b.carno = c.subcode AND c.typecode = 'MI041'
+	         WHERE 1=1
+	        <include refid="where_semiProduction"/>
+		)
+    </select>  -->
+	<!-- ==================================================================================================================================== -->
+	<select id="read_productionExceptionInputDetail" parameterType="map" resultType="com.example.demo.vo.ProductVO">
+		SELECT *
+		FROM (
+		    SELECT
+		        t.*,
+		        ROW_NUMBER() OVER (ORDER BY indate desc, ymdhms desc, barcode) AS rn
+		    FROM (
+		        SELECT
+		        	a.iid,
+		            a.indate,
+		            a.loginid,
+		            a.factory,
+		            a.storage,
+		            a.custcode,
+		            a.type,
+		            c.subname_ch AS car,
+		            a.itemcode,
+		            b.itemname,
+		            a.qty,
+		            a.invoiceno,
+		            nvl(a.SOURCE2,'EXCEPTION') AS SOURCE2,
+		            a.bdate,
+		            a.barcode,
+		            a.ymdhms,
+                	SUBSTR(a.ymdhms, 9, 2) || ':' || SUBSTR(a.ymdhms, 11, 2) as time
+		        FROM t_wms_workinbound a
+		        LEFT JOIN t_mi_item b
+		               ON b.itemcode = a.itemcode
+		        LEFT JOIN t_mi_typesub c
+		               ON c.subcode  = b.carno
+		              AND c.typecode = 'MI041'
+		        WHERE a.useyn  = 'Y'
+		          AND a.source = 'INCOMINGEXCEPTION'
+			  	<include refid="where_exceptionInput"/>
+        	) t
+        )
+        WHERE rn BETWEEN #{offset} + 1 AND #{offset} + #{itemsPerPage}
+        ORDER BY indate desc, ymdhms desc, barcode 
+    </select>
+   
+	<select id="read_productionExceptionInputDetail_all" parameterType="map" resultType="map">
+		SELECT
+        	a.iid,
+            a.indate,
+            a.loginid,
+            a.factory,
+            a.storage,
+            a.custcode,
+            a.type,
+            c.subname_ch AS car,
+            a.itemcode,
+            b.itemname,
+            a.invoiceno,
+            nvl(a.SOURCE2,'EXCEPTION') AS SOURCE2,
+            a.qty,
+            a.bdate,
+            a.barcode,
+            a.ymdhms,
+            SUBSTR(a.ymdhms, 9, 2) || ':' || SUBSTR(a.ymdhms, 11, 2) as time
+        FROM t_wms_workinbound a
+        LEFT JOIN t_mi_item b
+               ON b.itemcode = a.itemcode
+        LEFT JOIN t_mi_typesub c
+               ON c.subcode  = b.carno
+              AND c.typecode = 'MI041'
+        WHERE a.useyn  = 'Y'
+          AND a.source = 'INCOMINGEXCEPTION'
+	  	<include refid="where_exceptionInput"/>
+		ORDER BY a.indate desc, a.ymdhms desc, a.barcode
+	</select>
+	
+    <select id="getProductionExceptionInputDetailTotalCount" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+		      FROM t_wms_workinbound a
+		      LEFT OUTER JOIN t_mi_item b ON a.itemcode = b.itemcode
+		      LEFT OUTER JOIN t_mi_typesub c ON b.carno = c.subcode AND c.typecode = 'MI041'
+		     WHERE a.useyn = 'Y'
+		       AND a.source = 'INCOMINGEXCEPTION'
+	            <include refid="where_exceptionInput"/>
+    </select> 
+    
+    <select id="getProductionExceptionInputDetailTotalQty" parameterType="map" resultType="java.math.BigDecimal">
+        SELECT NVL(sum(qty), 0) as qty
+        FROM t_wms_workinbound a
+	      LEFT OUTER JOIN t_mi_item b ON a.itemcode = b.itemcode
+	      LEFT OUTER JOIN t_mi_typesub c ON b.carno = c.subcode AND c.typecode = 'MI041'
+	     WHERE a.useyn = 'Y'
+	       AND a.source = 'INCOMINGEXCEPTION'
+	            <include refid="where_exceptionInput"/>
+    </select>     	
+	<!-- ==================================================================================================================================== -->
+	<select id="read_productionExceptionInputSummary" parameterType="map" resultType="com.example.demo.vo.ProductVO">
+		SELECT *
+		FROM (
+		    SELECT
+		        t.*,
+		        ROW_NUMBER() OVER (ORDER BY indate desc, itemcode) AS rn
+		    FROM (
+				SELECT
+			        a.intf_yn,
+				    a.indate,
+				    a.factory,
+				    a.storage,
+				    c.subname_ch AS car,
+				    a.itemcode,
+				    b.itemname,
+				    sum(a.qty) as qty
+				FROM t_wms_workinbound a
+				LEFT JOIN t_mi_item b ON b.itemcode = a.itemcode
+				LEFT JOIN t_mi_typesub c ON c.subcode  = b.carno AND c.typecode = 'MI041'
+				WHERE a.useyn  = 'Y'
+				AND a.source = 'INCOMINGEXCEPTION'
+			<include refid="where_exceptionInput"/>        
+				GROUP BY a.intf_yn, a.indate, a.factory, a.storage, c.subname_ch, a.itemcode, b.itemname
+			) t
+        ) 
+        WHERE rn BETWEEN #{offset} + 1 AND #{offset} + #{itemsPerPage}
+        ORDER BY indate desc, itemcode
+    </select>
+   
+	<select id="read_productionExceptionInputSummary_all" parameterType="map" resultType="map">
+		SELECT
+	        a.intf_yn,
+		    a.indate,
+		    a.factory,
+		    a.storage,
+		    c.subname_ch AS car,
+		    a.itemcode,
+		    b.itemname,
+		    sum(a.qty) as qty
+		FROM t_wms_workinbound a
+		LEFT JOIN t_mi_item b ON b.itemcode = a.itemcode
+		LEFT JOIN t_mi_typesub c ON c.subcode  = b.carno AND c.typecode = 'MI041'
+		WHERE a.useyn  = 'Y'
+		AND a.source = 'INCOMINGEXCEPTION'
+	<include refid="where_exceptionInput"/>        
+		GROUP BY a.intf_yn, a.indate, a.factory, a.storage, c.subname_ch, a.itemcode, b.itemname
+		ORDER BY indate desc, itemcode
+	</select>
+	
+    <select id="getProductionExceptionInputSummaryTotalCount" parameterType="map" resultType="int">
+        SELECT COUNT(*) 
+        FROM (
+			SELECT COUNT(*)
+	        FROM t_wms_workinbound a
+	        LEFT OUTER JOIN t_mi_item b ON a.itemcode = b.itemcode
+	        LEFT OUTER JOIN t_mi_typesub c ON b.carno = c.subcode AND c.typecode = 'MI041'
+	        WHERE a.useyn = 'Y'
+	        AND a.source = 'INCOMINGEXCEPTION'
+		    <include refid="where_exceptionInput"/>
+			GROUP BY a.intf_yn, a.indate, a.factory, a.storage, c.subname_ch, a.itemcode, b.itemname
+		)
+    </select> 
+    
+    <select id="getProductionExceptionInputSummaryTotalQty" parameterType="map" resultType="java.math.BigDecimal">
+        SELECT NVL(SUM(qty), 0) as qty
+        FROM (
+	        SELECT NVL(sum(qty), 0) as qty
+	        FROM t_wms_workinbound a
+		    LEFT OUTER JOIN t_mi_item b ON a.itemcode = b.itemcode
+		    LEFT OUTER JOIN t_mi_typesub c ON b.carno = c.subcode AND c.typecode = 'MI041'
+		    WHERE a.useyn = 'Y'
+		    AND a.source = 'INCOMINGEXCEPTION'
+		    <include refid="where_exceptionInput"/>
+		)
+    </select>     
+    <!-- ==================================================================================================================================== -->
+	<select id="read_productionExceptionOutputDetail" parameterType="map" resultType="com.example.demo.vo.ProductVO">
+		SELECT *
+		FROM (
+		    SELECT
+		        t.*,
+		        ROW_NUMBER() OVER (ORDER BY outdate desc, ymdhms desc, barcode) AS rn
+		    FROM (
+		        SELECT
+		        	a.iid,
+		            a.outdate,
+		            a.loginid,
+		            a.factory,
+		            a.storage,
+		            c.subname_ch AS car,
+		            a.itemcode,
+		            b.itemname,
+		            a.qty,
+		            a.invoiceno,
+		            case when a.invoiceno = 'BARCODECOUNT'
+		                 then 'STOCKCOUNT'
+		                 ELSE 'EXCEPTION'
+		            end as source2,
+		            a.bdate,
+		            a.barcode,
+		            a.ymdhms,
+                	SUBSTR(a.ymdhms, 9, 2) || ':' || SUBSTR(a.ymdhms, 11, 2) as time
+		        FROM t_wms_workoutbound a
+		        LEFT JOIN t_mi_item b
+		               ON b.itemcode = a.itemcode
+		        LEFT JOIN t_mi_typesub c
+		               ON c.subcode  = b.carno
+		              AND c.typecode = 'MI041'
+		        WHERE a.useyn  = 'Y'
+		          AND a.source = 'LOADEXCEPTION'
+			  	<include refid="where_exceptionOutput"/>
+        	) t
+        )
+        WHERE rn BETWEEN #{offset} + 1 AND #{offset} + #{itemsPerPage}
+        ORDER BY outdate desc, ymdhms desc, barcode 
+    </select>
+   
+	<select id="read_productionExceptionOutputDetail_all" parameterType="map" resultType="map">
+		SELECT
+        	a.iid,
+            a.outdate,
+            a.loginid,
+            a.factory,
+            a.storage,
+            c.subname_ch AS car,
+            a.itemcode,
+            b.itemname,
+            a.qty,
+            a.invoiceno,
+            case when a.invoiceno = 'BARCODECOUNT'
+                 then 'STOCKCOUNT'
+                 ELSE 'EXCEPTION'
+            end as source2,
+            a.bdate,
+            a.barcode,
+            a.ymdhms,
+            SUBSTR(a.ymdhms, 9, 2) || ':' || SUBSTR(a.ymdhms, 11, 2) as time
+        FROM t_wms_workoutbound a
+        LEFT JOIN t_mi_item b
+               ON b.itemcode = a.itemcode
+        LEFT JOIN t_mi_typesub c
+               ON c.subcode  = b.carno
+              AND c.typecode = 'MI041'
+        WHERE a.useyn  = 'Y'
+          AND a.source = 'LOADEXCEPTION'
+	  	<include refid="where_exceptionOutput"/>
+		ORDER BY a.outdate desc, a.ymdhms desc, a.barcode
+	</select>
+	
+    <select id="getProductionExceptionOutputDetailTotalCount" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+		      FROM t_wms_workoutbound a
+		      LEFT OUTER JOIN t_mi_item b ON a.itemcode = b.itemcode
+		      LEFT OUTER JOIN t_mi_typesub c ON b.carno = c.subcode AND c.typecode = 'MI041'
+		     WHERE a.useyn = 'Y'
+		       AND a.source = 'LOADEXCEPTION'
+	            <include refid="where_exceptionOutput"/>
+    </select> 
+    
+    <select id="getProductionExceptionOutputDetailTotalQty" parameterType="map" resultType="java.math.BigDecimal">
+        SELECT NVL(sum(qty), 0) as qty
+        FROM t_wms_workoutbound a
+	      LEFT OUTER JOIN t_mi_item b ON a.itemcode = b.itemcode
+	      LEFT OUTER JOIN t_mi_typesub c ON b.carno = c.subcode AND c.typecode = 'MI041'
+	     WHERE a.useyn = 'Y'
+	       AND a.source = 'LOADEXCEPTION'
+	            <include refid="where_exceptionOutput"/>
+    </select>   
+    <!-- ==================================================================================================================================== -->
+    <select id="read_productionExceptionOutputSummary" parameterType="map" resultType="com.example.demo.vo.ProductVO">
+		SELECT *
+		FROM (
+		    SELECT
+		        t.*,
+		        ROW_NUMBER() OVER (ORDER BY outdate desc, itemcode) AS rn
+		    FROM (
+				SELECT
+			        a.intf_yn,
+				    a.outdate,
+				    a.factory,
+				    a.storage,
+				    c.subname_ch AS car,
+				    a.itemcode,
+				    b.itemname,
+				    sum(a.qty) as qty
+				FROM t_wms_workoutbound a
+				LEFT JOIN t_mi_item b ON b.itemcode = a.itemcode
+				LEFT JOIN t_mi_typesub c ON c.subcode  = b.carno AND c.typecode = 'MI041'
+				WHERE a.useyn  = 'Y'
+				AND a.source = 'LOADEXCEPTION'
+			<include refid="where_exceptionOutput"/>        
+				GROUP BY a.intf_yn, a.outdate, a.factory, a.storage, c.subname_ch, a.itemcode, b.itemname
+			) t
+        ) 
+        WHERE rn BETWEEN #{offset} + 1 AND #{offset} + #{itemsPerPage}
+        ORDER BY outdate desc, itemcode
+    </select>
+   
+	<select id="read_productionExceptionOutputSummary_all" parameterType="map" resultType="map">
+		SELECT
+	        a.intf_yn,
+		    a.outdate,
+		    a.factory,
+		    a.storage,
+		    c.subname_ch AS car,
+		    a.itemcode,
+		    b.itemname,
+		    sum(a.qty) as qty
+		FROM t_wms_workoutbound a
+		LEFT JOIN t_mi_item b ON b.itemcode = a.itemcode
+		LEFT JOIN t_mi_typesub c ON c.subcode  = b.carno AND c.typecode = 'MI041'
+		WHERE a.useyn  = 'Y'
+		AND a.source = 'LOADEXCEPTION'
+	<include refid="where_exceptionOutput"/>        
+		GROUP BY a.intf_yn, a.outdate, a.factory, a.storage, c.subname_ch, a.itemcode, b.itemname
+		ORDER BY outdate desc, itemcode
+	</select>
+	
+    <select id="getProductionExceptionOutputSummaryTotalCount" parameterType="map" resultType="int">
+        SELECT COUNT(*) 
+        FROM (
+			SELECT COUNT(*)
+	        FROM t_wms_workoutbound a
+	        LEFT OUTER JOIN t_mi_item b ON a.itemcode = b.itemcode
+	        LEFT OUTER JOIN t_mi_typesub c ON b.carno = c.subcode AND c.typecode = 'MI041'
+	        WHERE a.useyn = 'Y'
+	        AND a.source = 'LOADEXCEPTION'
+		    <include refid="where_exceptionOutput"/>
+			GROUP BY a.intf_yn, a.outdate, a.factory, a.storage, c.subname_ch, a.itemcode, b.itemname
+		)
+    </select> 
+    
+    <select id="getProductionExceptionOutputSummaryTotalQty" parameterType="map" resultType="java.math.BigDecimal">
+        SELECT NVL(SUM(qty), 0) as qty
+        FROM (
+	        SELECT NVL(sum(qty), 0) as qty
+	        FROM t_wms_workOutbound a
+		    LEFT OUTER JOIN t_mi_item b ON a.itemcode = b.itemcode
+		    LEFT OUTER JOIN t_mi_typesub c ON b.carno = c.subcode AND c.typecode = 'MI041'
+		    WHERE a.useyn = 'Y'
+		    AND a.source = 'LOADEXCEPTION'
+		    <include refid="where_exceptionOutput"/>
+		)
+    </select>     
+    <!-- ==================================================================================================================================== -->
+    <select id="read_productionUnloadList" parameterType="map" resultType="com.example.demo.vo.LocationVO">
+		SELECT * 
+		FROM (
+			SELECT 
+				rownum rn, 
+				t.* 
+			FROM (	
+				SELECT 
+			        a.barcode,
+			        a.indate,
+			        a.factory,
+			        a.storage,
+			        c.subname_ch as car,
+			        a.itemcode,
+			        b.itemname,
+			        SUM(a.qty) as qty,
+		            nvl(a.oldlocation,' ') as oldlocation,
+		            a.source,
+		            a.rack
+			    FROM t_wms_worklocation a
+			    LEFT JOIN t_mi_item b ON a.itemcode = b.itemcode
+			    LEFT JOIN t_mi_typesub c ON b.carno = c.subcode AND c.typecode = 'MI041'
+			    WHERE (a.rack IS NULL or a.rack = '-'
+			       OR a.module IS NULL or a.module = '-'
+			       OR a.levelcode IS NULL OR a.levelcode = '-'
+			       OR a.position IS NULL OR a.position = '-')
+			      AND a.useyn = 'Y'
+               <include refid="where_unloadList"/>   
+			    GROUP BY a.barcode, a.indate, a.factory, a.storage, c.subname_ch, a.itemcode, b.itemname, a.source, a.oldlocation, a.rack
+			    ORDER BY a.indate desc, a.itemcode
+		<![CDATA[
+			) t WHERE rownum <= #{offset} + #{itemsPerPage}
+		) WHERE rn > #{offset}
+		]]>
+    </select>
+	
+	<select id="read_productionUnloadList_all" parameterType="map" resultType="map">
+	    SELECT 
+	        a.barcode,
+	        a.indate,
+	        a.factory,
+	        a.storage,
+	        c.subname_ch as car,
+	        a.itemcode,
+	        b.itemname,
+	        SUM(a.qty) as qty,
+            nvl(a.oldlocation,' ') as oldlocation,
+            a.source,
+            a.rack
+	    FROM t_wms_worklocation a
+	    LEFT JOIN t_mi_item b ON a.itemcode = b.itemcode
+	    LEFT JOIN t_mi_typesub c ON b.carno = c.subcode AND c.typecode = 'MI041'
+	    WHERE (a.rack IS NULL or a.rack = '-'
+	       OR a.module IS NULL or a.module = '-'
+	       OR a.levelcode IS NULL OR a.levelcode = '-'
+	       OR a.position IS NULL OR a.position = '-')
+	      AND a.useyn = 'Y'
+        <include refid="where_unloadList"/>
+	    GROUP BY a.barcode, a.indate, a.factory, a.storage, c.subname_ch, a.itemcode, b.itemname, a.source, a.oldlocation, a.rack
+	    ORDER BY a.indate desc, a.itemcode
+	</select>
+	
+    <select id="getProductionUnloadListTotalCount" parameterType="map" resultType="int">
+        SELECT COUNT(*) 
+        FROM (
+	        SELECT COUNT(*)
+		    FROM t_wms_worklocation a
+		    LEFT JOIN t_mi_item b ON a.itemcode = b.itemcode
+		    LEFT JOIN t_mi_typesub c ON b.carno = c.subcode AND c.typecode = 'MI041'
+		    WHERE (a.rack IS NULL or a.rack = '-'
+		       OR a.module IS NULL or a.module = '-'
+		       OR a.levelcode IS NULL OR a.levelcode = '-'
+		       OR a.position IS NULL OR a.position = '-')	
+		    AND a.useyn = 'Y'
+	        <include refid="where_unloadList"/>
+		    GROUP BY a.barcode, a.indate, a.factory, a.storage, c.subname_ch, a.itemcode, b.itemname, a.source, a.oldlocation, a.rack
+		)
+    </select> 
+
+    <select id="getProductionUnloadListTotalQty" parameterType="map" resultType="java.math.BigDecimal">
+        SELECT NVL(sum(qty), 0) as qty
+          FROM (
+        	SELECT SUM(a.qty) as qty
+		    FROM t_wms_worklocation a
+		    LEFT JOIN t_mi_item b ON a.itemcode = b.itemcode
+		    LEFT JOIN t_mi_typesub c ON b.carno = c.subcode AND c.typecode = 'MI041'
+		    WHERE (a.rack IS NULL or a.rack = '-'
+		      OR a.module IS NULL or a.module = '-'
+		      OR a.levelcode IS NULL OR a.levelcode = '-'
+		      OR a.position IS NULL OR a.position = '-')	
+		     AND a.useyn = 'Y'
+	        <include refid="where_unloadList"/>
+		)
+    </select> 
+	<!-- ==================================================================================================================================== -->
+    <select id="read_productionStockDetail" parameterType="map" resultType="com.example.demo.vo.StockVO">
+		SELECT *
+		FROM (
+		    SELECT
+		        a.factory,
+		        a.storage,
+		        a.location,
+		        a.indate,
+		        c.subname_ch AS car,
+		        a.itemcode,
+		        b.itemname,
+		        a.qty,
+		        a.barcode,
+		        a.ymdhms,
+		        a.loginid,
+		        SUBSTR(a.ymdhms, 9, 2) || ':' || SUBSTR(a.ymdhms, 11, 2) as hhmm,
+				CASE 
+			        WHEN INSTR(a.barcode, ',') > 0 THEN 
+			            TRIM(REGEXP_SUBSTR(a.barcode, '[^,]+', 1, 2))
+			        ELSE 
+			            ''
+			    END AS bdate,
+		        ROW_NUMBER() OVER (ORDER BY a.ymdhms DESC) AS rn
+		    FROM t_wms_worklocation a
+		    LEFT JOIN t_mi_item b ON b.itemcode = a.itemcode
+		    LEFT JOIN t_mi_typesub c ON c.subcode  = b.carno AND c.typecode = 'MI041'
+		    WHERE a.useyn   = 'Y'
+		  	<include refid="where_stock"/>
+          ) 
+        WHERE rn BETWEEN #{offset} + 1 AND #{offset} + #{itemsPerPage}
+        ORDER BY itemcode, location        
+    </select>
+	
+	<select id="read_productionStockDetail_all" parameterType="map" resultType="map">
+		SELECT
+		    a.factory,
+		    a.storage,
+		    a.location,
+		    a.indate,
+		    c.subname_ch  AS car,
+		    a.itemcode,
+		    b.itemname,
+		    a.qty,
+		    a.barcode,
+		    a.ymdhms,
+		    a.loginid,
+		    SUBSTR(a.ymdhms, 9, 2) || ':' || SUBSTR(a.ymdhms, 11, 2) as hhmm,
+			CASE 
+		        WHEN INSTR(a.barcode, ',') > 0 THEN 
+		            TRIM(REGEXP_SUBSTR(a.barcode, '[^,]+', 1, 2))
+		        ELSE 
+		            ''
+		    END AS bdate
+		FROM t_wms_worklocation a
+		LEFT JOIN t_mi_item b ON b.itemcode = a.itemcode
+		LEFT JOIN t_mi_typesub c ON c.subcode  = b.carno AND c.typecode = 'MI041'
+		WHERE a.useyn   = 'Y'
+        <include refid="where_stock"/>
+        ORDER BY itemcode, location
+	</select>
+
+    <select id="getProductionStockDetailTotalCount" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+        FROM t_wms_worklocation a
+        LEFT OUTER JOIN t_mi_item b ON a.itemcode = b.itemcode
+        LEFT OUTER JOIN t_mi_typesub c ON b.carno = c.subcode AND c.typecode = 'MI041'
+        WHERE a.useyn = 'Y'
+        <include refid="where_stock"/>
+    </select> 
+
+    <select id="getProductionStockDetailTotalQty" parameterType="map" resultType="java.math.BigDecimal">
+        SELECT sum(qty) as qty
+        FROM t_wms_worklocation a
+        LEFT OUTER JOIN t_mi_item b ON a.itemcode = b.itemcode
+        LEFT OUTER JOIN t_mi_typesub c ON b.carno = c.subcode AND c.typecode = 'MI041'
+        WHERE a.useyn = 'Y'
+        <include refid="where_stock"/>
+    </select>
+    <!-- ==================================================================================================================================== -->
+	<select id="read_productionStockSummary" parameterType="map" resultType="com.example.demo.vo.StockVO">
+		SELECT *
+		FROM (
+		    SELECT
+		        factory,
+		        car, 
+		        itemcode, 
+		        itemname, 
+		        sum(qty) as qty, 
+		        sum(noqty1) as noqty1, 
+		        sum(noqty2) as noqty2, 
+		        ROW_NUMBER() OVER (ORDER BY itemcode) AS rn
+		    FROM (
+		        SELECT
+		            a.factory, 
+					c.subname_ch AS car,
+		            a.itemcode,
+		            b.itemname,
+		            SUM(a.qty) AS qty,
+		            nvl((select sum(qty) from t_wms_workinbound b where a.itemcode = b.itemcode and intf_yn ='N' and useyn = 'Y' and UPPER(b.factory) = UPPER(#{factory}) and a.storage = b.storage and indate >= #{fromDate}),0) as noqty1,
+		            nvl((select sum(qty) from t_wms_workoutbound b where a.itemcode = b.itemcode and b.intf_yn ='N' and b.useyn = 'Y' and UPPER(b.factory) = UPPER(#{factory}) and a.storage = b.storage and outdate >= #{fromDate}),0) as noqty2
+		        FROM t_wms_worklocation a
+		        LEFT JOIN t_mi_item b ON b.itemcode = a.itemcode
+		        LEFT JOIN t_mi_typesub c ON c.subcode  = b.carno AND c.typecode = 'MI041'
+		        WHERE a.useyn   = 'Y'
+		  		<include refid="where_stock"/>
+		  		GROUP BY a.factory, a.storage, c.subname_ch, a.itemcode, b.itemname
+	        )
+	        GROUP BY factory, car, itemcode, itemname
+        ) 
+        WHERE rn BETWEEN #{offset} + 1 AND #{offset} + #{itemsPerPage}
+        ORDER BY rn
+    </select>
+	
+	<select id="read_productionStockSummary_all" parameterType="map" resultType="map">
+		SELECT
+	        factory,
+	        car, 
+	        itemcode, 
+	        itemname, 
+	        sum(qty) as qty, 
+	        sum(noqty1) as noqty1, 
+	        sum(noqty2) as noqty2, 
+	        ROW_NUMBER() OVER (ORDER BY itemcode) AS rn
+	    FROM (
+	        SELECT
+	            a.factory,
+	            c.subname_ch AS car,
+	            a.itemcode,
+	            b.itemname,
+	            SUM(a.qty) AS qty,
+	            nvl((select sum(qty) from t_wms_workinbound b where a.itemcode = b.itemcode and intf_yn ='N' and useyn = 'Y' and UPPER(b.factory) = UPPER(#{factory}) and a.storage = b.storage and indate >= #{fromDate}),0) as noqty1,
+				nvl((select sum(qty) from t_wms_workoutbound b where a.itemcode = b.itemcode and b.intf_yn ='N' and b.useyn = 'Y' and UPPER(b.factory) = UPPER(#{factory}) and a.storage = b.storage and outdate >= #{fromDate}),0) as noqty2
+	        FROM t_wms_worklocation a
+	        LEFT JOIN t_mi_item b ON b.itemcode = a.itemcode
+	        LEFT JOIN t_mi_typesub c ON c.subcode  = b.carno AND c.typecode = 'MI041'
+	        WHERE a.useyn   = 'Y'
+	  		<include refid="where_stock"/>
+	  		GROUP BY a.factory, a.storage, c.subname_ch, a.itemcode, b.itemname
+        )
+        GROUP BY factory, car, itemcode, itemname
+		ORDER BY itemcode
+	</select>
+	
+    <select id="getProductionStockSummaryTotalCount" parameterType="map" resultType="int">
+        SELECT COUNT(*) 
+        FROM (
+        	SELECT COUNT(*)
+	        FROM t_wms_worklocation a
+	        LEFT OUTER JOIN t_mi_item b ON a.itemcode = b.itemcode
+	        LEFT OUTER JOIN t_mi_typesub c ON b.carno = c.subcode AND c.typecode = 'MI041'
+	        WHERE a.useyn = 'Y'
+	        <include refid="where_stock"/>
+			GROUP BY a.factory, c.subname_ch, a.itemcode, b.itemname 
+        )
+    </select> 
+    
+    <select id="getProductionStockSummaryTotalQty" parameterType="map" resultType="java.math.BigDecimal">
+        SELECT NVL(sum(qty), 0) as qty 
+        FROM (
+        	SELECT sum(qty) as qty
+	        FROM t_wms_worklocation a
+	        LEFT OUTER JOIN t_mi_item b ON a.itemcode = b.itemcode
+	        LEFT OUTER JOIN t_mi_typesub c ON b.carno = c.subcode AND c.typecode = 'MI041'
+	        WHERE a.useyn = 'Y'
+	        <include refid="where_stock"/>			
+        )
+    </select>  
+    <!-- ==================================================================================================================================== -->
+	<select id="read_productionStockInfo" resultType="com.example.demo.vo.StockVO">
+    	select 
+    		a.indate, 
+    		a.factory, 
+    		a.storage, 
+    		a.qty,
+    		a.location, 
+    		a.barcode, 
+    		b.itemname, 
+    		a.itemcode
+	      from t_wms_worklocation a
+	      left join t_mi_item b on a.itemcode = b.itemcode
+	      where a.useyn   = 'Y'
+	      <include refid="where_stockInfo"/>
+	      ORDER BY a.indate desc, a.itemcode, a.barcode, a.location
+    </select>
+    
+	<select id="read_productionStockInfo_all" parameterType="map" resultType="map">
+		select 
+			a.indate, 
+			a.factory, 
+			a.storage, 
+			a.qty,
+			a.location, 
+			a.barcode, 
+			b.itemname, 
+			a.itemcode
+	    from t_wms_worklocation a
+	    left join t_mi_item b on a.itemcode = b.itemcode
+	    where a.useyn   = 'Y'
+	    <include refid="where_stockInfo"/>
+	    ORDER BY a.indate desc, a.itemcode, a.barcode, a.location
+    </select>
+    
+    <select id="getProductionStockInfoTotalCount" parameterType="map" resultType="int">
+    	SELECT COUNT(*) 
+    	from t_wms_worklocation a
+	    where useyn = 'Y'				
+	    <include refid="where_stockInfo"/>
+	</select>
+	
+    <select id="getProductionStockInfoTotalQty" resultType="java.math.BigDecimal">
+    	SELECT SUM(QTY)
+    	FROM T_WMS_WORKLOCATION a
+    	WHERE USEYN = 'Y'		
+	    <include refid="where_stockInfo"/>
+	</select>	
+    
+    <!-- 재고실사 목록 조회 (검색 조건 포함) -->
+    <select id="read_productionStockCountList" parameterType="map" resultType="com.example.demo.vo.RealStockVO">
+        SELECT *
+        FROM (
+            SELECT 
+                a.factory,
+                a.storage,
+                a.scantype,
+                a.sdate,
+                c.subname_ch AS car,
+                a.itemcode,
+                b.itemname,
+                a.qty,
+                a.type,
+                a.barcode,
+                a.location,
+                a.lotdate,
+                a.ymdhms,
+                a.loginid,
+		        SUBSTR(a.ymdhms, 9, 2) || ':' || SUBSTR(a.ymdhms, 11, 2) as hhmm,
+				a.lotdate as bdate,
+                ROW_NUMBER() OVER (ORDER BY a.ymdhms DESC) AS rn
+            FROM t_wms_workrealstock a
+            LEFT OUTER JOIN t_mi_item b
+                ON a.itemcode = b.itemcode
+            LEFT OUTER JOIN t_mi_typesub c
+                ON b.carno = c.subcode
+                AND c.typecode = 'MI041'
+            WHERE 1=1
+                AND a.useyn = 'Y'
+            <include refid="where_realstock"/>
+            ) 
+        WHERE rn BETWEEN #{offset} + 1 AND #{offset} + #{itemsPerPage}
+        ORDER BY ymdhms DESC
+        
+    </select>
+
+    <select id="read_stockCountWIPWrokList" parameterType="map" resultType="com.example.demo.vo.RealStockVO">
+        SELECT *
+        FROM (
+            SELECT 
+                a.factory,
+                a.storage,
+                a.scantype,
+                a.sdate,
+                c.subname_ch AS car,
+                a.itemcode,
+                b.itemname,
+                a.qty,
+                a.type,
+                a.barcode,
+                a.location,
+                a.lotdate,
+                a.ymdhms,
+                a.loginid,
+		        SUBSTR(a.ymdhms, 9, 2) || ':' || SUBSTR(a.ymdhms, 11, 2) as hhmm,
+				a.lotdate as bdate,
+                ROW_NUMBER() OVER (ORDER BY a.ymdhms DESC) AS rn
+            FROM t_wms_workrealstock a
+            LEFT OUTER JOIN t_mi_item b
+                ON a.itemcode = b.itemcode
+            LEFT OUTER JOIN t_mi_typesub c
+                ON b.carno = c.subcode
+                AND c.typecode = 'MI041'
+            WHERE 1=1
+                AND a.useyn = 'Y'
+            <include refid="where_workrealstock"/>
+            ) 
+        ORDER BY ymdhms DESC
+        
+    </select>
+    
+    <select id="read_productionStockCountSummary" parameterType="map" resultType="com.example.demo.vo.RealStockVO">
+		SELECT *
+		FROM (
+		    SELECT
+		        t.*,
+		        ROW_NUMBER() OVER (ORDER BY sdate desc, itemcode) AS rn
+		    FROM (
+		        SELECT
+		            a.factory,
+		            a.storage,
+		            a.scantype,
+		            a.sdate,
+		            c.subname_ch AS car,
+		            a.itemcode,
+		            b.itemname,
+		            SUM(a.qty) AS qty,
+		            <!-- a.barcode, -->
+		            a.location,
+		           <!--  a.lotdate, -->
+		            a.intf_yn
+		        FROM t_wms_workrealstock a
+		        LEFT JOIN t_mi_item b
+		               ON a.itemcode = b.itemcode
+		        LEFT JOIN t_mi_typesub c
+		               ON b.carno = c.subcode
+		              AND c.typecode = 'MI041'
+		        WHERE a.useyn    = 'Y'
+		     <include refid="where_realstock"/>
+			GROUP BY
+            a.factory, a.storage, a.scantype, a.sdate, c.subname_ch,
+            a.itemcode, b.itemname, <!--  a.barcode, --> a.location, a.intf_yn
+    	) t
+    )
+        WHERE rn BETWEEN #{offset} + 1 AND #{offset} + #{itemsPerPage}
+        
+    </select>
+    
+    <!-- 재고실사 총 개수 조회 (검색 조건 포함) - Oracle용 -->
+    <select id="getProductionStockCountListTotalCount" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+        FROM t_wms_workrealstock a
+        LEFT OUTER JOIN t_mi_item b
+            ON a.itemcode = b.itemcode
+        LEFT OUTER JOIN t_mi_typesub c
+            ON b.carno = c.subcode
+            AND c.typecode = 'MI041'
+        WHERE 1=1
+            AND a.useyn = 'Y'            
+            <include refid="where_realstock"/>
+			
+    </select>
+    
+    <select id="getProductionStockCountSummaryTotalCount" parameterType="map" resultType="int">
+		SELECT COUNT(*)
+		FROM (
+		    SELECT COUNT(*)
+		    FROM t_wms_workrealstock a
+		    LEFT OUTER JOIN t_mi_item b
+		        ON a.itemcode = b.itemcode
+		    LEFT OUTER JOIN t_mi_typesub c
+		        ON b.carno = c.subcode
+		        AND c.typecode = 'MI041'
+		    WHERE 1=1
+		        AND a.useyn = 'Y'
+			
+			<include refid="where_realstock"/>
+			GROUP BY
+	            a.factory, a.storage, a.scantype, a.sdate, c.subname_ch,
+	            a.itemcode, b.itemname,  a.location, a.intf_yn
+		)
+	</select>
+    
+    <select id="read_productionStockCountList_all" parameterType="map" resultType="map">
+	    SELECT 
+	        a.factory,
+	        a.storage,
+	        a.scantype,
+	        a.sdate,
+	        c.subname_ch AS car,
+	        a.itemcode,
+	        b.itemname,
+	        a.qty,
+	        a.type,
+	        a.barcode,
+	        a.location,
+	        a.lotdate,
+	        a.ymdhms,
+	        a.loginid,
+	        SUBSTR(a.ymdhms, 9, 2) || ':' || SUBSTR(a.ymdhms, 11, 2) as hhmm,
+			a.lotdate as bdate
+	    FROM t_wms_workrealstock a
+	    LEFT OUTER JOIN t_mi_item b
+	        ON a.itemcode = b.itemcode
+	    LEFT OUTER JOIN t_mi_typesub c
+	        ON b.carno = c.subcode
+	        AND c.typecode = 'MI041'
+	    WHERE 1=1
+	        AND a.useyn = 'Y'
+	        <include refid="where_realstock"/>
+	        
+	    ORDER BY a.ymdhms DESC
+	</select>
+    
+    <select id="read_productionStockCountSummary_all" parameterType="map" resultType="map">
+		        SELECT
+		            a.factory,
+		            a.storage,
+		            a.scantype,
+		            a.sdate,
+		            c.subname_ch AS car,
+		            a.itemcode,
+		            b.itemname,
+		            SUM(a.qty) AS qty,
+		            <!-- a.barcode, -->
+		            a.location,
+		           <!--  a.lotdate, -->
+		            a.intf_yn
+		        FROM t_wms_workrealstock a
+		        LEFT JOIN t_mi_item b
+		               ON a.itemcode = b.itemcode
+		        LEFT JOIN t_mi_typesub c
+		               ON b.carno = c.subcode
+		              AND c.typecode = 'MI041'
+		        WHERE a.useyn    = 'Y'
+		     <include refid="where_realstock"/>
+			GROUP BY
+            a.factory, a.storage, a.scantype, a.sdate, c.subname_ch,
+            a.itemcode, b.itemname, <!--  a.barcode, --> a.location, a.intf_yn
+        	ORDER BY a.sdate desc, a.itemcode
+    </select>
+    
+    <select id="updateTotalQtyProductionStockCount" resultType="string">
+			SELECT
+				sum(qty)
+            FROM t_wms_workrealstock a
+            LEFT OUTER JOIN t_mi_item b
+                ON a.itemcode = b.itemcode
+            LEFT OUTER JOIN t_mi_typesub c
+                ON b.carno = c.subcode
+                AND c.typecode = 'MI041'
+            WHERE 1=1
+                AND a.useyn = 'Y'
+            <include refid="where_realstock"/>
+            
+	</select>
+    
+    
+    <select id="read_productionStockCountCompare" resultType="com.example.demo.vo.StockVO">
+    	SELECT
+		    NVL(r.factory, l.factory)   AS factory,
+		    NVL(r.storage, l.storage)   AS storage,
+		    NVL(r.itemcode, l.itemcode) AS itemcode,
+		    NVL(r.barcode, l.barcode)   AS barcode,
+		    r.location                  AS rlocation,
+		    l.location                  AS llocation,
+		    CASE 
+		        WHEN r.location = l.location THEN 'TRUE'
+		        ELSE 'FALSE'
+		    END AS difflocation,
+		    NVL(r.qty, 0)               AS rqty,
+		    NVL(l.qty, 0)               AS lqty,
+		    NVL(r.qty, 0) - NVL(l.qty, 0) AS diffqty
+		FROM
+		    (SELECT sdate, barcode, qty, loginid, itemcode, location, factory, storage
+		       FROM t_wms_workrealstock
+		      WHERE useyn = 'Y'
+		      	<if test="factory != null and factory != '' and factory != 'ALL'">
+		        	AND upper(factory) = upper(#{factory})
+		        </if>
+		      	<if test="storage != null and storage != '' and storage != 'ALL'">
+		        	AND upper(storage) = upper(#{storage})
+		        </if>
+		        AND sdate = #{startdate}
+		        <if test="itemcode != null and itemcode != ''">
+					AND UPPER(itemcode) LIKE '%' || #{itemcode} || '%'
+				</if>) r
+		FULL JOIN
+		    (SELECT indate, barcode, qty, loginid, itemcode, location, factory, storage
+		       FROM t_wms_worklocation
+		     <![CDATA[ WHERE (useyn = 'Y' OR YMDHMS_D > REPLACE(#{startdate}, '-', '') || '235959' )]]>
+		      	<if test="factory != null and factory != '' and factory != 'ALL'">
+		        	AND upper(factory) = upper(#{factory})
+		        </if>
+		      	<if test="storage != null and storage != '' and storage != 'ALL'">
+		        	AND upper(storage) = upper(#{storage})
+		        </if>
+		        <![CDATA[AND indate <= #{startdate}]]>
+		        <if test="itemcode != null and itemcode != ''">
+					AND UPPER(itemcode) LIKE '%' || #{itemcode} || '%'
+				</if>
+		        <if test="rack != null and rack != ''">
+					AND UPPER(rack) LIKE '%' || UPPER(#{rack}) || '%'
+				</if>) l
+		ON  r.factory  = l.factory
+		AND r.storage  = l.storage
+		AND r.itemcode = l.itemcode
+		AND r.barcode  = l.barcode
+		ORDER BY
+		difflocation, diffqty,llocation
+    </select>
+    
+    <select id="read_productionStockCountCompare_all">
+		SELECT
+		    NVL(r.factory, l.factory)   AS factory,
+		    NVL(r.storage, l.storage)   AS storage,
+		    NVL(r.itemcode, l.itemcode) AS itemcode,
+		    NVL(r.barcode, l.barcode)   AS barcode,
+		    r.location                  AS rlocation,
+		    l.location                  AS llocation,
+		    CASE 
+		        WHEN r.location = l.location THEN 'TRUE'
+		        ELSE 'FALSE'
+		    END AS difflocation,
+		    NVL(r.qty, 0)               AS rqty,
+		    NVL(l.qty, 0)               AS lqty,
+		    NVL(r.qty, 0) - NVL(l.qty, 0) AS diffqty
+		FROM
+		    (SELECT sdate, barcode, qty, loginid, itemcode, location, factory, storage
+		       FROM t_wms_workrealstock
+		      WHERE useyn = 'Y'
+		      	<if test="factory != null and factory != '' and factory != 'ALL'">
+		        	AND upper(factory) = upper(#{factory})
+		        </if>
+		      	<if test="storage != null and storage != '' and storage != 'ALL'">
+		        	AND upper(storage) = upper(#{storage})
+		        </if>
+		        AND sdate = #{startdate}
+		        <if test="itemcode != null and itemcode != ''">
+					AND UPPER(itemcode) LIKE '%' || #{itemcode} || '%'
+				</if>) r
+		FULL JOIN
+		    (SELECT indate, barcode, qty, loginid, itemcode, location, factory, storage
+		       FROM t_wms_worklocation
+		     <![CDATA[ WHERE (useyn = 'Y' OR YMDHMS_D > REPLACE(#{startdate}, '-', '') || '235959' )]]>
+		      	<if test="factory != null and factory != '' and factory != 'ALL'">
+		        	AND upper(factory) = upper(#{factory})
+		        </if>
+		      	<if test="storage != null and storage != '' and storage != 'ALL'">
+		        	AND upper(storage) = upper(#{storage})
+		        </if>
+		        <![CDATA[AND indate <= #{startdate}]]>
+		        <if test="itemcode != null and itemcode != ''">
+					AND UPPER(itemcode) LIKE '%' || #{itemcode} || '%'
+				</if>
+				<if test="rack != null and rack != ''">
+					AND UPPER(rack) LIKE '%' || UPPER(#{rack}) || '%'
+				</if>) l
+		ON  r.factory  = l.factory
+		AND r.storage  = l.storage
+		AND r.itemcode = l.itemcode
+		AND r.barcode  = l.barcode
+		ORDER BY
+		difflocation, diffqty,llocation
+	</select>
+	
+	<select id="read_productionStockCountCompare_detail">
+    
+		SELECT 
+		       SDATE,
+		       LOCATION,
+		       BARCODE,
+		       ITEMCODE,
+		       QTY AS realqty,
+		       '0'  AS systemqty
+		FROM (
+		         SELECT 
+		                R.*,
+		                ROW_NUMBER() OVER (
+		                    PARTITION BY LOCATION, BARCODE 
+		                    ORDER BY SDATE
+		                ) AS RN
+		         FROM T_WMS_WORKREALSTOCK R
+		         <!-- WHERE SDATE = DATE '${sdate}' -->
+		          WHERE TRIM(SDATE) = #{sdate}
+		           AND USEYN = 'Y'
+		           <if test="factory != null and factory != '' and factory != 'ALL'">
+			       		AND UPPER(factory) = UPPER(#{factory})
+				    </if>
+				    <if test="itemcode != null and itemcode != ''">
+			       		AND UPPER(itemcode) = UPPER(#{itemcode})
+				    </if>
+				    <if test="storage != null and storage != '' and storage != 'ALL'">
+				        AND UPPER(storage) = UPPER(#{storage})
+				    </if>
+		           AND location = #{location}
+		     ) X
+		
+		UNION ALL
+		
+		SELECT 
+		       indate,
+		       location,
+		       barcode,
+		       itemcode,
+		       '0'  AS realqty,
+		       qty  AS systemqty
+		FROM t_wms_worklocation
+		<!-- WHERE indate = DATE '${sdate}' -->
+		WHERE TRIM(indate) = #{sdate}
+		  AND useyn = 'N'
+		  <if test="factory != null and factory != '' and factory != 'ALL'">
+	      	AND UPPER(factory) = UPPER(#{factory})
+		  </if>
+			<if test="itemcode != null and itemcode != ''">
+			       		AND UPPER(itemcode) = UPPER(#{itemcode})
+				    </if>
+		  <if test="storage != null and storage != '' and storage != 'ALL'">
+		    AND UPPER(storage) = UPPER(#{storage})
+		  </if>
+		  AND memo_d = 'CHANGE'
+		  <!-- AND SUBSTR(ymdhms_d, 1, 8) = REPLACE('${sdate}', '-', '') -->
+		  AND SUBSTR(TRIM(ymdhms_d), 1, 8) = REPLACE(#{sdate}, '-', '')
+		  AND location = #{location}
+		
+		ORDER BY location
+
+	</select>
+	
+	<!-- 재고 실사 미스캔 -->
+	<select id="read_productionStockCountMissing" parameterType="map" resultType="com.example.demo.vo.StockVO">
+		SELECT 
+		    t.*,
+		    CASE WHEN rns.barcode IS NOT NULL THEN 1 ELSE 0 END AS flag,
+		    CASE WHEN t.useyn = 'Y' THEN 1 ELSE 0 END AS flag2,
+		   
+		        (SELECT 'SENDING' 
+		         FROM T_WMS_FACTORYMOVE F <!-- 여기 체크 work 없음 -->
+		         WHERE F.BARCODE = T.BARCODE 
+		          <![CDATA[  AND f.Sdate BETWEEN TO_CHAR(TO_DATE(#{startdate}, 'YYYY-MM-DD') - 7, 'YYYY-MM-DD') AND #{startdate}  ]]>
+		           AND SOURCE = 'SENDING' 
+		           AND USEYN = 'Y' 
+		        ) AS SENDING,
+		   
+		    ROW_NUMBER() OVER (ORDER BY t.location, t.itemcode, t.barcode) AS rn
+		FROM (
+		    SELECT
+		        l.indate,
+		        l.factory,
+		        l.storage,
+		        l.location,
+		        l.barcode,
+		        l.itemcode,
+		        l.qty,
+		        i.itemname,
+		        l.useyn
+		    FROM t_wms_worklocation l
+		         LEFT JOIN t_wms_workrealstock r
+		                ON r.useyn = 'Y'
+		               AND r.barcode = l.barcode
+		               <include refid="where_stockCountMissing_location_top"/>
+		         LEFT JOIN t_mi_item i
+		                ON i.itemcode = l.itemcode
+		    WHERE (l.useyn = 'Y' OR l.YMDHMS_D > REPLACE(#{startdate}, '-', '') || '235959' )
+		      <include refid="where_stockCountMissing_location"/>
+		      AND r.location IS NULL
+		) t
+		     LEFT JOIN t_wms_realstocknotscan rns <!-- 이부분 체크 -->
+		            ON rns.barcode = t.barcode
+		           AND rns.sdate = #{startdate}
+		ORDER BY t.location, t.itemcode, t.barcode
+       
+	    
+	</select>
+	
+	<select id="read_productionStockCountMissing_all">
+		SELECT 
+		    t.*,
+		    CASE WHEN rns.barcode IS NOT NULL THEN 1 ELSE 0 END AS flag,
+		    CASE WHEN t.useyn = 'Y' THEN '1' ELSE 'complete' END AS flag2,
+		    <![CDATA[ 
+		        (SELECT 'SENDING' 
+		         FROM T_WMS_FACTORYMOVE F 
+		         WHERE F.BARCODE = T.BARCODE 
+		         AND f.Sdate BETWEEN TO_CHAR(TO_DATE(#{startdate}, 'YYYY-MM-DD') - 7, 'YYYY-MM-DD') AND #{startdate}
+               ]]>
+		           <!-- AND f.Sdate BETWEEN TO_DATE(#{startdate}, 'YYYY-MM-DD') - 7 AND #{startdate} -->
+		           AND SOURCE = 'SENDING' 
+		           AND USEYN = 'Y' 
+		        ) AS SENDING,
+		    ROW_NUMBER() OVER (ORDER BY t.location, t.itemcode, t.barcode) AS rn
+		FROM (
+		    SELECT
+		        l.indate,
+		        l.factory,
+		        l.storage,
+		        l.location,
+		        l.barcode,
+		        l.itemcode,
+		        l.qty,
+		        i.itemname,
+		        l.useyn
+		    FROM t_wms_worklocation l
+		         LEFT JOIN t_wms_workrealstock r
+		                ON r.useyn = 'Y'
+		               AND r.barcode = l.barcode
+		               <include refid="where_stockCountMissing_location_top"/>
+		         LEFT JOIN t_mi_item i
+		                ON i.itemcode = l.itemcode
+		    WHERE (l.useyn = 'Y' OR l.YMDHMS_D > REPLACE(#{startdate}, '-', '') || '235959' )
+		      <include refid="where_stockCountMissing_location"/>
+		      AND r.location IS NULL
+		) t
+		     LEFT JOIN t_wms_realstocknotscan rns
+		            ON rns.barcode = t.barcode
+		           AND rns.sdate = #{startdate}
+		ORDER BY t.location, t.itemcode, t.barcode
+	</select>	
+	
+    <select id="getProductionStockCountMissingTotalCount" resultType="int">
+			    SELECT
+			        count(*)
+			    FROM (
+			    	SELECT
+		                l.indate,
+		                l.location,
+		                l.barcode,
+		                l.itemcode,
+		                l.qty
+		            FROM t_wms_worklocation l
+		            LEFT JOIN t_wms_workrealstock r
+		                ON r.useyn = 'Y'
+		                AND r.barcode = l.barcode
+		                <include refid="where_stockCountMissing_join"/>
+		           <!--  WHERE l.useyn = 'Y' -->
+	            <![CDATA[ WHERE (l.useyn = 'Y' OR l.YMDHMS_D > REPLACE(#{startdate}, '-', '') || '235959' )]]>
+		                <include refid="where_stockCountMissing_location"/>
+		                AND r.location IS NULL
+				    ORDER BY location
+			    ) t
+	</select>	
+
+	<select id="getProductionStockCountMissingTotalQty" resultType="java.math.BigDecimal">
+	    	SELECT
+                nvl(sum(l.qty),0)
+            FROM t_wms_worklocation l
+            LEFT JOIN t_wms_workrealstock r
+                ON r.useyn = 'Y'
+                AND r.barcode = l.barcode
+                <include refid="where_stockCountMissing_join"/>
+            <!--  WHERE l.useyn = 'Y' -->
+	            <![CDATA[ WHERE (l.useyn = 'Y' OR l.YMDHMS_D > REPLACE(#{startdate}, '-', '') || '235959' )]]>
+                <include refid="where_stockCountMissing_location"/>
+                AND r.location IS NULL
+	</select>
+    
+    <delete id = "deleteProductionRealStockNotScan" >
+		delete from t_wms_realstocknotscan
+		where factory = #{factory}
+		and storage =#{storage}
+		and sdate = #{date}
+	</delete>
+	
+	<insert id = "insertProductionRealStockNotScan">
+		INSERT ALL
+	    <foreach collection="list" item="vo">
+	        INTO t_wms_realstocknotscan 
+	        (sdate, factory, storage, barcode, itemcode, qty, loginid, ymdhms)
+	        VALUES (#{vo.date}, #{vo.factory}, #{vo.storage}, #{vo.barcode}, #{vo.itemcode}, #{vo.qty}, #{vo.loginid}, TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS'))
+	    </foreach>
+	    SELECT 1 FROM DUAL
+	</insert>
+	
+	<!-- 재고 실사 ERP -->
+	<select id="read_productionErpInterfaceSummary" parameterType="map" resultType="com.example.demo.vo.StockVO">
+    	SELECT *
+		FROM (
+		    SELECT
+		        t.*,
+		        ROW_NUMBER() OVER (ORDER BY FACTORY,STORAGE,CAR,ITEMCODE) AS rn
+		    FROM (
+			    SELECT 
+			    	#{sdate} as sdate,
+			    	FACTORY,
+			       	STORAGE,
+			       CAR,
+			       ITEMCODE,
+			       ITEMNAME,
+			       SUM(REALSTOCK_QTY)  AS countqty,
+			       SUM( NVL(BACKUP_QTY,0)-NVL(REALSTOCK_QTY,0))  AS stockqty,
+			       --SUM(BACKUP_QTY)  AS MAGAM_QTY,
+			       --SUM(COUNT_QTY)  AS COUNT_QTY,
+			       --SUM(STOCK_QTY)  AS STOCK_QTY,
+			       SUM(NOSCAN_QTY) AS noscanqty,
+			       SUM(COUNT_QTY) + SUM(STOCK_QTY) + SUM(NOSCAN_QTY) AS totalqty
+			FROM (
+			    -----------------------------------------------------------------
+			    -- 1) LOCATIONBACKUP 기준 수불/재고실사
+			    -----------------------------------------------------------------
+			    SELECT
+			          a.factory
+			        ,CASE 
+					    WHEN UPPER(a.storage) IN ('MATERIAL','SIDE SEAT','OUTSIDE') THEN 'Material'
+					    ELSE a.storage
+					END AS storage
+			        , c.subname_ch AS car
+			        , a.itemcode
+			        , b.itemname
+			        ,(SELECT SUM(QTY) FROM (SELECT AA.BARCODE, AA.QTY FROM T_WMS_REALSTOCK AA WHERE AA.ITEMCODE = A.ITEMCODE AND AA.FACTORY = A.FACTORY AND AA.STORAGE = A.STORAGE AND A.INDATE = AA.SDATE GROUP BY AA.BARCODE, AA.QTY )) AS REALSTOCK_QTY
+			        ,SUM(TO_NUMBER(a.qty)) AS BACKUP_qty
+			        ,SUM(CASE WHEN a.source IN ('BARCODECOUNT', 'LOCATIONCOUNT') THEN TO_NUMBER(a.qty)  ELSE 0 END) AS count_qty
+			        ,SUM(CASE WHEN a.source NOT IN ('BARCODECOUNT', 'LOCATIONCOUNT') THEN TO_NUMBER(a.qty)  ELSE 0 END) AS stock_qty
+			        , CAST(0 AS NUMBER(18,2)) AS noscan_qty
+			        , CAST(SUM(a.qty) AS NUMBER(18,2)) AS qty
+			    FROM t_wms_locationbackup a
+			         LEFT JOIN t_mi_item b
+			                ON a.itemcode = b.itemcode
+			         LEFT JOIN t_mi_typesub c
+			                ON b.carno = c.subcode
+			               AND c.typecode = 'MI041'
+			    WHERE a.useyn = 'Y'
+			    	<if test="factory != null and factory != '' and !factory.equalsIgnoreCase('all')">
+						AND UPPER(a.factory) = UPPER(#{factory})
+					</if>
+			      AND UPPER(a.storage) IN
+				    <foreach item="s" collection="storage" open="(" separator="," close=")">
+				        UPPER(#{s})
+				    </foreach>
+			      <!-- AND a.backup_date = TO_CHAR(TO_DATE(#{sdate}, 'YYYY-MM-DD') + 1, 'YYYY-MM-DD') || ' 05:00:00' 251101수정-->
+			       AND SUBSTR(a.backup_date,1,10) = TO_CHAR(TO_DATE('2025-10-31', 'YYYY-MM-DD') + 1, 'YYYY-MM-DD') 
+			    GROUP BY a.factory, a.storage, a.indate, c.subname_ch, a.itemcode, b.itemname
+			
+			    UNION ALL
+			
+			    -----------------------------------------------------------------
+			    -- 2) 실재고와 매칭 안 된 스캔 누락 데이터
+			    -----------------------------------------------------------------
+			    SELECT
+			          l.factory
+			        ,CASE 
+					    WHEN UPPER(l.storage) IN ('MATERIAL','SIDE SEAT','OUTSIDE') THEN 'Material'
+					    ELSE l.storage
+					END AS storage
+			        , c.subname_ch AS car
+			        , l.itemcode
+			        , i.itemname
+			        ,0
+			        ,0
+			        , CAST(0 AS NUMBER(18,2)) AS count_qty
+			        , CAST(0 AS NUMBER(18,2)) AS stock_qty
+			        , CAST(SUM(l.qty) AS NUMBER(18,2)) AS noscan_qty
+			        , CAST(0 AS NUMBER(18,2)) AS qty
+			    FROM t_wms_worklocation l
+			         LEFT JOIN t_mi_item b
+			                ON l.itemcode = b.itemcode
+			         LEFT JOIN t_mi_typesub c
+			                ON b.carno = c.subcode
+			               AND c.typecode = 'MI041'
+			         LEFT JOIN t_mi_item i
+			                ON i.itemcode = l.itemcode
+			         LEFT JOIN t_wms_workrealstock r
+			                ON r.useyn = 'Y'
+			               AND r.barcode = l.barcode
+			               AND UPPER(r.factory) =  UPPER(#{factory})
+			               AND  UPPER(r.storage) IN
+					    <foreach item="s" collection="storage" open="(" separator="," close=")">
+					        UPPER(#{s})
+					    </foreach>
+			               AND r.sdate = #{sdate}
+			         LEFT JOIN t_wms_realstocknotscan rns
+			                ON rns.barcode = l.barcode
+			    WHERE l.useyn = 'Y'
+			    	<if test="factory != null and factory != '' and !factory.equalsIgnoreCase('all')">
+						AND UPPER(r.factory) = UPPER(#{factory})
+					</if>
+			      AND UPPER(l.storage) IN
+			    <foreach item="s" collection="storage" open="(" separator="," close=")">
+			        UPPER(#{s})
+			    </foreach>
+			      <![CDATA[AND l.indate <= #{sdate}]]>
+			      AND r.location IS NULL
+			      AND rns.barcode IS NULL   -- FLAG = 0 조건 대체
+			    GROUP BY l.factory, l.storage, c.subname_ch, l.itemcode, i.itemname
+			)
+			where 1=1
+			<include refid="where_locationbackup"/> 
+			GROUP BY FACTORY, STORAGE, CAR, ITEMCODE, ITEMNAME
+			) t
+        )
+		ORDER BY FACTORY,STORAGE,CAR,ITEMCODE
+
+    	
+    </select>
+	
+	<select id="read_productionErpInterfaceSummary_all" parameterType="map" resultType="map">
+			    SELECT 
+			    	#{sdate} as sdate,
+			    	FACTORY,
+			       	STORAGE,
+			       CAR,
+			       ITEMCODE,
+			       ITEMNAME,
+			       SUM(REALSTOCK_QTY)  AS countqty,
+			       SUM( NVL(BACKUP_QTY,0)-NVL(REALSTOCK_QTY,0))  AS stockqty,
+			       --SUM(BACKUP_QTY)  AS MAGAM_QTY,
+			       --SUM(COUNT_QTY)  AS COUNT_QTY,
+			       --SUM(STOCK_QTY)  AS STOCK_QTY,
+			       SUM(NOSCAN_QTY) AS noscanqty,
+			       SUM(COUNT_QTY) + SUM(STOCK_QTY) + SUM(NOSCAN_QTY) AS totalqty
+			FROM (
+			    -----------------------------------------------------------------
+			    -- 1) LOCATIONBACKUP 기준 수불/재고실사
+			    -----------------------------------------------------------------
+			    SELECT
+			          a.factory
+			        ,CASE 
+					    WHEN UPPER(a.storage) IN ('MATERIAL','SIDE SEAT','OUTSIDE') THEN 'Material'
+					    ELSE a.storage
+					END AS storage
+			        , c.subname_ch AS car
+			        , a.itemcode
+			        , b.itemname
+			        ,(SELECT SUM(QTY) FROM (SELECT AA.BARCODE, AA.QTY FROM T_WMS_REALSTOCK AA WHERE AA.ITEMCODE = A.ITEMCODE AND AA.FACTORY = A.FACTORY AND AA.STORAGE = A.STORAGE AND A.INDATE = AA.SDATE GROUP BY AA.BARCODE, AA.QTY )) AS REALSTOCK_QTY
+			        ,SUM(TO_NUMBER(a.qty)) AS BACKUP_qty
+			        ,SUM(CASE WHEN a.source IN ('BARCODECOUNT', 'LOCATIONCOUNT') THEN TO_NUMBER(a.qty)  ELSE 0 END) AS count_qty
+			        ,SUM(CASE WHEN a.source NOT IN ('BARCODECOUNT', 'LOCATIONCOUNT') THEN TO_NUMBER(a.qty)  ELSE 0 END) AS stock_qty
+			        , CAST(0 AS NUMBER(18,2)) AS noscan_qty
+			        , CAST(SUM(a.qty) AS NUMBER(18,2)) AS qty
+			    FROM t_wms_locationbackup a
+			         LEFT JOIN t_mi_item b
+			                ON a.itemcode = b.itemcode
+			         LEFT JOIN t_mi_typesub c
+			                ON b.carno = c.subcode
+			               AND c.typecode = 'MI041'
+			    WHERE a.useyn = 'Y'
+			      <if test="factory != null and factory != '' and !factory.equalsIgnoreCase('all')">
+						AND UPPER(a.factory) = UPPER(#{factory})
+					</if>
+			      AND UPPER(a.storage) IN
+				    <foreach item="s" collection="storage" open="(" separator="," close=")">
+				        UPPER(#{s})
+				    </foreach>
+			      <!-- AND a.backup_date = TO_CHAR(TO_DATE(#{sdate}, 'YYYY-MM-DD') + 1, 'YYYY-MM-DD') || ' 05:00:00' 251101수정-->
+			       AND SUBSTR(a.backup_date,1,10) = TO_CHAR(TO_DATE('2025-10-31', 'YYYY-MM-DD') + 1, 'YYYY-MM-DD') 
+			    GROUP BY a.factory, a.storage, a.indate, c.subname_ch, a.itemcode, b.itemname
+			
+			    UNION ALL
+			
+			    -----------------------------------------------------------------
+			    -- 2) 실재고와 매칭 안 된 스캔 누락 데이터
+			    -----------------------------------------------------------------
+			    SELECT
+			          l.factory
+			        ,CASE 
+					    WHEN UPPER(l.storage) IN ('MATERIAL','SIDE SEAT','OUTSIDE') THEN 'Material'
+					    ELSE l.storage
+					END AS storage
+			        , c.subname_ch AS car
+			        , l.itemcode
+			        , i.itemname
+			        ,0
+			        ,0
+			        , CAST(0 AS NUMBER(18,2)) AS count_qty
+			        , CAST(0 AS NUMBER(18,2)) AS stock_qty
+			        , CAST(SUM(l.qty) AS NUMBER(18,2)) AS noscan_qty
+			        , CAST(0 AS NUMBER(18,2)) AS qty
+			    FROM t_wms_worklocation l
+			         LEFT JOIN t_mi_item b
+			                ON l.itemcode = b.itemcode
+			         LEFT JOIN t_mi_typesub c
+			                ON b.carno = c.subcode
+			               AND c.typecode = 'MI041'
+			         LEFT JOIN t_mi_item i
+			                ON i.itemcode = l.itemcode
+			         LEFT JOIN t_wms_workrealstock r
+			                ON r.useyn = 'Y'
+			               AND r.barcode = l.barcode
+			               AND UPPER(r.factory) =  UPPER(#{factory})
+			               AND  UPPER(r.storage) IN
+					    <foreach item="s" collection="storage" open="(" separator="," close=")">
+					        UPPER(#{s})
+					    </foreach>
+			               AND r.sdate = #{sdate}
+			         LEFT JOIN t_wms_realstocknotscan rns
+			                ON rns.barcode = l.barcode
+			    WHERE l.useyn = 'Y'
+			      	<if test="factory != null and factory != '' and !factory.equalsIgnoreCase('all')">
+						AND UPPER(r.factory) = UPPER(#{factory})
+					</if>
+			      AND UPPER(l.storage) IN
+			    <foreach item="s" collection="storage" open="(" separator="," close=")">
+			        UPPER(#{s})
+			    </foreach>
+			      <![CDATA[AND l.indate <= #{sdate}]]>
+			      AND r.location IS NULL
+			      AND rns.barcode IS NULL   -- FLAG = 0 조건 대체
+			    GROUP BY l.factory, l.storage, c.subname_ch, l.itemcode, i.itemname
+			)
+			where 1=1
+			<include refid="where_locationbackup"/> 
+			GROUP BY FACTORY, STORAGE, CAR, ITEMCODE, ITEMNAME
+			ORDER BY FACTORY,STORAGE,CAR,ITEMCODE
+	</select>	
+    
+    <select id="read_productionWipStockList" resultType="map">
+    	SELECT 
+			V.*,
+		    SUM(V.TOTAL_QTY) OVER () AS TOTALQTY
+		FROM (
+		    SELECT
+				a.ITEMCODE,
+				b.ITEMNAME,
+				/* 1. INVENTORY */
+				SUM(CASE WHEN KIND = 'INVENTORY' THEN PLUSQTY - MINUSQTY ELSE 0 END) AS INVENTORY_QTY,
+				/* 2. INCOMING EXCEPTION */
+				SUM(CASE WHEN KIND = 'INCOMING EXCEPTION' THEN PLUSQTY - MINUSQTY ELSE 0 END) AS INCOMING_EXCEPTION_QTY,
+				/* 3. WIP INPUT */
+				SUM(CASE WHEN KIND = 'WIP INPUT' THEN PLUSQTY - MINUSQTY ELSE 0 END) AS WIP_INPUT_QTY,
+				/* 4. WIP RETURN */
+				SUM(CASE WHEN KIND = 'WIP RETURN' THEN PLUSQTY - MINUSQTY ELSE 0 END) AS WIP_RETURN_QTY,
+				/* 5. LOAD EXCEPTION */
+				SUM(CASE WHEN KIND = 'LOAD EXCEPTION' THEN PLUSQTY - MINUSQTY ELSE 0 END) AS LOAD_EXCEPTION_QTY,
+				/* 6. INCOMING EXCEPTION */
+				SUM(CASE WHEN KIND = 'TOREDCAGE' THEN PLUSQTY - MINUSQTY ELSE 0 END) AS TOREDCAGE_QTY,
+				/* 7. PRODUCTION */
+				SUM(CASE WHEN KIND = 'PRODUCTION' THEN PLUSQTY - MINUSQTY ELSE 0 END) AS PRODUCTION_QTY,
+				/* 8. PRODUCTIONMOVE */
+				SUM(CASE WHEN KIND = 'PRODUCTIONMOVE' THEN PLUSQTY - MINUSQTY ELSE 0 END) AS PRODUCTIONMOVE_QTY,
+				/* 9. PRODUCTIONMOVE */
+				SUM(CASE WHEN KIND = 'PRODUCTION USED' THEN PLUSQTY - MINUSQTY ELSE 0 END) AS PRODUCTIONUSED_QTY,
+				/* 10. DISASSEMBLY */
+				SUM(CASE WHEN KIND = 'DISASSEMBLY' THEN PLUSQTY - MINUSQTY ELSE 0 END) AS DISASSEMBLY_QTY,
+				/* ▶ TOTAL (전부 합계) */
+				SUM(PLUSQTY - MINUSQTY) AS TOTAL_QTY
+			FROM V_WORKSTOCK a
+		    LEFT JOIN t_mi_item B ON A.ITEMCODE = B.ITEMCODE
+		    WHERE 1 = 1 
+			<include refid="searchCondition_wipStock"/>			
+		    GROUP BY A.ITEMCODE, B.ITEMNAME
+		) V
+		ORDER BY V.ITEMCODE
+    </select>
+    
+    <select id="readProductionDetail" parameterType="map" resultType="map">
+		SELECT 
+		    A.IID,
+		    A.INTF_YN,
+		    A.WMS_KEY,
+		    A.SDATE,
+		    A.FACTORY,
+		    A.STORAGE,
+		    C.SUBNAME_CH AS CAR,
+		    A.ITEMCODE,
+		    B.ITEMNAME,
+		    A.OKYN,
+		    A.QTY,
+		    CASE WHEN A.OKYN = 'Y' THEN NVL(A.QTY, 0) ELSE 0 END AS OKQTY,
+		    CASE WHEN A.OKYN = 'N' THEN NVL(A.QTY, 0) ELSE 0 END AS NGQTY,
+		    A.LOGINID,
+		    A.YMDHMS,
+		    SUBSTR(A.YMDHMS, 9, 2) || ':' || SUBSTR(A.YMDHMS, 11, 2) AS TIME,
+		    D.LINENO,
+		    D.WORKPLACE,
+		    D.SHIFT,
+		    A.BARCODE,
+		    
+		    SUM(NVL(A.QTY , 0)) OVER () AS TOTALQTY
+		FROM T_WMS_WORK A
+		LEFT JOIN T_MI_ITEM B ON A.ITEMCODE = B.ITEMCODE
+		LEFT JOIN T_MI_TYPESUB C ON C.SUBCODE = B.CARNO AND C.TYPECODE = 'MI041'
+		LEFT JOIN T_SCM_BARCODE D ON D.BARCODE = A.BARCODE AND D.USEYN = 'Y'
+		WHERE A.USEYN = 'Y'
+		<include refid="searchCondition_production"/>
+		ORDER BY A.SDATE DESC, A.YMDHMS DESC, A.BARCODE
+    </select>
+    
+    <select id="readProductionSummary" parameterType="map" resultType="map">
+		SELECT
+		    X.*,
+		    SUM(X.qty) OVER () AS TOTALQTY
+		FROM (
+		    SELECT 
+			    A.SDATE,
+			    A.FACTORY,
+			    C.SUBNAME_CH AS CAR,
+			    A.ITEMCODE,
+			    B.ITEMNAME,    
+			    SUM(a.qty) as qty,
+			    SUM(CASE WHEN a.okyn = 'Y' THEN TO_NUMBER(TRIM(a.qty)) ELSE 0 END) AS okqty,
+			    SUM(CASE WHEN a.okyn = 'N' THEN TO_NUMBER(TRIM(a.qty)) ELSE 0 END) AS ngqty,
+			    D.LINENO,
+			    D.WORKPLACE,
+			    D.SHIFT
+			FROM T_WMS_WORK A
+			LEFT JOIN T_MI_ITEM B ON A.ITEMCODE = B.ITEMCODE
+			LEFT JOIN T_MI_TYPESUB C ON C.SUBCODE = B.CARNO AND C.TYPECODE = 'MI041'
+			LEFT JOIN T_SCM_BARCODE D ON D.BARCODE = A.BARCODE AND D.USEYN = 'Y'
+			WHERE A.USEYN = 'Y'
+			<include refid="searchCondition_production"/>
+			GROUP BY 
+			    A.SDATE, A.FACTORY, C.SUBNAME_CH, A.ITEMCODE,
+			    B.ITEMNAME, D.LINENO, D.WORKPLACE, D.SHIFT
+		) X
+		ORDER BY X.SDATE DESC 
+    </select>
+    
+    <select id="readSemiProductionDetail" parameterType="map" resultType="map">
+		SELECT 
+		    A.IID,
+		    A.INTF_YN,
+		    A.WMS_KEY,
+		    A.SDATE,
+		    A.FACTORY,
+		    A.STORAGE,
+		    C.SUBNAME_CH AS CAR,
+		    A.ITEMCODE,
+		    B.ITEMNAME,
+		    A.QTY,
+		    CASE WHEN A.OKYN = 'Y' THEN A.QTY ELSE 0 END AS OKQTY,
+		    CASE WHEN A.OKYN = 'N' THEN A.QTY ELSE 0 END AS NGQTY,
+		    D.LINENO,
+		    A.LOGINID,
+		    A.YMDHMS,
+		    SUBSTR(A.YMDHMS, 9, 2) || ':' || SUBSTR(A.YMDHMS, 11, 2) AS TIME,
+		    A.BARCODE,
+		    
+		    SUM(NVL(A.QTY, 0))  OVER() AS TOTALQTY
+		FROM T_WMS_SEMIWORK A
+		LEFT JOIN T_MI_ITEM B ON A.ITEMCODE = B.ITEMCODE
+		LEFT JOIN T_MI_TYPESUB C ON C.SUBCODE = B.CARNO AND C.TYPECODE = 'MI041'
+		LEFT JOIN T_SCM_BARCODE D ON D.BARCODE = A.BARCODE AND D.USEYN = 'Y'
+		WHERE A.USEYN = 'Y'		
+		<include refid="searchCondition_production"/>
+		ORDER BY A.SDATE DESC, A.YMDHMS DESC, A.BARCODE
+    </select>
+    
+    <select id="readSemiProductionSummary" parameterType="map" resultType="map">
+		SELECT
+		    X.*,
+		    SUM(X.qty) OVER () AS TOTALQTY
+		FROM (
+		    SELECT 
+			    A.SDATE,
+			    A.FACTORY,
+			    C.SUBNAME_CH AS CAR,
+			    A.ITEMCODE,
+			    B.ITEMNAME,    
+			    SUM(a.qty) as qty,
+			    SUM(CASE WHEN a.okyn = 'Y' THEN TO_NUMBER(TRIM(a.qty)) ELSE 0 END) AS okqty,
+			    SUM(CASE WHEN a.okyn = 'N' THEN TO_NUMBER(TRIM(a.qty)) ELSE 0 END) AS ngqty
+			FROM T_WMS_SEMIWORK A
+			LEFT JOIN T_MI_ITEM B ON A.ITEMCODE = B.ITEMCODE
+			LEFT JOIN T_MI_TYPESUB C ON C.SUBCODE = B.CARNO AND C.TYPECODE = 'MI041'
+			LEFT JOIN T_SCM_BARCODE D ON D.BARCODE = A.BARCODE AND D.USEYN = 'Y'
+			WHERE A.USEYN = 'Y'
+			<include refid="searchCondition_production"/>
+			GROUP BY A.SDATE, A.FACTORY, C.SUBNAME_CH, A.ITEMCODE, B.ITEMNAME
+		) X
+		ORDER BY X.SDATE DESC, ITEMCODE
+    </select>
+    
+</mapper>  

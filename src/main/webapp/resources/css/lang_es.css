@@ -1,0 +1,20 @@
+#m2_incoming_return_summary,
+#m2_incoming_return_detail,
+body > div.serviceView > div.menuListArea > div.accordion > div.menuListCallBack_2 > div:nth-child(4) > label > span,
+#mPurchase_wipSummary,
+#m2_wipReturn_detail, #m2_wipReturn_summary {
+	font-size:9pt !important;	
+}
+
+
+#mPurchase_wipDetail,
+body > div.serviceView > div.menuListArea > div.accordion > div.menuListCallBack_2 > div:nth-child(10) > label > span{
+	font-size:10pt;
+}
+body>div.serviceView>div.menuListArea>div>div>div div i{
+	margin-left:15px !important;
+}
+
+.menuIconCommon{
+	margin-left:0px !important;
+}

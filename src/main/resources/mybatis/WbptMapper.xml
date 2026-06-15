@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.wbpt.WbptMapper">
+	<update id="removeInvoiceWmskey">
+		update t_mex_scm_invoice set wms_key = '' where invoice_create = #{date} and invoice_no = #{invoice_no}
+	</update>
+	
+	<update id="updateInvoiceWmsKey">
+		MERGE INTO t_mex_scm_invoice t
+		USING (
+		  <foreach collection="rows" item="r" separator=" UNION ALL ">
+		    SELECT
+		      #{r.wms_key}   AS wms_key,
+		      #{r.date}      AS invoice_create,
+		      #{r.invoice_no} AS invoice_no,
+		      #{r.itemcode}  AS itemcode
+		    FROM dual
+		  </foreach>
+		) s
+		ON (
+		     t.invoice_create = s.invoice_create
+		 AND t.invoice_no     = s.invoice_no
+		 AND t.itemcode       = s.itemcode
+		)
+		WHEN MATCHED THEN
+		UPDATE SET t.wms_key = s.wms_key
+	</update>
+
+	<update id="updateInvoiceWmsKey2">
+		update t_mex_scm_invoice t
+		set t.wms_key = #{wms_key}
+        where t.invoice_create = #{date}
+          and t.invoice_no = #{invoice_no}
+	</update>
+	
+</mapper>  
