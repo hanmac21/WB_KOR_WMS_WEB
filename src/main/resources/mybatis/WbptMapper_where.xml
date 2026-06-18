@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.demo.mapper.wbusa.WbusaMapper">
+<mapper namespace="com.example.demo.mapper.wbpt.WbptMapper">
 	<sql id="where_palletList">
 		<choose>
 			<when test="searchParams.fromDate != null and searchParams.fromDate != '' and searchParams.toDate != null and searchParams.toDate != ''">

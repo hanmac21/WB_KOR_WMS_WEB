@@ -24,14 +24,14 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.example.demo.mapper.wbusa.WbusaMapper;
+import com.example.demo.mapper.wbpt.WbptMapper;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class PurchaseServiceImpl implements PurchaseService {
 
 	@Autowired
-	private WbusaMapper purchaseMapper;
+	private WbptMapper purchaseMapper;
 
 	public List<WorkMoveVO> read_workMove() {
 		return purchaseMapper.read_workMove();
