@@ -146,18 +146,6 @@
                         <spring:message code="purchase.incoming.summary"/>
                     </p>
                 </div>
-                <div class="menuCommon">
-                    <i class="fa-solid fa-list" style="color:#046565;"></i>
-                    <p id="mPurchase_incoming_return_detail" class="divBlockTrigger" data-menu-type="purchase" data-matching="PURCHASE_INCOMING" data-group="<spring:message code='purchase.inbound.inquiry'/>">
-                        <spring:message code="purchase.incoming.return.detail"/>
-                    </p>
-                </div>
-                <div class="menuCommon">
-                    <i class="fa-solid fa-list" style="color:#046565;"></i>
-                    <p id="mPurchase_incoming_return_summary" class="divBlockTrigger" data-menu-type="purchase" data-matching="PURCHASE_INCOMING" data-group="<spring:message code='purchase.inbound.inquiry'/>">
-                        <spring:message code="purchase.incoming.return.summary"/>
-                    </p>
-                </div>
             </div>
 
             <!-- 출고 대분류 -->
@@ -178,18 +166,6 @@
                     <i class="fa-solid fa-list" style="color:#046565;"></i>
                     <p id="mPurchase_load_summary" class="divBlockTrigger" data-menu-type="purchase" data-matching="PURCHASE_LOAD" data-group="<spring:message code='purchase.load'/>">
                         <spring:message code="purchase.load.summary"/>
-                    </p>
-                </div>
-                <div class="menuCommon">
-                    <i class="fa-solid fa-list" style="color:#046565;"></i>
-                    <p id="mPurchase_load_return_detail" class="divBlockTrigger" data-menu-type="purchase" data-matching="PURCHASE_LOAD" data-group="<spring:message code='purchase.load'/>">
-                        <spring:message code="purchase.load.return.detail"/>
-                    </p>
-                </div>
-                <div class="menuCommon">
-                    <i class="fa-solid fa-list" style="color:#046565;"></i>
-                    <p id="mPurchase_load_return_summary" class="divBlockTrigger" data-menu-type="purchase" data-matching="PURCHASE_LOAD" data-group="<spring:message code='purchase.load'/>">
-                        <spring:message code="purchase.load.return.summary"/>
                     </p>
                 </div>
             </div>
@@ -229,52 +205,6 @@
                     <i class="fa-solid fa-list" style="color:#046565;"></i>
                     <p id="m2_7_3" class="divBlockTrigger" data-menu-type="purchase" data-matching="PURCHASE_STOCKCOUNT" data-group="<spring:message code='purchase.inventory'/>">
                         <spring:message code="purchase.inventory.summary"/>
-                    </p>
-                </div>
-            </div>
-
-            <!-- 재고 대분류 -->
-            <input type="checkbox" class="answer" id="answer05">
-            <label for="answer05" data-matching="PURCHASE_STOCK">
-                <img class="menuIconCommon" src="../resources/images/menuicon/WMS Web Icon-08.png">
-                <span class="normalLink"><spring:message code="purchase.stock"/></span>
-                <i class="fa-solid fa-plus" style="color:white; position:absolute; top:16px; right:13px;"></i>
-            </label>
-            <div class="menuListCallBack_5">
-                <div class="menuCommon">
-                    <i class="fa-solid fa-list" style="color:#046565;"></i>
-                    <p id="mPurchase_stock_detail" class="divBlockTrigger" data-menu-type="purchase" data-matching="PURCHASE_STOCK" data-group="<spring:message code='purchase.stock'/>">
-                        <spring:message code="purchase.stock.detail"/>
-                    </p>
-                </div>
-                <div class="menuCommon">
-                    <i class="fa-solid fa-list" style="color:#046565;"></i>
-                    <p id="mPurchase_stock_summary" class="divBlockTrigger" data-menu-type="purchase" data-matching="PURCHASE_STOCK" data-group="<spring:message code='purchase.stock'/>">
-                        <spring:message code="purchase.stock.summary"/>
-                    </p>
-                </div>
-                <div class="menuCommon">
-                    <i class="fa-solid fa-list" style="color:#046565;"></i>
-                    <p id="mPurchase_storageStock_list" class="divBlockTrigger" data-menu-type="purchase" data-matching="PURCHASE_STOCK" data-group="<spring:message code='purchase.stock'/>">
-                        <spring:message code="purchase.stock.storage"/>
-                    </p>
-                </div>
-                <div class="menuCommon">
-                    <i class="fa-solid fa-list" style="color:#046565;"></i>
-                    <p id="m2_stock_info" class="divBlockTrigger" data-menu-type="purchase" data-matching="PURCHASE_STOCKINFO" data-group="<spring:message code='purchase.stock'/>">
-                        <spring:message code="purchase.stock.info"/>
-                    </p>
-                </div>
-                <div class="menuCommon">
-                    <i class="fa-solid fa-list" style="color:#046565;"></i>
-                    <p id="m2_stock_history" class="divBlockTrigger" data-menu-type="purchase" data-matching="PURCHASE_STOCKINFO" data-group="<spring:message code='purchase.stock'/>">
-                        <spring:message code="purchase.stock.history"/>
-                    </p>
-                </div>
-                <div class="menuCommon">
-                    <i class="fa-solid fa-list" style="color:#046565;"></i>
-                    <p id="m2_stock_movement" class="divBlockTrigger" data-menu-type="purchase" data-matching="PURCHASE_STOCKINFO" data-group="<spring:message code='purchase.stock'/>">
-                        <spring:message code="purchase.stock.movement"/>
                     </p>
                 </div>
             </div>

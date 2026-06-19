@@ -37,10 +37,6 @@ public class PurchaseServiceImpl implements PurchaseService {
 		return purchaseMapper.read_workMove();
 	}
 
-//	public List<RealStockVO> read_realStock() {
-//		return purchaseMapper.read_realStock();
-//	}
-
 	@Override
 	public List<RealStockVO> read_realStock(Map<String, Object> paramMap) {
 		try {

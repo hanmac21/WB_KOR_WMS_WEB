@@ -1250,11 +1250,11 @@ SELECT * FROM (
     
     <select id="read_productInfo" resultType="map">
     	SELECT
-            e.subname_ch AS itemtype,
-            b.subname_ch AS car,
+            e.subname AS itemtype,
+            b.subname AS car,
             a.itemcode,
             a.itemname,
-            c.subname_ch AS spec,
+            c.subname AS spec,
             a.spec AS custcode
         FROM
             t_mi_item a
@@ -1272,10 +1272,10 @@ SELECT * FROM (
                 AND e.typecode = 'MI002'
         WHERE a.deldate = ' ' and e.subname is not null
         <if test="searchParams.itemtype != null and searchParams.itemtype != ''">
-	        AND UPPER(TRIM(e.subname_ch)) LIKE '%' || UPPER(TRIM(#{searchParams.itemtype})) || '%'
+	        AND UPPER(TRIM(e.subname)) LIKE '%' || UPPER(TRIM(#{searchParams.itemtype})) || '%'
 	    </if>
 	    <if test="searchParams.car != null and searchParams.car != ''">
-	        AND UPPER(TRIM(b.subname_ch)) LIKE '%' || UPPER(TRIM(#{searchParams.car})) || '%'
+	        AND UPPER(TRIM(b.subname)) LIKE '%' || UPPER(TRIM(#{searchParams.car})) || '%'
 	    </if>
 	    <if test="searchParams.itemcode != null and searchParams.itemcode != ''">
 	        AND UPPER(TRIM(a.itemcode)) LIKE '%' || UPPER(TRIM(#{searchParams.itemcode})) || '%'
@@ -1284,7 +1284,7 @@ SELECT * FROM (
 	        AND UPPER(TRIM(a.itemname)) LIKE '%' || UPPER(TRIM(#{searchParams.itemname})) || '%'
 	    </if>
 	    <if test="searchParams.spec != null and searchParams.spec != ''">
-	        AND UPPER(TRIM(c.subname_ch)) LIKE '%' || UPPER(TRIM(#{searchParams.spec})) || '%'
+	        AND UPPER(TRIM(c.subname)) LIKE '%' || UPPER(TRIM(#{searchParams.spec})) || '%'
 	    </if>
 	    <if test="searchParams.cucode != null and searchParams.cucode != ''">
 	        AND UPPER(TRIM(a.spec)) LIKE '%' || UPPER(TRIM(#{searchParams.cucode})) || '%'

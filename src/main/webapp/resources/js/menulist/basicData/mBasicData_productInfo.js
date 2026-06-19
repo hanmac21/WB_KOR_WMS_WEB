@@ -254,7 +254,7 @@ $(document).ready(function() {
 								<tr>
 									<th class = "noVal">${i18n.t('table.no')}<!-- NO --></th>
 								    <th class = "cucodeVal" data-sort="ITEMTYPE">${i18n.t('search.itemType')}<!-- ITEMTYPE --></th>
-									<th class = "carVal" data-sort="CAR">${i18n.t('search.car')}<!-- CAR --></th>
+									<th class = "cucodeVal" data-sort="CAR">${i18n.t('search.car')}<!-- CAR --></th>
 									<th class = "itemcodeVal" data-sort="ITEMCODE">${i18n.t('search.itemCode')}<!-- ITEMCODE --></th>
 									<th class = 'itemnameLongVal' data-sort="ITEMNAME">${i18n.t('search.itemName')}<!-- ITEMNAME --></th>
 									<th class = 'specVal' data-sort="SPEC">${i18n.t('search.spec')}<!-- SPEC --></th>									
@@ -345,7 +345,7 @@ $(document).ready(function() {
             <tr data-itemcode="${data.ITEMCODE || data.itemcode || ''}" class="${rowChanged ? 'row-changed' : ''}">
             	<td class = "noVal">${rowNumber}</td>
 				<td class = "cucodeVal">${data.ITEMTYPE || data.itemcodetype || ''}</td>
-				<td class = "carVal">${data.CAR || data.car || ''}</td>
+				<td class = "cucodeVal">${data.CAR || data.car || ''}</td>
 				<td class = "itemcodeVal">${data.ITEMCODE || data.itemcode || ''}</td>
 				<td class = "itemnameLongVal">${data.ITEMNAME || data.itemname || ''}</td>
 				<td class = "specVal">${data.SPEC || data.spec || ''}</td>

@@ -18,7 +18,6 @@ $(document).ready(function() {
 
 	window.filteredIncomingSummaryData = [];
 	window.incomingSummaryColumns = [
-		{ key: 'INTF_YN', header: 'status' },
 		{ key: 'SDATE', header: 'date' },
 		{ key: 'STORAGE', header: 'storage' },
 		{ key: 'CUSTCODE', header: 'custcode' },
@@ -26,9 +25,7 @@ $(document).ready(function() {
 		{ key: 'CAR', header: 'car' },
 		{ key: 'ITEMCODE', header: 'itemcode' },
 		{ key: 'ITEMNAME', header: 'itemname' },
-		{ key: 'QTY', header: 'qty', type: 'number' },
-		{ key: 'INVOICENO', header: 'invoiceno' },
-		{ key: 'IFNO', header: 'ifno' }
+		{ key: 'QTY', header: 'qty', type: 'number' }
 	];
 
 	// 메인 호출 함수 - 초기 로딩 시 전체 데이터 조회
@@ -199,10 +196,6 @@ function renderIncomingSummaryView() {
 									<!-- 동적으로 추가 -->
 								</select>
 							</div>
-							<div class="search-label" style = "display:none">
-								<div class="searchVal_cucode">${i18n.t('search.scode')}<!-- CUCODE --></div>
-								<input type="text" id="incomingSummary_searchVal_cucode" />
-							</div>
 							<div class="search-label">
 								<div class="searchVal_cname">${i18n.t('search.suppliername')}<!-- CNAME --></div>
 								<input type="text" id="incomingSummary_searchVal_cname" />
@@ -246,33 +239,20 @@ function renderIncomingSummaryView() {
 								${i18n.t('table.page')} <strong id="incomingSummaryCurrentPageInfo">${currentIncomingSummaryPage}</strong>/<strong id="incomingSummaryTotalPageInfo">${totalIncomingSummaryPages}</strong> |  
 								<span class="tqtyTitle">${i18n.t('table.info.qty')} : </span><span class="incomingSummaryTotalQty" style="color:#007bff"></span> 
 							</span>
-							<!--<div class="btnInterfaceCommon btnIncomingSummaryItemsArea" style="margin-left:24px;">
-								<select id = "incomingSummarySupplier">
-								</select>
-								<button class="btn btn-success" id="incomingSummaryChangeBtn" onclick="">Change</button>
-							</div>-->
 							<div class="action-buttons-right mPurchase_incomingSummary">
 								<div id="defaultActions" class="action-group">
 									<button class="btn btn-success" id="incomingSummaryExcelBtn" onclick="downloadAllIncomingSummaryData()">Excel</button>
 								</div>
 							</div>
-							<!--<div class="btnInterfaceCommon btnIncomingSummaryItemsArea" style="margin-left:24px;">
-								<input type="button" value="${i18n.t('btn.Intf')}" class="btn btn-success btnIntfIncomingSummary"/>
-								<input type="button" value="${i18n.t('btn.Intf.delete')}" class="btn btn-warning btnIntfIncomingSummaryDelete"/>
-							</div>-->
 						</div>
 						<table class="data-table mPurchase_incomingSummary" id="incomingSummaryTable">
 							<thead>
 								<tr>
-									<th class = 'checkboxVal'>
-										<input type="checkbox" class="incomingSummary_chkAll">
-									</th>
 									<th class = 'noVal'>${i18n.t('table.no')}<!-- No --></th>
-									<th class = 'statusVal' data-sort="INTF_YN">${i18n.t('table.status')}<!-- STATUS --></th>
 									<th class = 'dateVal' data-sort="SDATE" data-type="date">${i18n.t('search.date')}<!-- SDATE --></th>
 									<th class = 'statusVal' data-sort="STORAGE">${i18n.t('search.storage')}<!-- STORAGE --></th>
 									<th class = 'statusVal' data-sort="CUSTCODE">${i18n.t('search.scode')}<!-- CUCODE --></th>
-									<th class = 'cnameVal' data-sort="CNAME">${i18n.t('search.suppliername')}<!-- CNAME --></th>
+									<th class = 'cnameVal' data-sort="CUSTNAME">${i18n.t('search.suppliername')}<!-- CNAME --></th>
 									<th class = 'carVal' data-sort="CAR">${i18n.t('search.car')}<!-- CAR --></th>
 									<th class = 'itemcodeVal' data-sort="ITEMCODE">${i18n.t('search.itemCode')}<!-- ITEM CODE --></th>
 									<th class = 'cnameVal' data-sort="OITEMCODE">${i18n.t('search.customercode')}<!-- OITEM CODE --></th>
@@ -342,16 +322,10 @@ function getDefaultDateRange() {
 // 공장 및 창고 선택 함수
 function renderFactoryStorage() {
 	const storage = $('#incomingSummary_searchVal_storage');
-	const savedStorage = getCookie('selectedStorage');
 
 	storage.empty();
 
-	let storageList = ['all', 'INBOUND', 'PRODUCT', 'OUTSIDE'];
-
-	// ILLINOIS 사용자는 OUTSIDE만 선택 가능
-	if (savedStorage === 'ILLINOIS') {
-		storageList = ['OUTSIDE'];
-	}
+	let storageList = ['all', 'MATERIAL', 'PRODUCT', 'WORKSHOP', 'HSD', 'CNF', 'SW'];
 
 	storageList.forEach(item => {
 		const text = item === 'all' ? i18n.t('search.all') : item;
@@ -387,18 +361,12 @@ function renderIncomingSummaryTableData() {
 
 	for (let i = 0; i < globalIncomingSummaryData.length; i++) {
 		let rowNumber = (currentIncomingSummaryPage - 1) * incomingSummaryItemsPerPage + i + 1;
-		let un = globalIncomingSummaryData[i]
-		let statusText = globalIncomingSummaryData[i].INTF_YN === 'Y' ? i18n.t('search.input.completed') : i18n.t('search.input.waiting');
-		let statusClass = globalIncomingSummaryData[i].INTF_YN === 'Y' ? 'status-completed' : 'status-waiting';
-		//console.log(`행 ${i}:`, globalIncomingSummaryData[i]); // 각 행 데이터 확인
+		let un = globalIncomingSummaryData[i];
+
 
 		tableBody += `
             <tr>
-            	<td class = 'checkboxVal'><input type="checkbox" class="incomingSummary_chk ${statusClass}" 
-			    	data-unique="${un.SDATE}|${un.ITEMCODE}|${un.CUSTCODE}|${un.QTY}|${un.FACTORY}|${un.STORAGE}|${un.IFNO}|${un.INVOICENO}">
-			    </td>
                 <td class = 'noVal'>${rowNumber}</td>
-                <td class = 'statusVal'><span class="${statusClass}">${statusText}</span></td>
                 <td class = 'dateVal'>${globalIncomingSummaryData[i].SDATE || ''}</td>
 				<td class = 'statusVal'>${globalIncomingSummaryData[i].STORAGE || ''}</td>
 				<td class = 'statusVal'>${globalIncomingSummaryData[i].CUSTCODE || ''}</td>
@@ -500,11 +468,9 @@ function bindIncomingSummaryEvents() {
 
 function getCurrentSearchCriteria() {
 	return {
-		inboundCondition: $("#incomingSummary_searchVal_condition").val(),
 		fromDate: $("#incomingSummary_searchVal_fromDate").val(),
 		toDate: $("#incomingSummary_searchVal_toDate").val(),
 		storage: $("#incomingSummary_searchVal_storage").val(),
-		custcode: $("#incomingSummary_searchVal_cucode").val().trim().toUpperCase(),
 		cname: $("#incomingSummary_searchVal_cname").val().trim().toUpperCase(),
 		car: $("#incomingSummary_searchVal_car").val().trim().toUpperCase(),
 		itemcode: $("#incomingSummary_searchVal_itemcode").val().trim().toUpperCase(),
@@ -526,16 +492,14 @@ function resetIncomingSummarySearch() {
 
 	$("#incomingSummary_searchVal_fromDate").val(fromDate);
 	$("#incomingSummary_searchVal_toDate").val(toDate);
-	$("#incomingSummary_searchVal_cucode").val('');
 	$("#incomingSummary_searchVal_cname").val('');
 	$("#incomingSummary_searchVal_car").val('');
 	$("#incomingSummary_searchVal_itemcode").val('');
 	$("#incomingSummary_searchVal_oitemcode").val('');
 	$("#incomingSummary_searchVal_itemname").val('');
-	$("#incomingSummary_searchVal_invoice_no").val('');
 
 	renderFactoryStorage();
-	const storage = getCookie('selectedStorage') === 'ILLINOIS' ? 'OUTSIDE' : 'all';
+	const storage = 'all';
 
 	currentIncomingSummaryPage = 1;
 	performIncomingSummaryDBSearch({  storage, toDate, fromDate });
@@ -575,13 +539,7 @@ window.downloadAllIncomingSummaryData = function() {
 	// ✅ 엑셀 내보내기 전 데이터 가공
 	const processedData = filteredData_incomingSummary.map(item => {
 		return {
-			...item,
-			INTF_YN: item.INTF_YN === 'Y'
-				? i18n.t('search.input.completed')
-				: i18n.t('search.input.waiting'),
-			TYPE: item.CUSTCODE === '0039'
-				? i18n.t('search.type.free')
-				: i18n.t('search.type.normal')
+			...item
 		};
 	});
 
@@ -592,82 +550,3 @@ window.downloadAllIncomingSummaryData = function() {
 
 	hideLoading();
 };
-
-$(document).on("click", ".btnIntfIncomingSummary", function() {
-
-	if ($(".incomingSummary_chk.status-completed:checked").length > 0) {
-		alert(i18n.t('validation.confirm.items'));
-		return;
-	}
-
-	let hasUndefined = false;
-
-	const iidList = [];
-	$(".incomingSummary_chk:checked").each(function() {
-		let iid = $(this).data('unique');
-		
-		if (!iid || iid.split("_")[2] === '0039') {
-			alert("Free-of-charge products cannot have their interfaces.");
-			hasUndefined = true;
-			return false; // 🔹 each 반복 중단
-		}
-		if (!iid || iid.split("_")[2] === 'undefined') {
-			alert("Supplier Code is Empty");
-			hasUndefined = true;
-			return false; // 🔹 each 반복 중단
-		}
-		iidList.push(iid);
-	});
-
-	// 하나라도 undefined면 전체 중단
-	if (hasUndefined) return;
-
-	// 체크된 요소가 없으면 경고창 표시 후 리턴
-	if (iidList.length === 0) {
-		alert(i18n.t('validation.no.select.items'));
-		return;
-	}
-
-	if (!confirm(i18n.t('confirmation.interface.progress'))) {
-		return;
-	}
-
-	showLoading("data");
-
-	$.ajax({
-		url: "/inbound_confirm_summary",
-		type: "POST",
-		data: JSON.stringify(iidList),
-		contentType: "application/json",
-		success: function(data) {
-			let msg = [];
-			if (data.magamCnt > 0) msg.push(`closed: ${data.magamCnt} case(s)`);
-			if (data.lockCnt > 0) msg.push(`lock: ${data.lockCnt} case(s)`);
-			if (data.priceCnt > 0) msg.push(`There are ${data.priceCnt} items where the unit price is not registered. \nPlease register the unit price`);
-			if (msg.length > 0) {
-				alert("The following items were not processed:\n" + msg.join("\n"));
-			} else {
-
-			}
-			let searchVal = getCurrentSearchCriteria();
-			performIncomingSummaryDBSearch(searchVal);
-
-			// 전체 선택 해제
-			$('.incomingSummary_chkAll').prop('checked', false);
-
-		},
-		error: function(xhr, status, error) {
-			// ❌ alert(res.message) <- res 없음 (버그)
-			window.handleAjaxError(xhr, status, error);
-		}
-
-	});
-
-});
-
-
-
-$(document).on('click', '.incomingSummary_chkAll', function () {
-    const isChecked = $(this).prop('checked');
-    $('input.incomingSummary_chk').prop('checked', isChecked);
-});

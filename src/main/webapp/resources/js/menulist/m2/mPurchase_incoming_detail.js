@@ -18,7 +18,6 @@ $(document).ready(function() {
 
 	window.filteredIncomingDetailData = [];
 	window.incomingDetailColumns = [
-		{ key: 'INTF_YN', header: 'status' },
 		{ key: 'SDATE', header: 'date' },
 		{ key: 'STORAGE', header: 'storage' },
 		{ key: 'CUSTNAME', header: 'Supplier' },
@@ -152,30 +151,12 @@ $(document).ready(function() {
 
 	// 사용자 뷰 렌더링 함수
 	function renderIncomingDetailView() {
-		let loginid = $(".loginId").text().trim().toLowerCase();
-
-		let btnHtml = "";
-		if (loginid == "wms") {
-			btnHtml = `
-	            <input type="button" value="관리자용 삭제" class="btn btn-danger btnAdminIncomingDelete"/>
-	            <input type="button" value="${i18n.t('btn.Intf.delete')}" class="btn btn-warning btnIntfIncomingDetailDelete"/>
-	        `;
-		}
-
 		let content_output = `
 			<div class="divBlockControl" id="view_mPurchase_incomingDetail">
 				<div class="content-body">
 					<!-- 검색 영역 -->
 					<div class="search-area">
 						<div class="search-row m2_3_1">
-						    <div class="search-label">
-                                <div class="search_inboundCondition">${i18n.t('search.inbound.status')}<!-- 입고상태 --></div>
-                                <select id="incomingDetail_searchVal_condition" >
-                                    <option value="">${i18n.t('search.all')}<!-- 전체 --></option>
-                                    <option value="N">${i18n.t('search.input.waiting')}<!-- 입고 대기중 --></option>
-                                    <option value="Y">${i18n.t('search.input.completed')}<!-- 입고 완료 --></option>
-                                </select>
-                            </div>
 							<div class="search-label">
 								<div class="searchVal_fromDate">${i18n.t('search.date')}</div>
 								<input type="date" id="incomingDetail_searchVal_fromDate" /> 
@@ -244,14 +225,8 @@ $(document).ready(function() {
 								${i18n.t('table.page')} <strong id="incomingDetailCurrentPageInfo">${currentIncomingDetailPage}</strong>/<strong id="incomingDetailTotalPageInfo">${totalIncomingDetailPages}</strong> |  
 								<span class="tqtyTitle">${i18n.t('table.info.qty')} : </span><span class="incomingDetailTotalQty" style="color:#007bff"></span> 
 							</span>
-							<div class="btnInterfaceCommon btnIncomingDetailItemsArea" style="margin-left:24px;">
-                                <select id = "incomingDetailSupplier">
-                                </select>
-                                <button class="btn btn-success" id="incomingDetailChangeBtn" onclick="">Change</button>
-                            </div>
 							<div class="action-buttons-right mPurchase_incomingDetail">
 								<div id="defaultActions" class="action-group">
-									${btnHtml}
 									<input type="button" value="${i18n.t('btn.delete')}" class="btn btn-danger btnIncomingDelete"/>
 									<button class="btn btn-success" id="incomingDetailExcelBtn" onclick="downloadAllIncomingDetailData()">Excel</button>
 								</div>
@@ -265,10 +240,9 @@ $(document).ready(function() {
 									    <input type="checkbox" class="incoming_chkAll" />
 									</th>
 									<th class='noVal'>${i18n.t('table.no')}</th>
-									<th class='statusVal' data-sort="STATUS">${i18n.t('table.status')}</th>
 									<th class='dateVal' data-sort="SDATE" data-type="date">${i18n.t('search.date')}</th>
 									<th class='storageVal' data-sort="STORAGE">${i18n.t('search.storage')}</th>
-									<th class='cnameVal' data-sort="CNAME">${i18n.t('search.suppliername')}<!-- CNAME --></th>
+									<th class='cnameVal' data-sort="CUSTNAME">${i18n.t('search.suppliername')}<!-- CNAME --></th>
 									<th class='carVal' data-sort="CAR">${i18n.t('search.car')}</th>
 									<th class='itemcodeVal' data-sort="ITEMCODE">${i18n.t('search.itemCode')}</th>
 									<th class='cnameVal' data-sort="OITEMCODE">${i18n.t('search.customercode')}</th>
@@ -308,8 +282,6 @@ $(document).ready(function() {
 		$("#incomingDetail_searchVal_fromDate").val(fromDate);
 		$("#incomingDetail_itemsPerPage").val(incomingDetailItemsPerPage);
 
-		// 공급사 데이터 가져오기
-		selectSupplier();
 		// 공장 및 창고 선택
 		renderFactoryStorage();
 		// 테이블 데이터 렌더링
@@ -321,32 +293,7 @@ $(document).ready(function() {
 		// 초기 렌더링 후 카운트 업데이트
 		updateIncomingDetailTotalCount();
 	}
-    function selectSupplier() {
-    	$.ajax({
-    		url: "/selectSupplier",
-    		type: "POST",
-    		contentType: "application/json",
-    		success: function(data) {
-    			console.log("-- select Supplier --");
-    			console.log(data);
-    			let $select = $("#incomingDetailSupplier");
-    			$select.empty(); // 기존 option 제거
 
-    			$.each(data, function(index, value) {
-    				$select.append($("<option>", {
-    					value: value,
-    					text: value.split("_")[1]
-    				}));
-    			});
-    			hideLoading();
-    		},
-    		error: function(xhr, status, error) {
-    			console.error("DB 조회 실패:", error);
-    			hideLoading();
-    			alert("데이터 조회에 실패했습니다. 다시 시도해주세요.");
-    		}
-    	});
-    }
 	function fmtLocalDate(d) {
 		const y = d.getFullYear();
 		const m = String(d.getMonth() + 1).padStart(2, '0');
@@ -406,22 +353,18 @@ $(document).ready(function() {
 			let rowNumber = (currentIncomingDetailPage - 1) * incomingDetailItemsPerPage + i + 1;
 			let data = globalIncomingDetailData[i];
 
-			let statusText = data.INTF_YN === 'Y' ? i18n.t('search.input.completed') : i18n.t('search.input.waiting');
-			let statusClass = data.INTF_YN === 'Y' ? 'status-completed' : 'status-waiting';
-
 			let ymdhms = data.YMDHMS || '';
 			let hhmm = ymdhms.substring(8, 10) + ":" + ymdhms.substring(10, 12);
 
 			tableBody += `
 				<tr>
-					<td class='checkboxVal'><input type="checkbox" class="incoming_chk ${statusClass} row-checkbox" 
+					<td class='checkboxVal'><input type="checkbox" class="incoming_chk row-checkbox" 
 						data-global-index="${i}" data-filtered-index="${i}" 
 						data-chk-inboundbar="${data.BARCODE || ''}" 
 						data-chk-meskey="${data.MESKEY || ''}"
 	        			data-delete="${data.IID}|${data.SDATE}|${data.FACTORY}|${data.STORAGE}|${data.BARCODE}|${data.MESKEY || ''}">
 					</td>
 					<td class='noVal'>${rowNumber}</td>
-				    <td class="statusVal"><span class="${statusClass}">${statusText}</span></td>
 					<td class='dateVal'>${data.SDATE || ''}</td>
 					<td class='storageVal'>${data.STORAGE || ''}</td>
 					<td class='cnameVal'>${data.CUSTNAME || ''}</td>
@@ -532,7 +475,6 @@ $(document).ready(function() {
 
 	function getCurrentSearchCriteria() {
 		return {
-		    inboundCondition: $("#incomingDetail_searchVal_condition").val(),
 			fromDate: $("#incomingDetail_searchVal_fromDate").val(),
 			toDate: $("#incomingDetail_searchVal_toDate").val(),
 			useyn: $("#incomingDetail_searchVal_useyn").val(),
@@ -557,7 +499,6 @@ $(document).ready(function() {
 	function resetIncomingDetailSearch() {
 		const { fromDate, toDate } = getDefaultDateRange();
 
-		$("#incomingDetail_searchVal_condition").val('');
 		$("#incomingDetail_searchVal_fromDate").val(fromDate);
 		$("#incomingDetail_searchVal_toDate").val(toDate);
 		$("#incomingDetail_searchVal_useyn").val('Y');
@@ -679,191 +620,6 @@ $(document).ready(function() {
 			}
 		});
 	});
-
-	// 관리자용 삭제
-	$(document).on("click", ".btnAdminIncomingDelete", function() {
-		const iidList = [];
-		$(".incoming_chk:checked").each(function() {
-			let iid = $(this).data('delete');
-			iidList.push(iid);
-		});
-
-		// 체크된 요소가 없으면 경고창 표시 후 리턴
-		if (iidList.length === 0) {
-			alert(i18n.t('validation.no.select.items'));
-			return;
-		}
-
-		if (!confirm(i18n.t('confirmation.items.delete'))) {
-			return;
-		}
-
-		const reason = prompt("사유를 입력해 주세요");
-
-		if (reason === null) return;
-
-		if (reason.trim() === "") {
-			alert("내용이 비어 있습니다.");
-			return;
-		}
-
-		showLoading("data");
-
-		const loginid = sessionStorage.getItem('userId') || 'Name Not Found';//getCookie("userLoginId");
-
-		console.log(iidList)
-
-		$.ajax({
-			url: "/deleteIncoming",
-			type: "POST",
-			data: JSON.stringify({
-				iidList: iidList,
-				loginid: loginid,
-				reason: reason,
-				admin: true
-			}),
-			contentType: "application/json",
-			success: function(data) {
-				hideLoading();
-				if (data.success) {
-					alert("삭제 완료");
-
-					// 재조회
-					let searchVal = getCurrentSearchCriteria();
-					performIncomingDetailDBSearch(searchVal);
-
-					// 전체 선택 해제
-					$('.incoming_chkAll').prop('checked', false);
-				} else {
-					alert("삭제에 실패했습니다.");
-				}
-			},
-			error: function(xhr, status, error) {
-				console.log("🔥 LOCAL ajax error:", status, error);
-				console.log("Response:", xhr.responseText);
-
-				const message = "An error occurred while processing the request.\n\n"
-					+ "Details:\n"
-					+ (xhr.responseText || error || status || "Unknown error");
-
-				// 🔹 기본 alert 대신 커스텀 모달 사용
-				window.showCopyableAlert(message);
-
-				hideLoading();
-			}
-		});
-	});
-	
-	//공급사 업데이트
-	$(document).on("click", "#incomingDetailChangeBtn", function() {
-		// if ($(".incoming_chk.status-completed:checked").length > 0) {
-		// 	alert(i18n.t('validation.confirm.items'));
-		// 	return;
-		// }
-
-		const iidList = [];
-		$(".incoming_chk:checked").each(function() {
-			let deleteVal = $(this).data('delete');
-			if (deleteVal) iidList.push(deleteVal);
-		});
-
-		if (iidList.length === 0) {
-			alert(i18n.t('validation.no.select.items'));
-			return;
-		}
-
-		const data = {
-			iidList: iidList,
-			supplier: $("#incomingDetailSupplier").val()
-		};
-
-		if (confirm("Do you want to register the supplier?")) {
-			showLoading("data");
-			$.ajax({
-				url: "/incommingSupplierUpdate",
-				type: "POST",
-				data: JSON.stringify(data),
-				contentType: "application/json",
-				success: function(data) {
-					console.log("-- Supplier update --");
-					console.log(data);
-					alert("Supplier has been changed.");
-					let searchVal = getCurrentSearchCriteria();
-					performIncomingDetailDBSearch(searchVal);
-					$('.incoming_chkAll').prop('checked', false);
-				},
-				error: function(xhr, status, error) {
-					console.error("DB 조회 실패:", error);
-					hideLoading();
-					alert("Fail");
-				}
-			});
-		}
-
-	});
-
-});
-
-$(document).on("click", ".btnIntfIncomingDetailDelete", function() {
-
-	if ($(".incoming_chk.status-waiting:checked").length > 0) {
-		alert(i18n.t('validation.unconfirm.items'));
-		return;
-	}
-
-	const iidList = [];
-	$(".incoming_chk:checked").each(function() {
-		let iid = $(this).data('delete');
-		if (iid) iidList.push(iid);
-	});
-
-	// 체크된 요소가 없으면 경고창 표시 후 리턴
-	if (iidList.length === 0) {
-		alert(i18n.t('validation.no.select.items'));
-		return;
-	}
-
-	if (!confirm(i18n.t('confirmation.interface.progress'))) {
-		return;
-	}
-
-	showLoading("data");
-
-	$.ajax({
-		url: "/inbound_confirm_delete",
-		type: "POST",
-		data: JSON.stringify(iidList),
-		contentType: "application/json",
-		success: function(data) {
-			hideLoading();
-			let msg = [];
-
-			if (data.magamCnt > 0) msg.push(`closed: ${data.magamCnt} case(s)`);
-			if (data.lockCnt > 0) msg.push(`lock: ${data.lockCnt} case(s)`);
-			if (data.buyCnt > 0) msg.push(`Purchase confirmed: ${data.buyCnt} case(s)`);
-			if (data.laterCnt > 0) msg.push(`Post-processing done: ${data.laterCnt} case(s)`);
-			if (data.noExistCnt > 0) msg.push(`No deletable records: ${data.noExistCnt} case(s)`);
-
-			if (msg.length > 0) {
-				alert("The following items were not processed:\n" + msg.join("\n"));
-			}
-
-			// 재조회
-            let searchVal = getCurrentSearchCriteria();
-            performIncomingDetailDBSearch(searchVal);
-
-            // 전체 선택 해제
-            $('.incoming_chkAll').prop('checked', false);
-
-
-		},
-		error: function(xhr, status, error) {
-			hideLoading();
-			window.handleAjaxError(xhr, status, error);
-		}
-
-	});
-
 });
 
 // 전체 데이터 엑셀 다운로드
@@ -872,13 +628,7 @@ window.downloadAllIncomingDetailData = function() {
 
 	const processedData = filteredData_incomingDetail.map(item => {
 		return {
-			...item,
-			INTF_YN: item.INTF_YN === 'Y'
-				? i18n.t('search.input.completed')
-				: i18n.t('search.input.waiting'),
-			PURCHASETYPE: item.CUSTCODE === '0039'
-				? i18n.t('search.type.free')
-				: i18n.t('search.type.normal')
+			...item
 		};
 	});
 
