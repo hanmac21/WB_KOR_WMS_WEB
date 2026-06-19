@@ -30,7 +30,7 @@ $(document).ready(function() {
 		let sdate = fromDate;
 
 		// ✅ 메뉴 타입별 기본 STORAGE 지정
-		let storage = getCookie('selectedStorage') === 'ILLINOIS' ? 'OUTSIDE' : 'INBOUND'; // 기본값
+		let storage = 'INBOUND'; // 기본값
 
 		performRealStockSummaryDBSearch({ sdate,  storage });
 	};

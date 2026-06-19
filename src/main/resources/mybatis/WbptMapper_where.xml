@@ -3348,7 +3348,7 @@
 			)
 		</if>
 	    <if test="searchParams.car != null and searchParams.car != ''">
-	        AND UPPER(c.subname_ch) LIKE '%' || UPPER(#{searchParams.car}) || '%'
+	        AND UPPER(c.subname) LIKE '%' || UPPER(#{searchParams.car}) || '%'
 	    </if>
 	    
 	    <if test="searchParams.itemcode != null and searchParams.itemcode != ''">
@@ -3356,7 +3356,7 @@
 	    </if>
 
 		<if test="searchParams.oitemcode != null and searchParams.oitemcode != ''">
-			AND UPPER(a.oitemcode) LIKE '%' || UPPER(#{searchParams.oitemcode}) || '%'
+			AND UPPER(b.spec) LIKE '%' || UPPER(#{searchParams.oitemcode}) || '%'
 		</if>
 	
 	    <if test="searchParams.itemname != null and searchParams.itemname != ''">
@@ -3544,7 +3544,7 @@
 	    </if>
 	    
 	    <if test="searchParams.car != null and searchParams.car != ''">
-	        AND UPPER(c2.subname_ch) LIKE '%' || UPPER(#{searchParams.car}) || '%'
+	        AND UPPER(c2.subname) LIKE '%' || UPPER(#{searchParams.car}) || '%'
 	    </if>
 	
 	    <if test="searchParams.itemcode != null and searchParams.itemcode != ''">
@@ -3552,7 +3552,7 @@
 	    </if>
 
 		<if test="searchParams.oitemcode != null and searchParams.oitemcode != ''">
-			AND UPPER(a2.oitemcode) LIKE '%' || UPPER(#{searchParams.oitemcode}) || '%'
+			AND UPPER(b2.spec) LIKE '%' || UPPER(#{searchParams.oitemcode}) || '%'
 		</if>
 	
 	    <if test="searchParams.itemname != null and searchParams.itemname != ''">
@@ -3642,7 +3642,7 @@
 	    </if>
 	    
 	    <if test="searchParams.car != null and searchParams.car != ''">
-	        AND UPPER(c3.subname_ch) LIKE '%' || UPPER(#{searchParams.car}) || '%'
+	        AND UPPER(c3.subname) LIKE '%' || UPPER(#{searchParams.car}) || '%'
 	    </if>
 	    
 	    <if test="searchParams.itemcode != null and searchParams.itemcode != ''">
@@ -3650,7 +3650,7 @@
 	    </if>
 
 		<if test="searchParams.oitemcode != null and searchParams.oitemcode != ''">
-			AND UPPER(a3.oitemcode) LIKE '%' || UPPER(#{searchParams.oitemcode}) || '%'
+			AND UPPER(b3.spec) LIKE '%' || UPPER(#{searchParams.oitemcode}) || '%'
 		</if>
 	
 	    <if test="searchParams.itemname != null and searchParams.itemname != ''">

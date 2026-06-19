@@ -249,7 +249,7 @@
                 a.source,
                 a.scantype,
                 a.sdate,
-                c.subname_ch AS car,
+                c.subname AS car,
                 a.itemcode,
                 b.itemname,
                 a.qty,
@@ -3905,7 +3905,7 @@ FROM (
               ) d
                 ON a.itemcode = d.itemcode
 		      LEFT OUTER JOIN c_cust e
-		        ON d.custcode = e.cu_code           
+		        ON d.custcode = e.cu_code
 		      WHERE
 		      	<if test='useyn eq null or useyn eq "" or useyn eq "Y"'>
 		        	a.useyn='Y'
@@ -5644,9 +5644,9 @@ FROM (
 		    a.storage AS STORAGE,
 		    a.custcode AS custcode,
 		    a.custname AS custname,
-		    c.subname_ch AS CAR,
+		    c.subname AS CAR,
 		    a.itemcode AS ITEMCODE,
-			a.oitemcode AS OITEMCODE,
+			b.spec AS OITEMCODE,
 		    b.itemname AS ITEMNAME,
 		    a.qty AS QTY,
 		    a.barcode AS BARCODE,
@@ -5663,21 +5663,6 @@ FROM (
 		     FROM t_wms_inbound a2
 		     LEFT JOIN t_mi_item b2 ON a2.itemcode = b2.itemcode
 		     LEFT JOIN t_mi_typesub c2 ON b2.carno = c2.subcode AND c2.typecode = 'MI041'
-		     <!--LEFT JOIN (
-                SELECT ITEMCODE, CUSTCODE
-                FROM (
-                    SELECT ITEMCODE,
-                           CUSTCODE,
-                           ROW_NUMBER() OVER (
-                               PARTITION BY ITEMCODE
-                               ORDER BY CASE WHEN CUSTCODE = '0001' THEN 1 ELSE 2 END, CUSTCODE
-                           ) AS RN
-                    FROM T_MI_ITEM_CUSTINFO
-                    WHERE GMAIN = 1
-                ) X
-                WHERE RN = 1
-            ) d ON a2.itemcode = d.itemcode
-            LEFT OUTER JOIN c_cust e ON d.custcode = e.cu_code-->
 		     WHERE 1=1
 		     	AND a2.source = 'INCOMING'
 		     	<include refid="where_incoming_subquery_a2_b2"></include>
@@ -5688,21 +5673,6 @@ FROM (
 		     FROM t_wms_inbound a2
 		     LEFT JOIN t_mi_item b2 ON a2.itemcode = b2.itemcode
 		     LEFT JOIN t_mi_typesub c2 ON b2.carno = c2.subcode AND c2.typecode = 'MI041'
-		     <!--LEFT JOIN (
-                SELECT ITEMCODE, CUSTCODE
-                FROM (
-                    SELECT ITEMCODE,
-                           CUSTCODE,
-                           ROW_NUMBER() OVER (
-                               PARTITION BY ITEMCODE
-                               ORDER BY CASE WHEN CUSTCODE = '0001' THEN 1 ELSE 2 END, CUSTCODE
-                           ) AS RN
-                    FROM T_MI_ITEM_CUSTINFO
-                    WHERE GMAIN = 1
-                ) X
-                WHERE RN = 1
-            ) d ON a2.itemcode = d.itemcode
-            LEFT OUTER JOIN c_cust e ON d.custcode = e.cu_code-->
 		     WHERE 1=1
 		     	AND a2.source = 'INCOMING'
 		    	<include refid="where_incoming_subquery_a2_b2"></include> 
@@ -5711,22 +5681,6 @@ FROM (
 		FROM t_wms_inbound a
 		LEFT JOIN t_mi_item b ON a.itemcode = b.itemcode
 		LEFT JOIN t_mi_typesub c ON b.carno = c.subcode AND c.typecode = 'MI041'
-		<!--LEFT JOIN (
-		    SELECT ITEMCODE, CUSTCODE
-		    FROM (
-		        SELECT ITEMCODE,
-		               CUSTCODE,
-		               ROW_NUMBER() OVER (
-		                   PARTITION BY ITEMCODE
-		                   ORDER BY CASE WHEN CUSTCODE = '0001' THEN 1 ELSE 2 END, CUSTCODE
-		               ) AS RN
-		        FROM T_MI_ITEM_CUSTINFO
-		        WHERE GMAIN = 1
-		    ) X
-		    WHERE RN = 1
-		) d ON a.itemcode = d.itemcode
-		LEFT OUTER JOIN c_cust e ON d.custcode = e.cu_code-->
-
 		WHERE 1=1
 		AND a.source = 'INCOMING'
 		<include refid="where_incoming_subquery_a"/>
@@ -5744,32 +5698,17 @@ FROM (
 		        a.factory,
 		        a.storage,
 		        a.itemcode,
-		        a.oitemcode,
+		        b.spec as oitemcode,
 		        b.itemname,
 		        a.invoiceno,
 		        a.mes_key,
 		        a.qty,
 		        a.custcode AS custcode,
 		        a.custname AS custname,
-		        c.subname_ch AS car
+		        c.subname AS car
 		    FROM t_wms_inbound a
 		    LEFT JOIN t_mi_item b ON a.itemcode = b.itemcode
 		    LEFT JOIN t_mi_typesub c ON b.carno = c.subcode AND c.typecode = 'MI041'
-		    <!--LEFT JOIN (
-		        SELECT ITEMCODE, CUSTCODE
-		        FROM (
-		            SELECT ITEMCODE,
-		                   CUSTCODE,
-		                   ROW_NUMBER() OVER (
-		                       PARTITION BY ITEMCODE
-		                       ORDER BY CASE WHEN CUSTCODE = '0001' THEN 1 ELSE 2 END, CUSTCODE
-		                   ) AS RN
-		            FROM T_MI_ITEM_CUSTINFO
-		            WHERE GMAIN = 1
-		        ) X
-		        WHERE RN = 1
-		    ) d ON a.itemcode = d.itemcode
-		    LEFT OUTER JOIN c_cust e ON COALESCE(a.custcode, d.custcode) = e.cu_code-->
 		    WHERE 1=1
 		    <if test='searchParams.useyn eq null or searchParams.useyn eq "" or searchParams.useyn eq "Y"'>
 		        AND a.useyn = 'Y'
@@ -5787,21 +5726,6 @@ FROM (
 		    FROM t_wms_inbound a3
 		    LEFT JOIN t_mi_item b3 ON a3.itemcode = b3.itemcode
 		    LEFT JOIN t_mi_typesub c3 ON b3.carno = c3.subcode AND c3.typecode = 'MI041'
-		    <!--LEFT JOIN (
-		        SELECT ITEMCODE, CUSTCODE
-		        FROM (
-		            SELECT ITEMCODE,
-		                   CUSTCODE,
-		                   ROW_NUMBER() OVER (
-		                       PARTITION BY ITEMCODE
-		                       ORDER BY CASE WHEN CUSTCODE = '0001' THEN 1 ELSE 2 END, CUSTCODE
-		                   ) AS RN
-		            FROM T_MI_ITEM_CUSTINFO
-		            WHERE GMAIN = 1
-		        ) X
-		        WHERE RN = 1
-		    ) d3 ON a3.itemcode = d3.itemcode
-		    LEFT OUTER JOIN c_cust e3 ON COALESCE(a3.custcode, d3.custcode) = e3.cu_code-->
 		    WHERE 1=1
 		    <if test='searchParams.useyn eq null or searchParams.useyn eq "" or searchParams.useyn eq "Y"'>
 		        AND a3.useyn = 'Y'

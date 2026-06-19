@@ -38,7 +38,7 @@ $(document).ready(function() {
 		showLoading("data");
 
 		const { fromDate, toDate } = getDefaultDateRange();
-		let storage = getCookie('selectedStorage') === 'ILLINOIS' ? 'OUTSIDE' : 'all';
+		let storage = 'all';
 
 		performIncomingDetailDBSearch({ storage, toDate, fromDate });
 	}
@@ -365,16 +365,10 @@ $(document).ready(function() {
 	// 공장 및 창고 선택 함수
 	function renderFactoryStorage() {
 		const storage = $('#incomingDetail_searchVal_storage');
-		const savedStorage = getCookie('selectedStorage');
 
 		storage.empty();
 
-		let storageList = ['all', 'INBOUND', 'PRODUCT', 'OUTSIDE'];
-
-		// ILLINOIS 사용자는 OUTSIDE만 선택 가능
-		if (savedStorage === 'ILLINOIS') {
-			storageList = ['OUTSIDE'];
-		}
+		let storageList = ['all', 'MATERIAL', 'PRODUCT', 'WORKSHOP', 'HSD', 'CNF', 'SW'];
 
 		storageList.forEach(item => {
 			const text = item === 'all' ? i18n.t('search.all') : item;
@@ -575,7 +569,7 @@ $(document).ready(function() {
 		$("#incomingDetail_searchVal_invoice_no").val('');
 
 		renderFactoryStorage();
-		const storage = getCookie('selectedStorage') === 'ILLINOIS' ? 'OUTSIDE' : 'all';
+		const storage = 'all';
 
 		currentIncomingDetailPage = 1;
 		performIncomingDetailDBSearch({ storage, toDate, fromDate });

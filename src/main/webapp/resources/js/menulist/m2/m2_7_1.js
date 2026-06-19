@@ -37,7 +37,7 @@ $(document).ready(function() {
 		let sdate = fromDate;
 
 		// ✅ 메뉴 타입별 기본 STORAGE 지정
-		let storage = getCookie('selectedStorage') === 'ILLINOIS' ? 'OUTSIDE' : 'INBOUND'; // 기본값
+		let storage = 'INBOUND'; // 기본값
 
 		performRealStockDBSearch({ sdate, storage });
 	};
@@ -94,14 +94,6 @@ $(document).ready(function() {
 					<!-- 검색 영역 -->
 					<div class="search-area">
 						<div class="search-row">
-							<div class="search-label">
-								<div class="stockCountDetail_searchVal_counttype">${i18n.t('search.countType')}<!-- LASTDAY --></div>
-								<select id="stockCountDetail_searchVal_counttype" >
-									<option value="all">${i18n.t('search.all')}<!-- 전체 --></option>
-									<option value="ALWAYS">ALWAYS</option>
-									<option value="LASTDAY">LASTDAY</option>
-								</select>
-							</div>
 							<div class="search-label">
 								<div class="stockCountDetail_searchVal_sdate">${i18n.t('search.date')}<!-- SDATE --></div>
 								<input type="text" id="stockCountDetail_searchVal_sdate" readonly="readonly" class="realstock-datepicker" placeholder="YYYY-MM-DD" />
@@ -161,8 +153,6 @@ $(document).ready(function() {
 							<thead>
 								<tr>
 									<th class = "noVal">${i18n.t('table.no')}<!-- No --></th>
-									<th class = "scantypeVal">${i18n.t('search.countType')}<!-- COUNTTYPE --></th>
-									<th class = "scantypeVal">${i18n.t('search.scanType')}<!-- SCANTYPE --></th>
 									<th class = "storageVal">${i18n.t('search.storage')}<!-- STORAGE --></th>
 									<th class = "dateVal">${i18n.t('search.date')}<!-- SDATE --></th>
 									<th class = "carVal">${i18n.t('search.car')}<!-- CAR --></th>
@@ -173,7 +163,7 @@ $(document).ready(function() {
 									<th class = "locationVal">${i18n.t('search.location')}<!-- LOCATION --></th>   
 									<th class = "userVal">${i18n.t('search.user')}<!-- LOGINID --></th>									    
 									<th class = "hhmmVal">${i18n.t('table.time')}<!-- HHMM --></th>	
-									<th class = "barcodeVal">${i18n.t('search.barcode')}<!-- BARCODE --></th>
+									<th class = "barcodeVal transysBarcodeVal">${i18n.t('search.barcode')}<!-- BARCODE --></th>
 								</tr>
 							</thead>
 							<tbody id="realStockDetailTableBody">
@@ -229,12 +219,7 @@ $(document).ready(function() {
 
 		storage.empty();
 
-		let storageList = ['INBOUND',  'OUTSIDE', 'all'];
-
-		// ILLINOIS 사용자는 OUTSIDE만 선택 가능
-		if (savedStorage === 'ILLINOIS') {
-			storageList = ['OUTSIDE'];
-		}
+		let storageList = ['MATERIAL',  'PRODUCT', 'WORKSHOP', 'HSD', 'CNF', 'SW', 'all'];
 
 		storageList.forEach(item => {
 			const text = item === 'all' ? i18n.t('search.all') : item;
@@ -332,8 +317,6 @@ $(document).ready(function() {
 			tableBody += `
             <tr>
                 <td class = "noVal">${rowNumber}</td>
-                <td class = "scantypeVal">${globalRealStockData[i].SOURCE || globalRealStockData[i].source || ''}</td>
-				<td class = "scantypeVal">${globalRealStockData[i].SCANTYPE || globalRealStockData[i].scantype || ''}</td>
                 <td class = "storageVal">${globalRealStockData[i].STORAGE || globalRealStockData[i].storage || ''}</td>
                 <td class = "dateVal">${globalRealStockData[i].SDATE || globalRealStockData[i].sdate || ''}</td>
                 <td class = "carVal">${globalRealStockData[i].CAR || globalRealStockData[i].car || ''}</td>
@@ -344,7 +327,7 @@ $(document).ready(function() {
                 <td class = "locationVal">${globalRealStockData[i].LOCATION || globalRealStockData[i].location || ''}</td>
                 <td class = "userVal">${globalRealStockData[i].LOGINID || globalRealStockData[i].loginid || ''}</td>
                 <td class = "hhmmVal">${globalRealStockData[i].HHMM || globalRealStockData[i].hhmm || ''}</td>
-				<td class = "barcodeVal">${globalRealStockData[i].BARCODE || globalRealStockData[i].barcode || ''}</td>
+				<td class = "barcodeVal transysBarcodeVal">${globalRealStockData[i].BARCODE || globalRealStockData[i].barcode || ''}</td>
             </tr>
         `;
 		}
@@ -449,7 +432,6 @@ $(document).ready(function() {
 	// 현재 검색 조건 수집 함수
 	function getCurrentSearchCriteria() {
 		return {
-			counttype: $("#stockCountDetail_searchVal_counttype").val(),
 			storage: $("#stockCountDetail_searchVal_storage").val(),
 			sdate: $("#stockCountDetail_searchVal_sdate").val(),
 			//car: $("#stockCountDetail_searchVal_car").val().trim().toUpperCase(),
@@ -484,7 +466,7 @@ $(document).ready(function() {
 		$("#stockCountDetail_searchVal_loginid").val('');
 
 		renderFactoryStorage();
-		let storage = getCookie('selectedStorage') === 'ILLINOIS' ? 'OUTSIDE' : 'INBOUND'; // 기본값
+		let storage = 'INBOUND'; // 기본값
 
 		// 초기화 후 전체 데이터 다시 조회
 		currentRealStockPage = 1;
@@ -538,7 +520,6 @@ $(document).ready(function() {
 
 window.downloadAllRealStockData = function() {
 	let searchCriteria = {
-		counttype: $("#stockCountDetail_searchVal_counttype").val(),
 		storage: $("#stockCountDetail_searchVal_storage").val(),
 		sdate: $("#stockCountDetail_searchVal_sdate").val(),
 		itemcode: $("#stockCountDetail_searchVal_itemcode").val().trim().toUpperCase(),

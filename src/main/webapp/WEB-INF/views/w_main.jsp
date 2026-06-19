@@ -27,6 +27,12 @@ final long v = System.currentTimeMillis();
 <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
+<!-- 다국어 jsp -->
+<jsp:include page="/WEB-INF/views/include/i18n-str.jsp" />
+<jsp:include page="/WEB-INF/views/include/i18n-text.jsp" />
+<jsp:include page="/WEB-INF/views/include/i18n-dashboard.jsp" />
+<jsp:include page="/WEB-INF/views/include/i18n-btn.jsp" />
+
 <script src="/resources/js/global-table-wrapper.js"></script>
 
 <!-- 공용 JS -->

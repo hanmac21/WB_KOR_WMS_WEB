@@ -21,6 +21,12 @@ final long v = System.currentTimeMillis();
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link rel="stylesheet"
 	href="<c:url value='/resources/css/w_login.css'/>?v=<%=v%>">
+
+<!-- 다국어 jsp -->
+<jsp:include page="/WEB-INF/views/include/i18n-str.jsp" />
+<jsp:include page="/WEB-INF/views/include/i18n-text.jsp" />
+<jsp:include page="/WEB-INF/views/include/i18n-btn.jsp" />
+
 </head>
 <body class="body">
 	<div class="loginBox">

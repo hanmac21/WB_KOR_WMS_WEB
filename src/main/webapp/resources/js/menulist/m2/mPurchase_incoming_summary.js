@@ -36,7 +36,7 @@ $(document).ready(function() {
 		showLoading("data");
 
 		const { fromDate, toDate } = getDefaultDateRange();
-		const storage = getCookie('selectedStorage') === 'ILLINOIS' ? 'OUTSIDE' : 'all';
+		const storage = 'all';
 
 		performIncomingSummaryDBSearch({ storage, toDate, fromDate });
 	}
