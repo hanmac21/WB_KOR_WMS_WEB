@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.wbpt.WbBasicMapper">
+    <sql id="where_userInfo">
+        <if test="access != null and access != ''">
+            AND (UPPER(a.ks_wmsloginyn) = UPPER(#{access}) OR a.ks_wmsloginyn IS NULL)
+        </if>
+        <if test="factory != null and factory != '' and factory != 'ALL'">
+            AND UPPER(a.ks_factory_access) = UPPER(#{factory})
+        </if>
+        <if test="workFactory != null and workFactory != ''">
+            AND UPPER(a.ks_factory) = UPPER(#{workFactory})
+        </if>
+        <if test="buName != null and buName != ''">
+            AND UPPER(b.bu_name) LIKE '%' || UPPER(#{buName}) || '%'
+        </if>
+        <if test="ksId != null and ksId != ''">
+            AND UPPER(a.ks_id) LIKE '%' || UPPER(#{ksId}) || '%'
+        </if>
+        <if test="ksIndate != null and ksIndate != ''">
+            AND UPPER(a.ks_indate) LIKE '%' || UPPER(#{ksIndate}) || '%'
+        </if>
+        <if test="ksName != null and ksName != ''">
+            AND UPPER(a.ks_name) LIKE '%' || UPPER(#{ksName}) || '%'
+        </if>
+        <if test="ksSabun != null and ksSabun != ''">
+            AND UPPER(a.ks_sabun) LIKE '%' || UPPER(#{ksSabun}) || '%'
+        </if>
+    </sql>
+
+    <sql id="where_productInfo">
+        <if test="searchParams.itemtype != null and searchParams.itemtype != ''">
+            AND UPPER(TRIM(e.subname)) LIKE '%' || UPPER(TRIM(#{searchParams.itemtype})) || '%'
+        </if>
+        <if test="searchParams.car != null and searchParams.car != ''">
+            AND UPPER(TRIM(b.subname)) LIKE '%' || UPPER(TRIM(#{searchParams.car})) || '%'
+        </if>
+        <if test="searchParams.itemcode != null and searchParams.itemcode != ''">
+            AND UPPER(TRIM(a.itemcode)) LIKE '%' || UPPER(TRIM(#{searchParams.itemcode})) || '%'
+        </if>
+        <if test="searchParams.itemname != null and searchParams.itemname != ''">
+            AND UPPER(TRIM(a.itemname)) LIKE '%' || UPPER(TRIM(#{searchParams.itemname})) || '%'
+        </if>
+        <if test="searchParams.spec != null and searchParams.spec != ''">
+            AND UPPER(TRIM(c.subname)) LIKE '%' || UPPER(TRIM(#{searchParams.spec})) || '%'
+        </if>
+        <if test="searchParams.cucode != null and searchParams.cucode != ''">
+            AND UPPER(TRIM(a.spec)) LIKE '%' || UPPER(TRIM(#{searchParams.cucode})) || '%'
+        </if>
+    </sql>
+</mapper>  

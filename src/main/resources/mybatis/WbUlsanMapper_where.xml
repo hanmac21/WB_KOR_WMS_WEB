@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.wbpt.WbUlsanMapper">
+    <sql id="where_realstock">
+
+        <choose>
+            <when test="storage != null and storage != '' and storage != 'all'">
+                AND UPPER(a.storage) = UPPER(#{storage})
+            </when>
+            <when test="storage == null or storage == ''">
+                AND UPPER(a.storage) = UPPER('MATERIAL')
+            </when>
+            <otherwise>
+                <!-- storage == 'all'인 경우: 조건 추가 안함 (전체 조회) -->
+            </otherwise>
+        </choose>
+
+        <if test="sdate != null and sdate != ''">
+            AND a.sdate = #{sdate}
+        </if>
+
+        <if test="car != null and car != ''">
+            AND UPPER(c.subname) LIKE '%' || #{car} || '%'
+        </if>
+
+        <if test="itemcode != null and itemcode != ''">
+            AND UPPER(a.itemcode) LIKE '%' || #{itemcode} || '%'
+        </if>
+
+        <if test="oitemcode != null and oitemcode != ''">
+            AND UPPER(b.spec) LIKE '%' || #{oitemcode} || '%'
+        </if>
+
+        <if test="itemname != null and itemname != ''">
+            AND UPPER(REPLACE(b.itemname, ' ', '')) LIKE '%' || UPPER(REPLACE(#{itemname}, ' ', '')) || '%'
+        </if>
+
+        <if test="location != null and location != ''">
+            AND UPPER(a.location) LIKE '%' || #{location} || '%'
+        </if>
+
+        <if test="loginid != null and loginid != ''">
+            AND UPPER(a.loginid) LIKE '%' || #{loginid} || '%'
+        </if>
+    </sql>
+
+    <sql id="where_incoming_subquery_a">
+        <choose>
+            <when test="searchParams.storage != null and searchParams.storage != '' and searchParams.storage != 'all'">
+                AND UPPER(a.storage) = UPPER(#{searchParams.storage})
+            </when>
+            <when test="searchParams.storage == null or searchParams.storage == ''">
+                AND UPPER(a.storage) = 'MATERIAL'
+            </when>
+        </choose>
+
+        <if test="searchParams.fromDate != null and searchParams.fromDate != '' and searchParams.toDate != null and searchParams.toDate != ''">
+            AND a.sdate BETWEEN #{searchParams.fromDate} AND #{searchParams.toDate}
+        </if>
+
+        <if test="searchParams.custcode != null and searchParams.custcode != ''">
+            AND UPPER(a.custcode) LIKE '%' || UPPER(#{searchParams.custcode}) || '%'
+        </if>
+
+        <if test="searchParams.cname != null and searchParams.cname != ''">
+            AND UPPER(a.custname) LIKE '%' || UPPER(#{searchParams.cname}) || '%'
+        </if>
+
+        <if test="searchParams.car != null and searchParams.car != ''">
+            AND UPPER(c.subname) LIKE '%' || UPPER(#{searchParams.car}) || '%'
+        </if>
+
+        <if test="searchParams.itemcode != null and searchParams.itemcode != ''">
+            AND UPPER(a.itemcode) LIKE '%' || UPPER(#{searchParams.itemcode}) || '%'
+        </if>
+
+        <if test="searchParams.oitemcode != null and searchParams.oitemcode != ''">
+            AND UPPER(b.spec) LIKE '%' || UPPER(#{searchParams.oitemcode}) || '%'
+        </if>
+
+        <if test="searchParams.itemname != null and searchParams.itemname != ''">
+            AND UPPER(REPLACE(b.itemname, ' ', '')) LIKE '%' || UPPER(REPLACE(#{searchParams.itemname}, ' ', '')) || '%'
+        </if>
+
+        <if test="searchParams.invoice_no != null and searchParams.invoice_no != ''">
+            AND UPPER(REPLACE(a.invoiceno, ' ', '')) LIKE '%' || UPPER(REPLACE(#{searchParams.invoice_no}, ' ', '')) || '%'
+        </if>
+
+        <if test='searchParams.useyn eq null or searchParams.useyn eq "" or searchParams.useyn eq "Y"'>
+            AND a.useyn = 'Y'
+        </if>
+        <if test='searchParams.useyn eq "N"'>
+            AND a.useyn = 'N'
+        </if>
+    </sql>
+
+    <sql id="where_incoming_subquery_a2_b2">
+        <if test="searchParams.factory != null and searchParams.factory != '' and searchParams.factory != 'all'">
+            AND UPPER(a2.factory) = UPPER(#{searchParams.factory})
+        </if>
+
+        <choose>
+            <when test="searchParams.storage != null and searchParams.storage != '' and searchParams.storage != 'ALL' and searchParams.storage != 'all'">
+                AND UPPER(a2.storage) = UPPER(#{searchParams.storage})
+            </when>
+        </choose>
+
+        <if test="searchParams.fromDate != null and searchParams.fromDate != '' and searchParams.toDate != null and searchParams.toDate != ''">
+            AND a2.sdate BETWEEN #{searchParams.fromDate} AND #{searchParams.toDate}
+        </if>
+
+        <if test="searchParams.cname != null and searchParams.cname != ''">
+            AND UPPER(a2.custname) LIKE '%' || UPPER(#{searchParams.cname}) || '%'
+        </if>
+
+        <if test="searchParams.car != null and searchParams.car != ''">
+            AND UPPER(c2.subname) LIKE '%' || UPPER(#{searchParams.car}) || '%'
+        </if>
+
+        <if test="searchParams.itemcode != null and searchParams.itemcode != ''">
+            AND UPPER(a2.itemcode) LIKE '%' || UPPER(#{searchParams.itemcode}) || '%'
+        </if>
+
+        <if test="searchParams.oitemcode != null and searchParams.oitemcode != ''">
+            AND UPPER(b2.spec) LIKE '%' || UPPER(#{searchParams.oitemcode}) || '%'
+        </if>
+
+        <if test="searchParams.itemname != null and searchParams.itemname != ''">
+            AND UPPER(REPLACE(b2.itemname, ' ', '')) LIKE '%' || UPPER(REPLACE(#{searchParams.itemname}, ' ', '')) || '%'
+        </if>
+
+        <if test="searchParams.invoice_no != null and searchParams.invoice_no != ''">
+            AND UPPER(REPLACE(a2.invoiceno, ' ', '')) LIKE '%' || UPPER(REPLACE(#{searchParams.invoice_no}, ' ', '')) || '%'
+        </if>
+
+        <if test='searchParams.useyn eq null or searchParams.useyn eq "" or searchParams.useyn eq "Y"'>
+            AND a2.useyn = 'Y'
+        </if>
+        <if test='searchParams.useyn eq "N"'>
+            AND a2.useyn = 'N'
+        </if>
+    </sql>
+
+    <sql id="where_incoming_subquery_a3">
+
+        <choose>
+            <when test="searchParams.storage != null and searchParams.storage != '' and searchParams.storage != 'all'">
+                AND UPPER(a3.storage) = UPPER(#{searchParams.storage})
+            </when>
+            <when test="searchParams.storage == null or searchParams.storage == ''">
+                AND UPPER(a3.storage) = 'MATERIAL'
+            </when>
+        </choose>
+
+        <if test="searchParams.fromDate != null and searchParams.fromDate != '' and searchParams.toDate != null and searchParams.toDate != ''">
+            AND a3.sdate BETWEEN #{searchParams.fromDate} AND #{searchParams.toDate}
+        </if>
+
+        <if test="searchParams.cname != null and searchParams.cname != ''">
+            AND UPPER(a3.custname) LIKE '%' || UPPER(#{searchParams.cname}) || '%'
+        </if>
+
+        <if test="searchParams.car != null and searchParams.car != ''">
+            AND UPPER(c3.subname) LIKE '%' || UPPER(#{searchParams.car}) || '%'
+        </if>
+
+        <if test="searchParams.itemcode != null and searchParams.itemcode != ''">
+            AND UPPER(a3.itemcode) LIKE '%' || UPPER(#{searchParams.itemcode}) || '%'
+        </if>
+
+        <if test="searchParams.oitemcode != null and searchParams.oitemcode != ''">
+            AND UPPER(b3.spec) LIKE '%' || UPPER(#{searchParams.oitemcode}) || '%'
+        </if>
+
+        <if test="searchParams.itemname != null and searchParams.itemname != ''">
+            AND UPPER(REPLACE(b3.itemname, ' ', '')) LIKE '%' || UPPER(REPLACE(#{searchParams.itemname}, ' ', '')) || '%'
+        </if>
+
+        <if test="searchParams.invoice_no != null and searchParams.invoice_no != ''">
+            AND UPPER(REPLACE(a3.invoiceno, ' ', '')) LIKE '%' || UPPER(REPLACE(#{searchParams.invoice_no}, ' ', '')) || '%'
+        </if>
+    </sql>
+
+    <sql id="searchCondition_load">
+        <choose>
+            <when test="searchParams.storage != null and searchParams.storage != '' and searchParams.storage != 'all'">
+                AND UPPER(a.storage) = UPPER(#{searchParams.storage})
+            </when>
+            <when test="searchParams.storage == null or searchParams.storage == ''">
+                AND UPPER(a.storage) = 'MATERIAL'
+            </when>
+        </choose>
+
+        <if test="searchParams.fromDate != null and searchParams.fromDate != '' and searchParams.toDate != null and searchParams.toDate != ''">
+            AND a.sdate BETWEEN #{searchParams.fromDate} AND #{searchParams.toDate}
+        </if>
+
+        <if test="searchParams.custcode != null and searchParams.custcode != ''">
+            AND UPPER(
+                NVL(
+                    a.custcode,
+                    (
+                        SELECT custcode
+                        FROM (
+                            SELECT custcode
+                            FROM T_SM_SALECUSTPRICE
+                            WHERE itemcode = a.itemcode
+                            ORDER BY condate DESC
+                        )
+                        WHERE ROWNUM = 1
+                    )
+                )
+            ) LIKE '%' || UPPER(#{searchParams.cucode}) || '%'
+        </if>
+        <if test="searchParams.custname != null and searchParams.custname != ''">
+            AND UPPER(
+                NVL(
+                    a.custname,
+                    (
+                        SELECT cu_sangho
+                        FROM c_cust
+                        WHERE cu_code = (
+                            SELECT custcode
+                            FROM (
+                                SELECT custcode
+                                FROM T_SM_SALECUSTPRICE
+                                WHERE itemcode = a.itemcode
+                                ORDER BY condate DESC
+                            )
+                            WHERE ROWNUM = 1
+                        )
+                    )
+                )
+            ) LIKE '%' || UPPER(#{searchParams.custname}) || '%'
+        </if>
+
+        <if test="searchParams.car != null and searchParams.car != ''">
+            AND UPPER(c.subname) LIKE '%' || UPPER(#{searchParams.car}) || '%'
+        </if>
+
+        <if test="searchParams.itemcode != null and searchParams.itemcode != ''">
+            AND UPPER(a.itemcode) LIKE '%' || UPPER(#{searchParams.itemcode}) || '%'
+        </if>
+
+        <if test="searchParams.oitemcode != null and searchParams.oitemcode != ''">
+            AND UPPER(a.oitemcode) LIKE '%' || UPPER(#{searchParams.oitemcode}) || '%'
+        </if>
+
+        <if test="searchParams.itemname != null and searchParams.itemname != ''">
+            AND UPPER(REPLACE(b.itemname, ' ', '')) LIKE '%' || UPPER(REPLACE(#{searchParams.itemname}, ' ', '')) || '%'
+        </if>
+
+        <if test="searchParams.invoiceNo != null and searchParams.invoiceNo != ''">
+            AND UPPER(a.invoiceno) LIKE '%' || UPPER(#{searchParams.invoiceNo}) || '%'
+        </if>
+    </sql>
+
+    <sql id="searchCondition_validation">
+        <if test="searchParams.fromDate != null and searchParams.fromDate != '' and searchParams.toDate != null and searchParams.toDate != ''">
+            AND a.sdate BETWEEN #{searchParams.fromDate} AND #{searchParams.toDate}
+        </if>
+
+        <if test="searchParams.cartBarcode != null and searchParams.cartBarcode != ''">
+            AND UPPER(a.cartbarcode) LIKE '%' || UPPER(#{searchParams.cartBarcode}) || '%'
+        </if>
+
+        <if test="searchParams.assyBarcode != null and searchParams.assyBarcode != ''">
+            AND UPPER(a.assybarcode) LIKE '%' || UPPER(#{searchParams.assyBarcode}) || '%'
+        </if>
+
+        <if test="searchParams.itemcode != null and searchParams.itemcode != ''">
+            AND UPPER(b.itemcode) LIKE '%' || UPPER(#{searchParams.itemcode}) || '%'
+        </if>
+
+        <if test="searchParams.oitemcode != null and searchParams.oitemcode != ''">
+            AND UPPER(a.oitemcode) LIKE '%' || UPPER(#{searchParams.oitemcode}) || '%'
+        </if>
+    </sql>
+</mapper>  

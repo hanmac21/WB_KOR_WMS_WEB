@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.wbpt.WbBasicMapper">
+
+    <select id="loginCheck" parameterType="map">
+        SELECT NVL(TO_CHAR(u.KS_ID), 'none') AS KS_ID
+            , NVL(u.KS_NAME, 'none')           AS KS_NAME
+            , NVL(u.KS_DML_ACCESS, 'N')        AS KS_DML_ACCESS
+            , NVL(u.KS_FACTORY_ACCESS, 'ALL')  AS KS_FACTORY_ACCESS
+        FROM(
+            SELECT KS_ID, KS_NAME, KS_DML_ACCESS, KS_FACTORY_ACCESS
+            FROM T_WMS_USER
+            WHERE UPPER(KS_ID) = UPPER(#{userId})
+            AND KS_PASSWD = #{userPw}
+            AND KS_WMSLOGINYN = 'Y'
+            AND ROWNUM = 1
+        ) u
+        RIGHT JOIN DUAL ON 1 = 1
+    </select>
+
+    <!-- 로그인 - 공장 권한 체크 -->
+    <select id="loginCheck_factoryAccess">
+        SELECT count(*) from t_wms_user
+        where (UPPER(ks_factory_access) = UPPER(#{factory}) OR UPPER(ks_factory_access) = 'ALL')
+        and UPPER(KS_ID) = UPPER(#{userId})
+    </select>
+
+    <select id="read_userInfo" resultType="com.example.demo.vo.UserInfoVO">
+        SELECT *
+        FROM (
+            SELECT
+                t.*,
+                ROW_NUMBER() OVER (ORDER BY t.ks_indate DESC) AS rn
+            FROM (
+                SELECT
+                    b.bu_name,
+                    a.ks_name,
+                    a.ks_id,
+                    a.ks_sabun,
+                    a.ks_indate,
+                    a.ks_wmsloginyn,
+                    a.ks_factory_access,
+                    a.ks_factory
+                FROM t_wms_user a
+                LEFT OUTER JOIN c_busor b ON a.ks_busor = b.bu_code
+                WHERE 1=1
+                <include refid="where_userInfo"/>
+                ORDER BY
+                a.ks_busor,
+                a.ks_name
+            ) t
+        )
+        WHERE rn BETWEEN #{offset} + 1 AND #{offset} + #{itemsPerPage}
+    </select>
+
+    <select id="getUserInfoTotalCount" resultType="int">
+        SELECT COUNT(*)
+        FROM t_wms_user a
+        LEFT OUTER JOIN c_busor b
+        ON a.ks_busor = b.bu_code
+        WHERE 1=1
+        <include refid="where_userInfo"/>
+    </select>
+
+    <select id="read_roles_for_users" parameterType="list" resultType="map">
+        SELECT
+            R.ROLE_ID,
+            COUNT(UR.LOGINID) AS ASSIGNED_CNT,
+            #{totalCnt} AS TOTAL_CNT
+        FROM T_WMS_ROLE R
+        LEFT JOIN T_WMS_USER_ROLE UR ON UR.ROLE_ID = R.ROLE_ID AND UR.USEYN = 'Y' AND UR.LOGINID IN
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        WHERE R.USEYN = 'Y'
+        <![CDATA[AND R.ROLE_ID <> 'ADMIN']]>
+        GROUP BY R.ROLE_ID, R.SORTING
+        ORDER BY R.SORTING
+    </select>
+
+    <select id="read_role_menus" parameterType="list" resultType="map">
+        SELECT
+            ROLE_ID,
+            MENU_CODE
+        FROM T_WMS_ROLE_PERMISSION
+        WHERE USEYN = 'Y'
+        AND ROLE_ID IN
+        <foreach collection="list" item="roleId" open="(" separator="," close=")">
+            #{roleId}
+        </foreach>
+    </select>
+
+    <delete id="userDelete" parameterType="map">
+        DELETE FROM	T_WMS_USER
+        WHERE KS_ID = #{id}
+    </delete>
+
+    <!-- 사용자 권한 조회 -->
+    <select id="read_users_effective_menu_state" parameterType="list" resultType="map">
+        WITH USER_LIST AS (
+            SELECT COLUMN_VALUE AS USER_ID
+            FROM TABLE(
+                SYS.ODCIVARCHAR2LIST(
+                    <foreach collection="list" item="id" separator=",">
+                        #{id}
+                    </foreach>
+                )
+            )
+        ),
+        ROLE_MENU AS (
+            SELECT
+                U.USER_ID,
+                P.MENU_CODE
+            FROM USER_LIST U
+            JOIN T_WMS_USER_ROLE UR
+                ON UPPER(UR.LOGINID) = UPPER(U.USER_ID)
+                AND UR.USEYN = 'Y'
+            JOIN T_WMS_ROLE_PERMISSION P
+                ON P.ROLE_ID = UR.ROLE_ID
+                AND P.USEYN = 'Y'
+        ),
+        OVR AS (
+            SELECT
+                UPPER(LOGINID) AS USER_ID,
+                MENU_CODE,
+                USEYN
+            FROM T_WMS_USER_PERMISSION_OVERRIDE
+        ),
+        EFFECTIVE AS (
+            SELECT
+                U.USER_ID,
+                M.MENU_CODE,
+                CASE
+                    WHEN O.MENU_CODE IS NOT NULL THEN O.USEYN
+                    WHEN R.MENU_CODE IS NOT NULL THEN 'Y'
+                    ELSE 'N'
+                END AS USEYN
+            FROM USER_LIST U
+            JOIN T_WMS_MENU M
+                ON M.USEYN = 'Y'
+            LEFT JOIN ROLE_MENU R
+                ON UPPER(R.USER_ID) = UPPER(U.USER_ID)
+                AND R.MENU_CODE = M.MENU_CODE
+            LEFT JOIN OVR O
+                ON O.USER_ID = UPPER(U.USER_ID)
+                AND O.MENU_CODE = M.MENU_CODE
+        )
+        SELECT
+            MENU_CODE,
+            CASE
+                WHEN SUM(CASE WHEN USEYN = 'Y' THEN 1 ELSE 0 END) = COUNT(*) THEN 'Y'
+                WHEN SUM(CASE WHEN USEYN = 'Y' THEN 1 ELSE 0 END) = 0 THEN 'N'
+                ELSE 'M'
+            END AS STATE
+        FROM EFFECTIVE
+        GROUP BY MENU_CODE
+        ORDER BY MENU_CODE
+    </select>
+
+
+    <update id="updateOtherRolesN">
+        <![CDATA[
+		UPDATE T_WMS_USER_ROLE
+		SET USEYN = 'N'
+		WHERE USER_ID = #{userId}
+		    AND ROLE_ID <> 'MANAGER'
+		    AND USEYN = 'Y'
+		]]>
+    </update>
+
+
+    <update id="mergeManager">
+        MERGE INTO T_WMS_USER_ROLE A
+        USING (
+            SELECT
+                #{userId} AS USER_ID,
+                'MANAGER' AS ROLE_ID,
+                'Y' AS USEYN
+            FROM DUAL
+        ) B
+        ON (A.USER_ID = B.USER_ID AND A.ROLE_ID = B.ROLE_ID)
+        WHEN MATCHED THEN
+            UPDATE SET USEYN = 'Y'
+        WHEN NOT MATCHED THEN
+            INSERT (USER_ID, ROLE_ID, USEYN)
+            VALUES (B.USER_ID, B.ROLE_ID, B.USEYN)
+    </update>
+
+    <select id="getRolesY" resultType="string">
+        SELECT ROLE_ID
+        FROM T_WMS_USER_ROLE
+        WHERE USER_ID = #{userId}
+        AND USEYN = 'Y'
+    </select>
+
+    <update id="updateUserRolesN">
+        UPDATE T_WMS_USER_ROLE
+        SET USEYN = 'N'
+        WHERE USER_ID = #{userId}
+        AND ROLE_ID = #{roleId}
+        AND USEYN = 'Y'
+    </update>
+
+
+    <update id="mergeUserRole">
+        MERGE INTO T_WMS_USER_ROLE A
+        USING (
+            SELECT
+                #{userId} AS USER_ID,
+                #{roleId} AS ROLE_ID,
+                'Y' AS USEYN
+            FROM DUAL
+        ) B
+        ON (A.USER_ID = B.USER_ID AND A.ROLE_ID = B.ROLE_ID)
+        WHEN MATCHED THEN
+            UPDATE SET USEYN = 'Y'
+        WHEN NOT MATCHED THEN
+            INSERT (USER_ID, ROLE_ID, USEYN)
+            VALUES (B.USER_ID, B.ROLE_ID, B.USEYN)
+    </update>
+
+
+    <select id="getRoleMenus" resultType = "string">
+        SELECT
+            MENU_CODE
+        FROM T_WMS_ROLE_PERMISSION
+        WHERE USEYN = 'Y'
+        AND ROLE_ID IN
+        <foreach collection="roleIds" item="roleId" open="(" separator="," close=")">
+            #{roleId}
+        </foreach>
+    </select>
+
+    <delete id="deleteOverrideMenus">
+        DELETE T_WMS_USER_PERMISSION_OVERRIDE
+        WHERE USER_ID = #{userId}
+        AND MENU_CODE IN
+        <foreach collection="menuCodes" item="menuCode" open="(" separator="," close=")">
+            #{menuCode}
+        </foreach>
+    </delete>
+
+
+    <update id="mergeOverrideY">
+        MERGE INTO T_WMS_USER_PERMISSION_OVERRIDE A
+        USING (
+            SELECT
+                #{userId} AS USER_ID,
+                #{menuCode} AS MENU_CODE,
+                'Y' AS USEYN
+            FROM DUAL
+        ) B
+        ON (A.USER_ID = B.USER_ID AND A.MENU_CODE = B.MENU_CODE)
+        WHEN MATCHED THEN
+            UPDATE SET USEYN = 'Y'
+        WHEN NOT MATCHED THEN
+            INSERT (USER_ID, MENU_CODE, USEYN)
+            VALUES (B.USER_ID, B.MENU_CODE, B.USEYN)
+    </update>
+
+    <update id="mergeOverrideN">
+        MERGE INTO T_WMS_USER_PERMISSION_OVERRIDE A
+        USING (
+            SELECT
+                #{userId} AS USER_ID,
+                #{menuCode} AS MENU_CODE,
+                'N' AS USEYN
+            FROM DUAL
+        ) B
+        ON (A.USER_ID = B.USER_ID AND A.MENU_CODE = B.MENU_CODE)
+        WHEN MATCHED THEN
+            UPDATE SET USEYN = 'N'
+        WHEN NOT MATCHED THEN
+            INSERT (USER_ID, MENU_CODE, USEYN)
+            VALUES (B.USER_ID, B.MENU_CODE, B.USEYN)
+    </update>
+
+    <select id="view_main_menu_user_access" parameterType="string">
+        WITH ROLE_MENU AS (
+            SELECT DISTINCT B.MENU_CODE
+            FROM T_WMS_USER_ROLE A
+            JOIN T_WMS_ROLE_PERMISSION B ON A.ROLE_ID = B.ROLE_ID
+            WHERE UPPER(A.LOGINID) = UPPER(#{id})
+            AND A.USEYN = 'Y'
+            AND B.USEYN = 'Y'
+        ),
+        FINAL_MENU AS (
+            SELECT
+                A.MENU_CODE,
+                CASE
+                    WHEN C.MENU_CODE IS NOT NULL THEN C.USEYN
+                    WHEN B.MENU_CODE IS NOT NULL THEN 'Y'
+                    ELSE 'N'
+                END AS FINAL_USEYN
+            FROM T_WMS_MENU A
+            LEFT JOIN ROLE_MENU B
+                ON A.MENU_CODE = B.MENU_CODE
+            LEFT JOIN T_WMS_USER_PERMISSION_OVERRIDE C
+                ON UPPER(C.LOGINID) = UPPER(#{id})
+                AND C.MENU_CODE = A.MENU_CODE
+            WHERE A.USEYN = 'Y'
+        )
+        SELECT MENU_CODE
+        FROM FINAL_MENU
+        WHERE FINAL_USEYN = 'Y'
+        ORDER BY MENU_CODE
+    </select>
+
+    <!-- 사용자 체크 -->
+    <select id="check_wms_account">
+        select count(*) from t_wms_user
+        where ks_wmsloginyn = 'Y'
+        AND upper(ks_id) = upper(#{ks_id})
+    </select>
+
+    <insert id="insert_user_account">
+        insert into t_wms_user (
+            ks_id,
+            ks_passwd,
+            ks_busor,
+            ks_wmsloginyn,
+            ks_name,
+            ks_indate,
+            ks_inuser,
+            ks_gubun,
+            ks_factory
+        ) values (
+            #{ks_id},
+            #{ks_passwd},
+            #{ks_busor},
+            'Y',
+            #{ks_name},
+            #{ks_indate},
+            #{ks_inuser},
+            '01',
+            #{ks_factory}
+        )
+    </insert>
+
+    <!-- 비밀번호 검색 -->
+    <select id="selectUserPassword" resultType="string">
+        SELECT KS_PASSWD
+        FROM T_WMS_USER
+        WHERE KS_ID = #{id}
+    </select>
+
+    <update id="update_user_pass">
+        update t_wms_user set ks_passwd = #{pass}, ks_name = #{name}
+        where ks_id = #{id}
+    </update>
+
+    <update id="update_user_pass_menu_access">
+        update t_wms_user_menu_access set password = #{pass}, name = #{name}
+        where id = #{id}
+    </update>
+
+
+    <!-- 사용자 정보 가져오기 -->
+    <select id="getUserInfo" resultType="map">
+        SELECT
+            KS_NAME,
+            KS_ID,
+            KS_INDATE,
+            KS_WMSLOGINYN,
+            KS_FACTORY_ACCESS,
+            KS_FACTORY,
+            KS_BUSOR,
+            KS_DML_ACCESS
+        FROM T_WMS_USER
+        WHERE KS_ID = #{id}
+    </select>
+
+    <!-- 사용자 정보 업데이트 -->
+    <update id="updateUserInfo">
+        UPDATE T_WMS_USER
+        SET KS_FACTORY = #{factory}
+        , KS_FACTORY_ACCESS = #{factoryAccess}
+        , KS_BUSOR = #{busor}
+        , KS_DML_ACCESS = #{dmlAccess}
+        , KS_WMSLOGINYN = #{loginAccess}
+        WHERE KS_ID = #{id}
+    </update>
+
+
+    <!-- 비밀번호 변경 -->
+    <update id="updateUserPassword">
+        UPDATE T_WMS_USER
+        SET KS_PASSWD = #{newPw}
+        WHERE KS_ID = #{id}
+    </update>
+
+
+    <select id="read_productInfo" resultType="map">
+        SELECT
+            e.subname AS itemtype,
+            b.subname AS car,
+            a.itemcode,
+            a.itemname,
+            c.subname AS spec,
+            a.spec AS custcode
+        FROM t_mi_item a
+        LEFT OUTER JOIN t_mi_typesub b
+            ON a.carno = b.subcode
+            AND b.typecode = 'MI041'
+        LEFT OUTER JOIN t_mi_typesub c
+            ON a.specno = c.subcode
+            AND c.typecode = 'MI042'
+        LEFT OUTER JOIN t_mi_typesub d
+            ON a.LABEL_COLOR = d.subcode
+            AND d.typecode = 'MI046'
+        LEFT OUTER JOIN t_mi_typesub e
+            ON a.cmb_itemtype = e.subcode
+            AND e.typecode = 'MI002'
+        WHERE a.deldate = ' ' and e.subname is not null
+        <include refid="where_productInfo"/>
+        ORDER BY a.itemcode
+    </select>
+</mapper>  
