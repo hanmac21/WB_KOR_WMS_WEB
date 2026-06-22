@@ -50,7 +50,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public LocaleResolver localeResolver() {        
         // 쿠키 방식
         CookieLocaleResolver clr = new CookieLocaleResolver();
-        clr.setDefaultLocale(Locale.ENGLISH); // 기본 언어 값
+        clr.setDefaultLocale(Locale.KOREAN); // 기본 언어 값
         clr.setCookieName("lang");
         clr.setCookieMaxAge(60 * 60 * 24 * 365); // 1년 유지
         return clr;

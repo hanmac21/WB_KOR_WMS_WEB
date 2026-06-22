@@ -19,6 +19,16 @@ final long v = System.currentTimeMillis();
 	href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap"
 	rel="stylesheet">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- 로그인 화면은 무조건 한국어 고정 -->
+<script>
+    (function () {
+        var d = new Date();
+        d.setDate(d.getDate() + 365);
+        document.cookie = "lang=ko; expires=" + d.toGMTString();
+    })();
+</script>
+
 <link rel="stylesheet"
 	href="<c:url value='/resources/css/w_login.css'/>?v=<%=v%>">
 
@@ -262,7 +272,7 @@ $(document).ready(function() {
 		return a.split('_')[0] === b.split('_')[0];
 	}
 
-	var lang = getCookie('lang') || 'ko';
+	var lang = 'ko';
 
 	$('.setLang a').each(function() {
 		var $a = $(this);
