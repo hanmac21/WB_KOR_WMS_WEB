@@ -192,10 +192,6 @@ $(document).ready(function() {
 								<input type="text" id="incomingDetail_searchVal_itemname" />
 							</div>
 							<div class="search-label">
-								<div class="search_invoice_no">${i18n.t('search.invoiceNo')}</div>
-								<input type="text" id="incomingDetail_searchVal_invoice_no" />
-							</div>
-							<div class="search-label">
 								<div class="searchVal_factory">DELETED</div>
 								<select id="incomingDetail_searchVal_useyn" >
 									<option value="Y">N</option>
@@ -248,7 +244,6 @@ $(document).ready(function() {
 									<th class='cnameVal' data-sort="OITEMCODE">${i18n.t('search.customercode')}</th>
 									<th class='itemnameMedVal' data-sort="ITEMNAME">${i18n.t('search.itemName')}</th>
 									<th class='qtyVal' data-sort="QTY" data-type="number">${i18n.t('search.qty')}</th>
-									<th class='invoiceNoVal' data-sort="INVOICENO">${i18n.t('search.invoiceNo')}</th>
 									<th class='loginidVal' data-sort="LOGINID">${i18n.t('search.user')}</th>
 									<th class='hhmmVal' data-sort="HHMM">${i18n.t('table.time')}</th>
 									<th class='barcodeVal' data-sort="BARCODE">${i18n.t('search.barcode')}</th>
@@ -373,7 +368,6 @@ $(document).ready(function() {
 					<td class='cnameVal'>${data.OITEMCODE || ''}</td>
 					<td class='itemnameMedVal'>${data.ITEMNAME || ''}</td>
 					<td class='qtyVal'>${Number(data.QTY || 0).toLocaleString()}</td>
-					<td class='invoiceNoVal'>${data.INVOICENO || ''}</td>
 					<td class='loginidVal'>${data.LOGINID || ''}</td>
 					<td class='hhmmVal'>${hhmm || ''}</td>
 					<td class='barcodeVal'>${data.BARCODE || ''}</td>

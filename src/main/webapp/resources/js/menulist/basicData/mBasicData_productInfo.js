@@ -15,6 +15,9 @@ let currentSortOrder = 'asc';
 
 let totalQty = 0;
 
+// 출력 라벨 타입 옵션
+const LABELINFO_OPTIONS = ['내부 일반', '출고 일반', '내부 소형', 'H/REST'];
+
 $(document).ready(function() {
 
 	window.filteredProductInfoData = [];
@@ -51,13 +54,17 @@ $(document).ready(function() {
 				allServerData = response.records || [];
 				
 				// ✅ 최초 기준값(origin) 보관 (공백 포함)
-				allServerData.forEach(r => {
-					const uwRaw = (r.UNIT_WEIGHT ?? r.unit_weight);
-					const pwRaw = (r.PALLET_WEIGHT ?? r.pallet_weight);
+				const toOrigin = (v) => (v === null || v === undefined) ? "" : String(v);
 
-					// origin은 문자열로 저장 (""도 보존)
-					r.__ORIGIN_UNIT_WEIGHT  = (uwRaw === null || uwRaw === undefined) ? "" : String(uwRaw);
-					r.__ORIGIN_PALLET_WEIGHT = (pwRaw === null || pwRaw === undefined) ? "" : String(pwRaw);
+				allServerData.forEach(r => {
+					r.__ORIGIN_CLOSE_CUSTOMER    = toOrigin(r.CLOSE_CUSTOMER    ?? r.close_customer);
+					r.__ORIGIN_DELIVERY_CUSTOMER = toOrigin(r.DELIVERY_CUSTOMER  ?? r.delibery_customer);
+					r.__ORIGIN_LABEL_INFO        = toOrigin(r.LABELINFO          ?? r.labelinfo);
+					r.__ORIGIN_LABEL_1           = toOrigin(r.LABEL1             ?? r.label1);
+					r.__ORIGIN_LABEL_2           = toOrigin(r.LABEL2             ?? r.label2);
+					r.__ORIGIN_LABEL_3           = toOrigin(r.LABEL3             ?? r.label3);
+					r.__ORIGIN_LABEL_4           = toOrigin(r.LABEL4             ?? r.label4);
+					r.__ORIGIN_LABEL_5           = toOrigin(r.LABEL5             ?? r.label5);
 				});
 
 				
@@ -202,12 +209,29 @@ $(document).ready(function() {
 								<input type="text" id="productInfo_searchVal_itemname" />
 							</div>
 							<div class="search-label">
-								<div class="searchVal_storage">${i18n.t('search.spec')}<!-- SPEC --></div>
+								<div class="searchVal_spex">${i18n.t('search.spec')}<!-- SPEC --></div>
 								<input type="text" id="productInfo_searchVal_spec" />
 							</div>
 							<div class="search-label">
-								<div class="searchVal_storage">${i18n.t('search.customercode')}<!-- CUSTCODE --></div>
+								<div class="searchVal_custcode">${i18n.t('search.customercode')}<!-- CUSTCODE --></div>
 								<input type="text" id="productInfo_searchVal_custcode" />
+							</div>
+							<div class="search-label">
+								<div class="searchVal_close">마감처<!-- CUSTCODE --></div>
+								<input type="text" id="productInfo_searchVal_close" />
+							</div>
+							<div class="search-label">
+								<div class="searchVal_delivery">납품처<!-- CUSTCODE --></div>
+								<input type="text" id="productInfo_searchVal_delivery" />
+							</div><div class="search-label">
+							<div class="searchVal_labelinfo">출력 라벨 타입<!-- LABELINFO --></div>
+								<select id="productInfo_searchVal_labelinfo">
+									<option value="">전체</option>
+									<option value="내부 일반">내부 일반</option>
+									<option value="출고 일반">출고 일반</option>
+									<option value="내부 소형">내부 소형</option>
+									<option value="H/REST">H/REST</option>
+								</select>
 							</div>
 						</div>
 						<div class="search_button_area">
@@ -243,7 +267,7 @@ $(document).ready(function() {
 						
 							<div class="action-buttons-right mBasicData_productInfo">
 								<div id="defaultActions" class="action-group">
-									<button class="btn btn-success" id="productInfoSaveBtn" style="display:none;">Save</button>
+									<button class="btn btn-success" id="productInfoSaveBtn">Save</button>
 									<button class="btn btn-success" id="productInfoExcelBtn" onclick="downloadAllProductInfoData()" style="display:none;">Execl</button>
 								</div>
 							</div>
@@ -259,6 +283,14 @@ $(document).ready(function() {
 									<th class = 'itemnameLongVal' data-sort="ITEMNAME">${i18n.t('search.itemName')}<!-- ITEMNAME --></th>
 									<th class = 'specVal' data-sort="SPEC">${i18n.t('search.spec')}<!-- SPEC --></th>									
 									<th class = 'locationVal' data-sort="CUSTCODE">${i18n.t('search.customercode')}<!-- CUCODE --></th>
+									<th class = "itemcodeVal" data-sort="CLOSE_CUSTOMER">마감처<!-- ITEMCODE --></th>
+									<th class = "itemcodeVal" data-sort="DELIVERY_CUSTOMER">납품처<!-- ITEMCODE --></th>
+									<th class = "itemcodeVal" data-sort="LABELINFO">출력 라벨 타입<!-- ITEMCODE --></th>
+									<th class = "itemcodeVal" data-sort="LABEL1">라벨 1<!-- ITEMCODE --></th>
+									<th class = "itemcodeVal" data-sort="LABEL2">라벨 2<!-- ITEMCODE --></th>
+									<th class = "itemcodeVal" data-sort="LABEL3">라벨 3<!-- ITEMCODE --></th>
+									<th class = "itemcodeVal" data-sort="LABEL4">라벨 4<!-- ITEMCODE --></th>
+									<th class = "itemcodeVal" data-sort="LABEL5">라벨 5<!-- ITEMCODE --></th>
 								</tr>
 							</thead>
 							<tbody id="productInfoListTableBody">
@@ -326,32 +358,103 @@ $(document).ready(function() {
 			let data = globalProductInfoData[i];
 
 			// 현재값(화면 표시용) - null/undefined만 공백, 0은 유지
-			const uwVal = (data.UNIT_WEIGHT ?? data.unit_weight);
-			const pwVal = (data.PALLET_WEIGHT ?? data.pallet_weight);
+			const ccVal = (data.CLOSE_CUSTOMER ?? data.close_customer);
+			const dcVal = (data.DELIVERY_CUSTOMER ?? data.delibery_customer);
+			const liVal = (data.LABELINFO ?? data.labelinfo);
+			const l1Val = (data.LABEL1 ?? data.label1);
+			const l2Val = (data.LABEL2 ?? data.label2);
+			const l3Val = (data.LABEL3 ?? data.label3);
+			const l4Val = (data.LABEL4 ?? data.label4);
+			const l5Val = (data.LABEL5 ?? data.label5);
 
-			const uwStr = (uwVal === null || uwVal === undefined) ? "" : String(uwVal);
-			const pwStr = (pwVal === null || pwVal === undefined) ? "" : String(pwVal);
+			const ccStr = (ccVal === null || ccVal === undefined) ? "" : String(ccVal);
+			const dcStr = (dcVal === null || dcVal === undefined) ? "" : String(dcVal);
+			const liStr = (liVal === null || liVal === undefined) ? "" : String(liVal);
+			const l1Str = (l1Val === null || l1Val === undefined) ? "" : String(l1Val);
+			const l2Str = (l2Val === null || l2Val === undefined) ? "" : String(l2Val);
+			const l3Str = (l3Val === null || l3Val === undefined) ? "" : String(l3Val);
+			const l4Str = (l4Val === null || l4Val === undefined) ? "" : String(l4Val);
+			const l5Str = (l5Val === null || l5Val === undefined) ? "" : String(l5Val);
 
 			// 최초 기준값(origin)
-			const ouw = String(data.__ORIGIN_UNIT_WEIGHT ?? "");
-			const opw = String(data.__ORIGIN_PALLET_WEIGHT ?? "");
+			const occ = String(data.__ORIGIN_CLOSE_CUSTOMER ?? "");
+			const odc = String(data.__ORIGIN_DELIVERY_CUSTOMER ?? "");
+			const oli = String(data.__ORIGIN_LABEL_INFO ?? "");
+			const ol1 = String(data.__ORIGIN_LABEL_1 ?? "");
+			const ol2 = String(data.__ORIGIN_LABEL_2 ?? "");
+			const ol3 = String(data.__ORIGIN_LABEL_3 ?? "");
+			const ol4 = String(data.__ORIGIN_LABEL_4 ?? "");
+			const ol5 = String(data.__ORIGIN_LABEL_5 ?? "");
 
 			// changed 계산(문자열 기준)
-			const uwChanged = uwStr !== ouw;
-			const pwChanged = pwStr !== opw;
-			const rowChanged = uwChanged || pwChanged;
-			
+			const ccChanged = ccStr !== occ;
+			const dcChanged = dcStr !== odc;
+			const liChanged = liStr !== oli;
+			const l1Changed = l1Str !== ol1;
+			const l2Changed = l2Str !== ol2;
+			const l3Changed = l3Str !== ol3;
+			const l4Changed = l4Str !== ol4;
+			const l5Changed = l5Str !== ol5;
+			const rowChanged = ccChanged || dcChanged || liChanged || l1Changed || l2Changed || l3Changed || l4Changed || l5Changed;
+
+			// 출력 라벨 타입(labelinfo) select 옵션 생성
+			// 현재값이 목록에 없으면 빈 선택 + 해당 값을 옵션으로 추가하여 유실 방지
+			let liOptions = `<option value=""></option>`;
+			let liFound = false;
+			for (let k = 0; k < LABELINFO_OPTIONS.length; k++) {
+				const opt = LABELINFO_OPTIONS[k];
+				const sel = (liStr === opt) ? 'selected' : '';
+				if (sel) liFound = true;
+				liOptions += `<option value="${opt}" ${sel}>${opt}</option>`;
+			}
+			if (!liFound && liStr !== "") {
+				liOptions += `<option value="${liStr}" selected>${liStr}</option>`;
+			}
+
 			tableBody += `
-            <tr data-itemcode="${data.ITEMCODE || data.itemcode || ''}" class="${rowChanged ? 'row-changed' : ''}">
-            	<td class = "noVal">${rowNumber}</td>
-				<td class = "cucodeVal">${data.ITEMTYPE || data.itemcodetype || ''}</td>
-				<td class = "cucodeVal">${data.CAR || data.car || ''}</td>
-				<td class = "itemcodeVal">${data.ITEMCODE || data.itemcode || ''}</td>
-				<td class = "itemnameLongVal">${data.ITEMNAME || data.itemname || ''}</td>
-				<td class = "specVal">${data.SPEC || data.spec || ''}</td>
-				<td class = "locationVal">${data.CUSTCODE || data.custcode || ''}</td>
-            </tr>
-        `;
+				<tr data-itemcode="${data.ITEMCODE || data.itemcode || ''}" class="${rowChanged ? 'row-changed' : ''}">
+					<td class = "noVal">${rowNumber}</td>
+					<td class = "cucodeVal">${data.ITEMTYPE || data.itemcodetype || ''}</td>
+					<td class = "cucodeVal">${data.CAR || data.car || ''}</td>
+					<td class = "itemcodeVal">${data.ITEMCODE || data.itemcode || ''}</td>
+					<td class = "itemnameLongVal">${data.ITEMNAME || data.itemname || ''}</td>
+					<td class = "specVal">${data.SPEC || data.spec || ''}</td>
+					<td class = "locationVal">${data.CUSTCODE || data.custcode || ''}</td>
+					<td class = "itemcodeVal">
+						<input type='text' class="text-input ${ccChanged ? 'changed' : ''}" data-field="close" 
+							value="${ccStr}" data-origin="${occ}">
+					</td>
+					<td class = "itemcodeVal">
+						<input type='text' class="text-input ${dcChanged ? 'changed' : ''}" data-field="delivery" 
+							value="${dcStr}" data-origin="${odc}">
+					</td>
+					<td class = "itemcodeVal">
+						<select class="text-input ${liChanged ? 'changed' : ''}" data-field="labelinfo" data-origin="${oli}">
+							${liOptions}
+						</select>
+					</td>
+					<td class = "itemcodeVal">
+						<input type='text' class="text-input ${l1Changed ? 'changed' : ''}" data-field="label1" 
+							value="${l1Str}" data-origin="${ol1}">
+					</td>
+					<td class = "itemcodeVal">
+						<input type='text' class="text-input ${l2Changed ? 'changed' : ''}" data-field="label2" 
+							value="${l2Str}" data-origin="${ol2}">
+					</td>
+					<td class = "itemcodeVal">
+						<input type='text' class="text-input ${l3Changed ? 'changed' : ''}" data-field="label3" 
+							value="${l3Str}" data-origin="${ol3}">
+					</td>
+					<td class = "itemcodeVal">
+						<input type='text' class="text-input ${l4Changed ? 'changed' : ''}" data-field="label4" 
+							value="${l4Str}" data-origin="${ol4}">
+					</td>
+					<td class = "itemcodeVal">
+						<input type='text' class="text-input ${l5Changed ? 'changed' : ''}" data-field="label5" 
+							value="${l5Str}" data-origin="${ol5}">
+					</td>
+				</tr>
+       		`;
 		}
 
 		$("#productInfoListTableBody").html(tableBody);
@@ -444,25 +547,26 @@ $(document).ready(function() {
 				performProductInfoSearch();
 			}
 		});
-		
-		// ✅ 수량 변경 감지 + allServerData 즉시 반영 (페이지 이동/정렬해도 유지)
-		$(document).off('input change', '#productInfoTable .qty-input').on('input change', '#productInfoTable .qty-input', function () {
+
+		// ✅ 값 변경 감지 + allServerData 즉시 반영 (페이지 이동/정렬해도 유지)
+		//    input(text) + select(labelinfo) 모두 .text-input 클래스 공유
+		$(document).off('input change', '#productInfoTable .text-input').on('input change', '#productInfoTable .text-input', function () {
 			const tr = $(this).closest('tr');
 
 			const itemcode = tr.data('itemcode');
 			const field = $(this).data('field');
 			if (!itemcode || !field) return;
 
-			// 화면 값(공백 허용)
-			const currentRaw = ($(this).val() ?? "");
-			const originRaw = String($(this).attr('data-origin') ?? "");
+			// 화면 값(공백 trim) - select도 val()로 동일하게 동작
+			const currentRaw = ($(this).val() ?? "").trim();
+			const originRaw = String($(this).attr('data-origin') ?? "").trim();
 
-			// 1) changed 토글 (문자열 비교)
-			const isChanged = (String(currentRaw) !== originRaw);
+			// 1) changed 토글
+			const isChanged = (currentRaw !== originRaw);
 			$(this).toggleClass('changed', isChanged);
-			tr.toggleClass('row-changed', tr.find('.qty-input.changed').length > 0);
+			tr.toggleClass('row-changed', tr.find('.text-input.changed').length > 0);
 
-			// 2) allServerData에 현재값 반영 (공백이면 "" 저장)
+			// 2) allServerData에 현재값 반영 (trim 값으로)
 			const target = allServerData.find(r => String(r.ITEMCODE ?? r.itemcode ?? '') === itemcode);
 			if (target) {
 				target[field] = currentRaw;
@@ -478,6 +582,9 @@ $(document).ready(function() {
 			itemname: $("#productInfo_searchVal_itemname").val().trim().toUpperCase(),
 			spec: $("#productInfo_searchVal_spec").val().trim().toUpperCase(),
 			custcode: $("#productInfo_searchVal_custcode").val().trim().toUpperCase(),
+			close: $("#productInfo_searchVal_close").val().trim().toUpperCase(),
+			delivery: $("#productInfo_searchVal_delivery").val().trim().toUpperCase(),
+			labelinfo: $("#productInfo_searchVal_labelinfo").val(),
 		};
 	}
 
@@ -491,9 +598,16 @@ $(document).ready(function() {
 	}
 
 	function resetProductInfoSearch() {
-		
+
+		$("#productInfo_searchVal_itemType").val('');
+		$("#productInfo_searchVal_car").val('');
 		$("#productInfo_searchVal_itemcode").val('');
 		$("#productInfo_searchVal_itemname").val('');
+		$("#productInfo_searchVal_spec").val('');
+		$("#productInfo_searchVal_custcode").val('');
+		$("#productInfo_searchVal_close").val('');
+		$("#productInfo_searchVal_delivery").val('');
+		$("#productInfo_searchVal_labelinfo").val('');   // select → 전체
 
 		// ✅ totals 즉시 초기화 (UI도 즉시 반영)
 		totalQty = 0;
@@ -532,4 +646,108 @@ $(document).ready(function() {
 			data: filteredData
 		};
 	}
+
+	$(document).off("click", "#productInfoSaveBtn").on("click", "#productInfoSaveBtn", function () {
+		const payload = [];
+
+		const loginId = getCookie('userLoginId');
+
+		$('#productInfoTable tbody tr.row-changed').each(function(){
+			const tr = $(this);
+			const itemcode = tr.data("itemcode").toString();
+
+			if(!itemcode) return;
+
+			const rowObj = { itemcode: itemcode, loginid: loginId };
+
+			// 변경된 input/select만 담기
+			tr.find(".text-input.changed").each(function(){
+				const field = $(this).data("field").toString();
+				let value = $(this).val();
+
+				if(!field) return;
+
+				// 앞뒤 공백 제거 (null 방어 포함). 문자 코드/라벨 값이므로 문자열 그대로 전달
+				value = (value == null) ? "" : value.trim();
+				rowObj[field] = value;
+			});
+
+			// itemcode, loginid 외에 변경된 필드가 있는지 체크
+			if(Object.keys(rowObj).length > 2){
+				payload.push(rowObj);
+			}
+		});
+
+		if (payload.length == 0){
+			alert(i18n.t('validation.no.change.items'));
+			return;
+		}
+
+		if (!confirm(i18n.tf('confirmation.items.save', payload.length))){
+			return;
+		}
+
+		showLoading("data");
+
+		$.ajax({
+			url: "/save_productInfo_changed",
+			type: "POST",
+			contentType: "application/json",
+			data: JSON.stringify({ records: payload }),
+			success: function (res) {
+
+				// data-field → origin 키 매핑
+				const ORIGIN_MAP = {
+					close:     '__ORIGIN_CLOSE_CUSTOMER',
+					delivery:  '__ORIGIN_DELIVERY_CUSTOMER',
+					labelinfo: '__ORIGIN_LABEL_INFO',
+					label1:    '__ORIGIN_LABEL_1',
+					label2:    '__ORIGIN_LABEL_2',
+					label3:    '__ORIGIN_LABEL_3',
+					label4:    '__ORIGIN_LABEL_4',
+					label5:    '__ORIGIN_LABEL_5'
+				};
+
+				// DOM: origin 갱신 + changed 표시 제거 (input/select 공통)
+				$("#productInfoTable tbody tr.row-changed").each(function () {
+					$(this).find(".text-input.changed").each(function () {
+						const v = $(this).val();
+						$(this).attr("data-origin", v);
+						$(this).data("origin", v);
+						$(this).removeClass("changed");
+					});
+
+					$(this).removeClass("row-changed");
+				});
+
+				// allServerData의 origin도 payload 기준으로 갱신
+				const savedMap = {};
+				payload.forEach(p => { savedMap[String(p.itemcode)] = p; });
+
+				allServerData.forEach(r => {
+					const code = String(r.ITEMCODE ?? r.itemcode ?? "");
+					const saved = savedMap[code];
+					if (!saved) return;
+
+					Object.keys(saved).forEach(field => {
+						if (field === 'itemcode' || field === 'loginid') return;
+						const originKey = ORIGIN_MAP[field];
+						if (originKey) {
+							r[originKey] = String(saved[field] ?? "");
+						}
+					});
+				});
+
+				hideLoading();
+
+				alert(i18n.t('success.user.update'));
+			},
+			error: function (xhr, status, err) {
+				console.error(err);
+				hideLoading();
+				alert("저장 실패");
+			}
+		});
+	});
+
 });

@@ -49,5 +49,14 @@
         <if test="searchParams.cucode != null and searchParams.cucode != ''">
             AND UPPER(TRIM(a.spec)) LIKE '%' || UPPER(TRIM(#{searchParams.cucode})) || '%'
         </if>
+        <if test="searchParams.close != null and searchParams.close != ''">
+            AND UPPER(f.close_customer) LIKE '%' || #{searchParams.close} || '%'
+        </if>
+        <if test="searchParams.delivery != null and searchParams.delivery != ''">
+            AND UPPER(f.delivery_customer) LIKE '%' || #{searchParams.delivery} || '%'
+        </if>
+        <if test="searchParams.labelinfo != null and searchParams.labelinfo != ''">
+            AND f.labelinfo = #{searchParams.labelinfo}
+        </if>
     </sql>
 </mapper>  

@@ -399,7 +399,15 @@
             a.itemcode,
             a.itemname,
             c.subname AS spec,
-            a.spec AS custcode
+            a.spec AS custcode,
+            f.close_customer,
+            f.delivery_customer,
+            f.labelinfo,
+            f.label1,
+            f.label2,
+            f.label3,
+            f.label4,
+            f.label5
         FROM t_mi_item a
         LEFT OUTER JOIN t_mi_typesub b
             ON a.carno = b.subcode
@@ -413,8 +421,63 @@
         LEFT OUTER JOIN t_mi_typesub e
             ON a.cmb_itemtype = e.subcode
             AND e.typecode = 'MI002'
+        LEFT OUTER JOIN T_WMS_ITEMINFO f
+            ON a.itemcode = f.itemcode
         WHERE a.deldate = ' ' and e.subname is not null
         <include refid="where_productInfo"/>
         ORDER BY a.itemcode
     </select>
+
+    <update id="save_productInfo_changed">
+        MERGE INTO T_WMS_ITEMINFO t
+        USING (SELECT #{itemcode} AS ITEMCODE FROM DUAL) s
+            ON (t.ITEMCODE = s.ITEMCODE)
+        WHEN MATCHED THEN UPDATE
+        <set>
+            <if test="close != null">
+                CLOSE_CUSTOMER = #{close},
+            </if>
+            <if test="delivery != null">
+                DELIVERY_CUSTOMER = #{delivery},
+            </if>
+            <if test="labelinfo != null">
+                LABELINFO = #{labelinfo},
+            </if>
+            <if test="label1 != null">
+                LABEL1 = #{label1},
+            </if>
+            <if test="label2 != null">
+                LABEL2 = #{label2},
+            </if>
+            <if test="label3 != null">
+                LABEL3 = #{label3},
+            </if>
+            <if test="label4 != null">
+                LABEL4 = #{label4},
+            </if>
+            <if test="label5 != null">
+                LABEL5 = #{label5},
+            </if>
+            LOGINID = #{loginid},
+            YMDHMS  = TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+        </set>
+        WHEN NOT MATCHED THEN INSERT (
+            ITEMCODE, CLOSE_CUSTOMER, DELIVERY_CUSTOMER, LABELINFO,
+            LABEL1, LABEL2, LABEL3, LABEL4, LABEL5,
+            USEYN, LOGINID, YMDHMS
+        ) VALUES (
+            #{itemcode,  jdbcType=VARCHAR},
+            #{close,     jdbcType=VARCHAR},
+            #{delivery,  jdbcType=VARCHAR},
+            #{labelinfo, jdbcType=VARCHAR},
+            #{label1,    jdbcType=VARCHAR},
+            #{label2,    jdbcType=VARCHAR},
+            #{label3,    jdbcType=VARCHAR},
+            #{label4,    jdbcType=VARCHAR},
+            #{label5,    jdbcType=VARCHAR},
+            'Y',
+            #{loginid,   jdbcType=VARCHAR},
+            TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+        )
+    </update>
 </mapper>  

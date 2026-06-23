@@ -3,14 +3,7 @@ package com.example.demo.service;
 import java.util.List;
 import java.util.Map;
 
-import com.example.demo.vo.BOMPageVO;
-import com.example.demo.vo.CustomerVO;
-import com.example.demo.vo.PalletVO;
-import com.example.demo.vo.ProductPageVO;
-import com.example.demo.vo.ProductVO;
-import com.example.demo.vo.StockVO;
 import com.example.demo.vo.UserInfoVO;
-import com.example.demo.vo.WarehouseVO;
 
 public interface MasterDataService {
 	int userDelete(List<Map<String, Object>> sList);
@@ -48,4 +41,5 @@ public interface MasterDataService {
 
 	Map<String, Object> read_productInfo(Map<String, Object> params);
 
+    int save_productInfo_changed(List<Map<String, Object>> records);
 }

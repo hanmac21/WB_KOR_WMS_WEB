@@ -62,4 +62,6 @@ public interface WbBasicMapper {
     int updateUserPassword(Map<String, Object> upd);
 
     List<ProductVO> read_productInfo(Map<String, Object> queryParams);
+
+    int save_productInfo_changed(Map<String, Object> record);
 }

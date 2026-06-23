@@ -5,14 +5,12 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -188,6 +186,24 @@ public class MasterDataController {
 		return mService.read_productInfo(params);
 	}
 
+	@PostMapping("/save_productInfo_changed")
+	@ResponseBody
+	public Map<String, Object> save_productInfo_changed(@RequestBody Map<String, Object> body) {
+		@SuppressWarnings("unchecked")
+		List<Map<String, Object>> records =
+				(List<Map<String, Object>>) body.getOrDefault("records", Collections.emptyList());
+
+		Map<String, Object> result = new HashMap<>();
+		try {
+			int updated = mService.save_productInfo_changed(records);
+			result.put("success", true);
+			result.put("updated", updated);
+		} catch (Exception e) {
+			result.put("success", false);
+			result.put("message", e.getMessage());
+		}
+		return result;
+	}
 }
 
 

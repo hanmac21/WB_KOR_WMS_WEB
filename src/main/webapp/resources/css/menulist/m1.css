@@ -2553,7 +2553,7 @@ input:checked + .modal_userUpdateForm_toggle_slider::before {
 
 
 
-#productInfoListTableBody .qty-input {
+#productInfoListTableBody .text-input {
     width: 100%;
     padding: 0px 12px;
     border: 1px solid #ced4da;
@@ -2562,25 +2562,25 @@ input:checked + .modal_userUpdateForm_toggle_slider::before {
     transition: border-color 0.2s;
 }
 
-#productInfoListTableBody .qty-input::-webkit-outer-spin-button,
-#productInfoListTableBody .qty-input::-webkit-inner-spin-button {
+#productInfoListTableBody .text-input::-webkit-outer-spin-button,
+#productInfoListTableBody .text-input::-webkit-inner-spin-button {
 	-webkit-appearance: none;
   	margin: 0;
 }
 
-#productInfoListTableBody .qty-input:focus {
+#productInfoListTableBody .text-input:focus {
     outline: none;
     border-color: #2196f3;
     box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
 } 
 
-#productInfoListTableBody .qty-input.changed {
+#productInfoListTableBody .text-input.changed {
     border-color: #ff9800;
     box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.18);
     background: #fff7e6;
 }
 
-#productInfoListTableBody .qty-input.changed:focus {
+#productInfoListTableBody .text-input.changed:focus {
     border-color: #ff9800;
     box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.18);
 }

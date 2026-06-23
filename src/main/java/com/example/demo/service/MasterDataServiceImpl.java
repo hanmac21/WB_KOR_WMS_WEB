@@ -389,4 +389,20 @@ public class MasterDataServiceImpl implements MasterDataService {
 
 		return result;
 	}
+
+	@Transactional
+	public int save_productInfo_changed(List<Map<String, Object>> records) {
+		if (records == null || records.isEmpty()) return 0;
+
+		int count = 0;
+		for (Map<String, Object> record : records) {
+			Object itemcode = record.get("itemcode");
+			if (itemcode == null || String.valueOf(itemcode).isEmpty()) continue;
+
+			System.out.println(record);
+			count += basicMapper.save_productInfo_changed(record);
+		}
+		return count;
+	}
+
 }
