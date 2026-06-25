@@ -18,7 +18,6 @@ $(document).ready(function() {
 	window.filteredLoadDetailData = [];
 	window.loadDetailColumns = [
 		{ key: 'SDATE', header: 'Date' },
-		{ key: 'STORAGE', header: 'Storage' },
 		{ key: 'CUSTNAME', header: 'Supplier' },
 		{ key: 'CAR', header: 'Car' },
 		{ key: 'ITEMCODE', header: 'Itemcode' },
@@ -26,12 +25,7 @@ $(document).ready(function() {
 		{ key: 'ITEMNAME', header: 'Itemname' },
 		{ key: 'QTY', header: 'Qty' },
 		{ key: 'LOGINID', header: 'User' },
-		{ key: 'DOCK', header: 'Dock' },
-		{ key: 'INVOICENO', header: 'Invoice No' },
-		{ key: 'CONTAINER', header: 'Container No' },
 		{ key: 'HHMM', header: 'Time' },
-	    { key: 'SOURCE3', header: 'Box No' },
-		{ key: 'TYPE', header: 'Type' },
 		{ key: 'BARCODE', header: 'Barcode' }
 	];
 
@@ -39,9 +33,8 @@ $(document).ready(function() {
 	window.call_mPurchase_load_detail = function(menuId) {
 		showLoading("data");
 		const { fromDate, toDate } = getDefaultDateRange();
-		const storage = getCookie('selectedStorage') === 'ILLINOIS' ? 'OUTSIDE' : 'all';
 
-		performLoadDetailDBSearch({ fromDate, toDate, storage });
+		performLoadDetailDBSearch({ fromDate, toDate });
 	};
 
 	// DB에서 전체 데이터 조회 (검색 조건 변경 시에만 호출)
@@ -156,21 +149,6 @@ $(document).ready(function() {
 
 	// 사용자 뷰 렌더링 함수
 	function renderLoadDetailView() {
-		let loginid = $(".loginId").text().trim().toLowerCase();
-
-		let btnHtml = "";
-		let intfBtnHtml = "";
-		if (loginid == "wms") {
-			btnHtml = `
-	            <input type="button" value="관리자용 삭제" class="btn btn-danger btnAdminLoadDetailDelete"/>
-	        `;
-			intfBtnHtml = `				
-				<div class="btnInterfaceCommon btnLoadDetailItemsArea" style="margin-left:24px;">
-					<input type="button" value="${i18n.t('btn.Intf.delete')}" class="btn btn-warning btnIntfLoadDetailDelete"/>
-				</div>	
-			`;
-		}
-
 		let content_output = `
 			<div class="divBlockControl" id="view_mPurchase_load_detail">
 				<div class="content-body">
@@ -178,26 +156,12 @@ $(document).ready(function() {
 					<div class="search-area">
 						<div class="search-row">
 							<div class="search-label">
-								<div class="search_loadCondition">${i18n.t('search.input.status')}<!-- 불출상태 --></div>
-								<select id="loadDetail_searchVal_Condition" >
-									<option value="">${i18n.t('search.all')}<!-- 전체 --></option>
-									<option value="N">${i18n.t('search.input.waiting')}<!-- 불출 대기중 --></option>
-									<option value="Y">${i18n.t('search.input.completed')}<!-- 불출 완료 --></option>
-								</select>
-							</div>
-							<div class="search-label">
 								<div class="searchVal_fromDate">${i18n.t('search.date')}<!-- DATE --></div>
 								<input type="date" id="loadDetail_searchVal_fromDate" />
 							</div>
 							<div class="search-label">
 								<div class="searchVal_toDate">　</div>
 								<input type="date" id="loadDetail_searchVal_toDate" />
-							</div>
-							<div class="search-label">
-								<div class="searchVal_storage">${i18n.t('search.storage')}<!-- STORAGE --></div>
-								<select id="loadDetail_searchVal_storage" >
-									<!-- 동적으로 추가 -->
-								</select>
 							</div>
 							<div class="search-label">
 								<div class="searchVal_custname">${i18n.t('search.suppliername')}<!-- custname --></div>
@@ -218,11 +182,7 @@ $(document).ready(function() {
 							<div class="search-label">
 								<div class="searchVal_itemname">${i18n.t('search.itemName')}<!-- ITEMNAME --></div>
 								<input type="text" id="loadDetail_searchVal_itemname" />
-							</div>						
-							<div class="search-label">
-								<div class="searchVal_invoiceNo">${i18n.t('search.invoiceNo')}<!-- INVOICENO --></div>
-								<input type="text" id="loadDetail_searchVal_invoiceNo" />
-							</div>
+							</div>	
 						</div>
 						<div class="search_button_area">
 							<button class="btn btn-primary btnLoadDetailSearch">${i18n.t('btn.search')}</button>
@@ -246,22 +206,12 @@ $(document).ready(function() {
 								${i18n.t('table.page')} <strong id="loadDetailCurrentPageInfo">${currentLoadDetailPage}</strong>/<strong id="loadDetailTotalPageInfo">${totalLoadDetailPages}</strong> |  
 								<span class="tqtyTitle">${i18n.t('table.info.qty')} : </span><span class="loadDetailTotalQty" style="color:#007bff"></span> 
 							</span>
-							<div class="btnInterfaceCommon btnLoadDetailItemsArea" style="margin-left:24px;">
-								<select id="loadDetailCustomer"></select>
-								<button class="btn btn-success" id="loadDetailChangeBtn">Change</button>
-							</div>
-							<div class="btnInterfaceCommon btnLoadDetailItemsArea" style="margin-left:24px;">
-								<input class="btn" type="date" id="loadDetailChangeDate" />
-								<button class="btn btn-success" id="loadDetailChangeDateBtn">Date Change</button>
-							</div>
 							<div class="action-buttons-right mPurchase_load_detail">
 								<div id="defaultActions" class="action-group">
-									${btnHtml}
 									<input type="button" value="${i18n.t('btn.delete')}" class="btn btn-danger btnLoadDetailDelete"/>
 									<button class="btn btn-success" id="loadDetailExcelBtn" onclick="downloadAllLoadDetailData()">Excel</button>
 								</div>
 							</div>
-							${intfBtnHtml}
 						</div>
 						<table class="data-table mPurchase_load_detail" id="loadDetailTable">
 							<thead>
@@ -270,9 +220,7 @@ $(document).ready(function() {
 										<input type="checkbox" class="loadDetail_chkAll">
 									</th>
 									<th class = "noVal">${i18n.t('table.no')}<!-- No --></th>
-									<th class = "statusVal_long" data-sort="INTF_YN">${i18n.t('table.status')}</th>
 									<th class = "dateVal" data-sort="SDATE">${i18n.t('search.date')}<!-- DATE --></th>
-									<th class = "storageVal" data-sort="STORAGE">${i18n.t('search.storage')}<!-- STORAGE --></th>
 									<th class = "storageVal" data-sort="CUSTNAME">${i18n.t('search.suppliername')}<!-- custname --></th>
 									<th class = "carVal" data-sort="CAR">${i18n.t('search.car')}<!-- CAR --></th>
 									<th class = "itemcodeVal" data-sort="ITEMCODE">${i18n.t('search.itemCode')}<!-- ITEMCODE --></th>
@@ -280,12 +228,7 @@ $(document).ready(function() {
 									<th class = "itemnameMedVal" data-sort="ITEMNAME">${i18n.t('search.itemName')}<!-- ITEMNAME --></th>
 									<th class = "qtyVal" data-sort="QTY" data-type="number">${i18n.t('search.qty')}<!-- QTY --></th>
 									<th class = "loginidVal" data-sort="LOGINID">${i18n.t('search.user')}<!-- USER --></th>
-									<th class = "loginidVal" data-sort="DOCK">${i18n.t('search.dock')}<!-- DOCK --></th>
-									<th class = "wccodeVal" data-sort="INVOICENO">${i18n.t('search.invoiceNo')}<!-- INVOICENO --></th>
-									<th class = "loginidVal" data-sort="CONTAINER">${i18n.t('search.containerNo')}<!-- CONTAINER --></th>
 									<th class = "hhmmVal" data-sort="HHMM">${i18n.t('table.time')}<!-- TIME --></th>
-									<th class = "typeVal" data-sort="SEQ">${i18n.t('table.seq')}<!-- TYPE --></th>
-									<th class = "typeVal" data-sort="TYPE">${i18n.t('search.type')}<!-- TYPE --></th>
 									<th class = "barcodeVal transysBarcodeVal" data-sort="BARCODE">${i18n.t('search.barcode')}<!-- LOT --></th>
 								</tr>
 							</thead>
@@ -317,10 +260,6 @@ $(document).ready(function() {
 		$("#loadDetail_searchVal_fromDate").val(fromDate);
 		$("#loadDetail_itemsPerPage").val(loadDetailItemsPerPage);
 
-		// 거래처 데이터 가져오기
-		selectCustomer();
-		// 공장 및 창고 선택
-		renderFactoryStorage();
 		// 테이블 데이터 렌더링
 		renderLoadDetailTableData();
 		// 페이지네이션 렌더링
@@ -329,24 +268,6 @@ $(document).ready(function() {
 		bindLoadDetailEvents();
 		// 초기 렌더링 후 카운트 업데이트
 		updateLoadDetailTotalCount();
-	}
-
-	function selectCustomer() {
-		const customers = [
-			'0005|TRANSYS_AL',
-			'0006|ADIENT',
-			'0002|LEAR',
-			'0004|TRANSYS_IL',
-			'A022|TRANSYS_GA'
-		];
-		const $select = $("#loadDetailCustomer");
-		$select.empty();
-		customers.forEach(function(value) {
-			$select.append($("<option>", {
-				value: value,
-				text: value.split("|").slice(1)
-			}));
-		});
 	}
 
 	function fmtLocalDate(d) {
@@ -362,30 +283,6 @@ $(document).ready(function() {
 	    const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
 		const fromDate = fmtLocalDate(firstDayOfMonth);
 		return { fromDate, toDate };
-	}
-
-	// 공장 및 창고 선택 함수
-	function renderFactoryStorage() {
-		const storage = $('#loadDetail_searchVal_storage');
-		const savedStorage = getCookie('selectedStorage');
-
-		storage.empty();
-
-		let storageList = ['all', 'INBOUND', 'PRODUCT', 'OUTSIDE'];
-
-		// ILLINOIS 사용자는 OUTSIDE만 선택 가능
-		if (savedStorage === 'ILLINOIS') {
-			storageList = ['OUTSIDE'];
-		}
-
-		storageList.forEach(item => {
-			const text = item === 'all' ? i18n.t('search.all') : item;
-			storage.append(`<option value="${item}">${text}</option>`);
-		});
-
-		storage.val(storageList[0]);
-
-		window.autoSetStorageFields();
 	}
 
 	function getCookie(cookieName) {
@@ -413,19 +310,13 @@ $(document).ready(function() {
 			let rowNumber = (currentLoadDetailPage - 1) * loadDetailItemsPerPage + i + 1;
 			let data = globalLoadDetailData[i];
 
-			let statusText = data.INTF_YN === 'Y' ? i18n.t('search.input.completed') : i18n.t('search.input.waiting');
-			let statusClass = data.INTF_YN === 'Y' ? 'status-completed' : 'status-waiting';
-			
 			tableBody += `
 				<tr>
-				    <td class = "checkboxVal"><input type="checkbox" class="loadDetail_chk ${statusClass}" 
-		    			data-unique="${data.SDATE}|${data.ITEMCODE}|${data.INTF_YN}|${data.QTY}|${data.FACTORY}|${data.STORAGE}|${data.BARCODE}"
+				    <td class = "checkboxVal"><input type="checkbox" class="loadDetail_chk" 
 		    			data-delete="${data.IID}|${data.SDATE}|${data.FACTORY}|${data.STORAGE}|${data.BARCODE}|${data.MESKEY || ''}">
 		    		</td>
 				    <td class = "noVal">${rowNumber}</td>
-				    <td class = "statusVal_long"><span class="${statusClass}">${statusText}</span></td>
 		            <td class = "dateVal">${data.SDATE || data.sdate || ''}</td>
-					<td class = "storageVal">${data.STORAGE || data.storage || ''}</td>
 					<td class = "storageVal">${data.CUSTNAME || data.custname || ''}</td>
 					<td class = "carVal">${data.CAR || data.car || ''}</td>
 					<td class = "itemcodeVal">${data.ITEMCODE || data.itemcode || ''}</td>
@@ -433,12 +324,7 @@ $(document).ready(function() {
 					<td class = "itemnameMedVal">${data.ITEMNAME || data.itemname || ''}</td>
 					<td class = "qtyVal">${Number(data.QTY || data.qty || 0).toLocaleString()}</td>
 					<td class = "loginidVal">${data.LOGINID || data.loginid || ''}</td>
-					<td class = "loginidVal">${data.DOCK || data.dock || ''}</td>
-					<td class = "wccodeVal">${data.INVOICENO || data.invoiceno || ''}</td>
-					<td class = "loginidVal">${data.CONTAINER || data.container || ''}</td>
 					<td class = "hhmmVal">${data.HHMM || data.hhmm || ''}</td>
-					<td class = "typeVal">${data.SEQ || data.seq || ''}</td>
-					<td class = "typeVal">${data.TYPE || data.type || ''}</td>
 					<td class = "barcodeVal transysBarcodeVal">${data.BARCODE || data.barcode || ''}</td>
 		        </tr>
 			`;
@@ -546,16 +432,13 @@ $(document).ready(function() {
 
 	function getCurrentSearchCriteria() {
 		return {
-			intf_yn: $("#loadDetail_searchVal_Condition").val(),
 			fromDate: $("#loadDetail_searchVal_fromDate").val(),
 			toDate: $("#loadDetail_searchVal_toDate").val(),
-			storage: $("#loadDetail_searchVal_storage").val(),
 			custname: $("#loadDetail_searchVal_custname").val().trim().toUpperCase(),
 			car: $("#loadDetail_searchVal_car").val().trim().toUpperCase(),
 			itemcode: $("#loadDetail_searchVal_itemcode").val().trim().toUpperCase(),
 			oitemcode: $("#loadDetail_searchVal_oitemcode").val().trim().toUpperCase(),
 			itemname: $("#loadDetail_searchVal_itemname").val().trim().toUpperCase(),
-			invoiceNo: $("#loadDetail_searchVal_invoiceNo").val().trim().toUpperCase()
 		};
 	}
 
@@ -569,7 +452,6 @@ $(document).ready(function() {
 
 	function resetLoadDetailSearch() {
 		const { fromDate, toDate } = getDefaultDateRange();
-		$("#loadDetail_searchVal_Condition").val('');
 		$("#loadDetail_searchVal_fromDate").val(fromDate);
 		$("#loadDetail_searchVal_toDate").val(toDate);
 		$("#loadDetail_searchVal_custname").val('');
@@ -577,13 +459,9 @@ $(document).ready(function() {
 		$("#loadDetail_searchVal_itemcode").val('');
 		$("#loadDetail_searchVal_oitemcode").val('');
 		$("#loadDetail_searchVal_itemname").val('');
-		$("#loadDetail_searchVal_invoiceNo").val('');
-
-		const storage = getCookie('selectedStorage') === 'ILLINOIS' ? 'OUTSIDE' : 'all';
-		renderFactoryStorage();
 
 		currentLoadDetailPage = 1;
-		performLoadDetailDBSearch({ storage, toDate, fromDate });
+		performLoadDetailDBSearch({  toDate, fromDate });
 
 		console.log('검색 조건이 초기화되었습니다.');
 	}
@@ -614,7 +492,6 @@ $(document).ready(function() {
 			data: filteredData_loadDetail
 		};
 	}
-
 
 	//삭제
 	$(document).on("click", ".btnLoadDetailDelete", function() {
@@ -691,232 +568,6 @@ $(document).ready(function() {
 
 		});
 	});
-
-
-	// 관리자용 삭제
-	$(document).on("click", ".btnAdminLoadDetailDelete", function() {
-		const iidList = [];
-		$(".loadDetail_chk:checked").each(function() {
-			let iid = $(this).data('delete');
-			iidList.push(iid);
-		});
-
-		// 체크된 요소가 없으면 경고창 표시 후 리턴
-		if (iidList.length === 0) {
-			alert(i18n.t('validation.no.select.items'));
-			return;
-		}
-
-		if (!confirm(i18n.t('confirmation.items.delete'))) {
-			return;
-		}
-
-		const reason = prompt("사유를 입력해 주세요");
-
-		if (reason === null) return;
-
-		if (reason.trim() === "") {
-			alert("내용이 비어 있습니다.");
-			return;
-		}
-
-		showLoading("data");
-
-		const loginid = sessionStorage.getItem('userId') || 'Name Not Found';//getCookie("userLoginId");
-
-		console.log(iidList)
-		$.ajax({
-			url: "/deleteLoad",
-			type: "POST",
-			data: JSON.stringify({
-				iidList: iidList,
-				loginid: loginid,
-				reason: reason,
-				admin: true
-			}),
-			contentType: "application/json",
-			success: function(data) {
-				hideLoading();
-				if (data.success) {
-					alert("삭제 완료");
-
-					let searchVal = getCurrentSearchCriteria();
-					performLoadDetailDBSearch(searchVal);
-
-					// 전체 선택 해제
-					$('.loadDetail_chkAll').prop('checked', false);
-				} else {
-					alert("삭제에 실패했습니다.");
-				}
-			},
-			error: function(xhr, status, error) {
-				console.log("🔥 LOCAL ajax error:", status, error);
-				console.log("Response:", xhr.responseText);
-
-				const message = "An error occurred while processing the request.\n\n"
-					+ "Details:\n"
-					+ (xhr.responseText || error || status || "Unknown error");
-
-				// 🔹 기본 alert 대신 커스텀 모달 사용
-				window.showCopyableAlert(message);
-
-				hideLoading();
-			}
-		});
-	});
-
-	$(document).on("click", ".btnIntfLoadDetailDelete", function() {
-		if ($(".loadDetail_chk.status-waiting:checked").length > 0) {
-			alert(i18n.t('validation.unconfirm.items'));
-			return;
-		}
-
-		const iidList = [];
-		$(".loadDetail_chk:checked").each(function() {
-			let iid = $(this).data('delete');
-			if (iid) iidList.push(iid);
-		});
-
-		// 체크된 요소가 없으면 경고창 표시 후 리턴
-		if (iidList.length === 0) {
-			alert(i18n.t('validation.no.select.items'));
-			return;
-		}
-
-		if (!confirm(i18n.t('confirmation.interface.progress'))) {
-			return;
-		}
-
-		showLoading("data");
-
-		let loginid = $(".loginId").text().trim();
-		console.log(iidList)
-
-		$.ajax({
-			url: "/load_confirm_summary_cancel",
-			type: "POST",
-			data: JSON.stringify({ list: iidList, loginid: loginid }),
-			contentType: "application/json",
-			success: function(data) {
-				let msg = [];
-
-				if (data.magamCnt > 0) msg.push(`closed: ${data.magamCnt} case(s)`);
-				if (data.lockCnt > 0) msg.push(`lock: ${data.lockCnt} case(s)`);
-				if (data.laterCnt > 0) msg.push(`Post-processing done: ${data.laterCnt} case(s)`);
-				if (data.noExistCnt > 0) msg.push(`No deletable records: ${data.noExistCnt} case(s)`);
-
-				if (msg.length > 0) {
-					alert("The following items were not processed:\n" + msg.join("\n"));
-				} else {
-
-				}
-				let searchVal = getCurrentSearchCriteria();
-				performLoadDetailDBSearch(searchVal);
-
-				// 전체 선택 해제
-				$('.loadDetail_chkAll').prop('checked', false);
-			},
-			error: function(xhr, status, error) {
-				// ❌ alert(res.message) <- res 없음 (버그)
-				window.handleAjaxError(xhr, status, error);
-			}
-
-		});
-
-	});
-
-
-// 거래처 변경
-	$(document).on("click", "#loadDetailChangeBtn", function() {
-		// if ($(".loadDetail_chk.status-completed:checked").length > 0) {
-		// 	alert(i18n.t('validation.confirm.items'));
-		// 	return;
-		// }
-
-		const iidList = [];
-		$(".loadDetail_chk:checked").each(function() {
-			let deleteVal = $(this).data('delete');
-			if (deleteVal) iidList.push(deleteVal);
-		});
-
-		if (iidList.length === 0) {
-			alert(i18n.t('validation.no.select.items'));
-			return;
-		}
-
-		const data = {
-			iidList: iidList,
-			supplier: $("#loadDetailCustomer").val()
-		};
-
-		if (confirm("Do you want to register the customer?")) {
-			showLoading("data");
-			$.ajax({
-				url: "/loadCustomerUpdate",
-				type: "POST",
-				data: JSON.stringify(data),
-				contentType: "application/json",
-				success: function(data) {
-					console.log("-- load customer update --");
-					alert("Customer has been changed.");
-					let searchVal = getCurrentSearchCriteria();
-					performLoadDetailDBSearch(searchVal);
-					$('.loadDetail_chkAll').prop('checked', false);
-				},
-				error: function(xhr, status, error) {
-					window.handleAjaxError(xhr, status, error);
-				}
-			});
-		}
-	});
-
-
-// 날짜 변경
-	$(document).on("click", "#loadDetailChangeDateBtn", function() {
-		if ($(".loadDetail_chk.status-completed:checked").length > 0) {
-			alert(i18n.t('validation.confirm.items'));
-			return;
-		}
-
-		const iidList = [];
-		$(".loadDetail_chk:checked").each(function() {
-			let deleteVal = $(this).data('delete');
-			if (deleteVal) iidList.push(deleteVal.split('|')[0]);
-		});
-
-		if (iidList.length === 0) {
-			alert(i18n.t('validation.no.select.items'));
-			return;
-		}
-
-		const dateVal = $("#loadDetailChangeDate").val();
-		if (!dateVal) {
-			alert("Select a date.");
-			return;
-		}
-
-		if (!confirm('Do you want to change the date?')) {
-			return;
-		}
-
-		showLoading("data");
-		$.ajax({
-			url: "/loadDateUpdate",
-			type: "POST",
-			data: JSON.stringify({ iidList: iidList, newdate: dateVal }),
-			contentType: "application/json",
-			success: function(data) {
-				console.log("-- load date update --");
-				let searchVal = getCurrentSearchCriteria();
-				performLoadDetailDBSearch(searchVal);
-				$('.loadDetail_chkAll').prop('checked', false);
-				hideLoading();
-			},
-			error: function(xhr, status, error) {
-				window.handleAjaxError(xhr, status, error);
-			}
-		});
-	});
 });
 
 // 전체 데이터 엑셀 다운로드
@@ -925,10 +576,7 @@ window.downloadAllLoadDetailData = function() {
 
 	const processedData = filteredData_loadDetail.map(item => {
 		return {
-			...item,
-			INTF_YN: item.INTF_YN === 'Y'
-				? i18n.t('search.input.completed')
-				: i18n.t('search.input.waiting')
+			...item
 		};
 	});
 

@@ -232,7 +232,7 @@
 	<div class="header-wrap">
 		<div class="header-content">
 			<div class="headerFrontIcon">
-				<img class="wooboTopLogo" src="../resources/images/wooboTechLogo_white_usa.png">
+				<img class="wooboTopLogo" src="../resources/images/wooboTechLogo_white.png">
 			</div>
 			<div class="loginUserArea">
 				<div class = "factoryArea">

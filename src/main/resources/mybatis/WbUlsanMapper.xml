@@ -543,7 +543,7 @@
 			a.loginid,
 			a.factory,
 			a.storage,
-			c.subname_ch  AS car,
+			c.subname AS car,
 			a.itemcode,
 			b.itemname,
 			a.qty,

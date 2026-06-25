@@ -184,15 +184,6 @@
     </sql>
 
     <sql id="searchCondition_load">
-        <choose>
-            <when test="searchParams.storage != null and searchParams.storage != '' and searchParams.storage != 'all'">
-                AND UPPER(a.storage) = UPPER(#{searchParams.storage})
-            </when>
-            <when test="searchParams.storage == null or searchParams.storage == ''">
-                AND UPPER(a.storage) = 'MATERIAL'
-            </when>
-        </choose>
-
         <if test="searchParams.fromDate != null and searchParams.fromDate != '' and searchParams.toDate != null and searchParams.toDate != ''">
             AND a.sdate BETWEEN #{searchParams.fromDate} AND #{searchParams.toDate}
         </if>

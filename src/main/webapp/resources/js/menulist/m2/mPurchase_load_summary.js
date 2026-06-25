@@ -17,27 +17,21 @@ let currentSortOrder = 'asc';
 $(document).ready(function() {
 	window.filteredLoadSummaryData = [];
 	window.loadSummaryColumns = [
-		{ key: 'INTF_YN', header: 'Status' },
 		{ key: 'SDATE', header: 'Date' },
-		{ key: 'STORAGE', header: 'Storage' },
 		{ key: 'CUSTNAME', header: 'Supplier' },
 		{ key: 'CAR', header: 'Car' },
 		{ key: 'ITEMCODE', header: 'Item Code' },
 		{ key: 'SPEC', header: 'Supplier Code' },
 		{ key: 'ITEMNAME', header: 'Item Name' },
-		{ key: 'QTY', header: 'Qty' },
-		{ key: 'DOCK', header: 'Dock' },
-		{ key: 'INVOICENO', header: 'Invoice No' },
-		{ key: 'CONTAINER', header: 'Container No' }
+		{ key: 'QTY', header: 'Qty' }
 	];
 
 	// 메인 호출 함수 - 메뉴 클릭 시 호출
 	window.call_mPurchase_load_summary = function(menuId) {
 		showLoading("data");
 		const { fromDate, toDate } = getDefaultDateRange();
-		const storage = getCookie('selectedStorage') === 'ILLINOIS' ? 'OUTSIDE' : 'all';
 
-		performLoadSummaryDBSearch({ fromDate, toDate, storage });
+		performLoadSummaryDBSearch({ fromDate, toDate });
 	};
 
 	// DB에서 전체 데이터 조회 (검색 조건 변경 시에만 호출)
@@ -158,16 +152,6 @@ $(document).ready(function() {
 					<!-- 검색 영역 -->
 					<div class="search-area">
 						<div class="search-row">
-							<!-- 상태검색 - detail로 이동
-							<div class="search-label">
-								<div class="search_loadCondition">${i18n.t('search.input.status')}</div>
-								<select id="loadSummary_searchVal_Condition" >
-									<option value="">${i18n.t('search.all')}</option>
-									<option value="N">${i18n.t('search.input.waiting')}</option>
-									<option value="Y">${i18n.t('search.input.completed')}</option>
-								</select>
-							</div>
-							-->
 							<div class="search-label">
 								<div class="searchVal_fromDate">${i18n.t('search.date')}<!-- DATE --></div>
 								<input type="date" id="loadSummary_searchVal_fromDate" /> 
@@ -175,12 +159,6 @@ $(document).ready(function() {
 							<div class="search-label">
 								<div class="searchVal_toDate">　</div>
 								<input type="date" id="loadSummary_searchVal_toDate" />
-							</div>
-							<div class="search-label">
-								<div class="searchVal_storage">${i18n.t('search.storage')}<!-- STORAGE --></div>
-								<select id="loadSummary_searchVal_storage" >
-									<!-- 동적으로 추가 -->
-								</select>
 							</div>
 							<div class="search-label">
 								<div class="searchVal_custname">${i18n.t('search.suppliername')}<!-- custname --></div>
@@ -201,10 +179,6 @@ $(document).ready(function() {
 							<div class="search-label">
 								<div class="searchVal_itemname">${i18n.t('search.itemName')}<!-- ITEMNAME --></div>
 								<input type="text" id="loadSummary_searchVal_itemname" />
-							</div>						
-							<div class="search-label">
-								<div class="searchVal_invoiceNo">${i18n.t('search.invoiceNo')}<!-- INVOICENO --></div>
-								<input type="text" id="loadSummary_searchVal_invoiceNo" />
 							</div>
 						</div>
 						<div class="search_button_area">
@@ -229,45 +203,23 @@ $(document).ready(function() {
 								${i18n.t('table.page')} <strong id="loadSummaryCurrentPageInfo">${currentLoadSummaryPage}</strong>/<strong id="loadSummaryTotalPageInfo">${totalLoadSummaryPages}</strong> |  
 								<span class="tqtyTitle">${i18n.t('table.info.qty')} : </span><span class="loadSummaryTotalQty" style="color:#007bff"></span> 
 							</span>
-							<!-- 거래처변경/날짜변경 - detail로 이동
-							<div class="btnInterfaceCommon btnLoadSummaryItemsArea" style="margin-left:24px;">
-								<select id="loadSummaryCustomer"></select>
-								<button class="btn btn-success" id="loadSummaryChangeBtn">Change</button>
-							</div>
-							<div class="btnInterfaceCommon btnLoadSummaryItemsArea" style="margin-left:24px;">
-								<input class="btn" type="date" id="loadSummaryChangeDate" />
-								<button class="btn btn-success" id="loadSummaryChangeDateBtn">Date Change</button>
-							</div>
-							-->
 							<div class="action-buttons-right mPurchase_load_summary">
 								<div id="defaultActions" class="action-group">
 									<button class="btn btn-success" id="loadSummaryExcelBtn" onclick="downloadAllLoadSummaryData()">Excel</button>
 								</div>
-							</div>
-							<div class="btnInterfaceCommon btnLoadSummaryItemsArea" style="margin-left:24px;">
-								<!--<input type="button" value="${i18n.t('btn.Intf')}" class="btn btn-success btnIntfLoadSummary"/>-->
-								<!-- <input type="button" value="${i18n.t('btn.Intf.delete')}" class="btn btn-warning btnIntfLoadSummaryDelete"/> -->
-							</div>							
+							</div>					
 						</div>
 						<table class="data-table mPurchase_load_summary" id="loadSummaryTable">
 							<thead>
 								<tr>
-									<th class = "checkboxVal">
-										<input type="checkbox" class="loadSummary_chkAll">
-									</th>
 									<th class = "noVal">${i18n.t('table.no')}<!-- No --></th>
-									<th class = "statusVal_long" data-sort="INTF_YN">${i18n.t('table.status')}</th>
 									<th class = "dateVal" data-sort="SDATE">${i18n.t('search.date')}<!-- DATE --></th>
-									<th class = "storageVal" data-sort="STORAGE">${i18n.t('search.storage')}<!-- STORAGE --></th>
 									<th class = "storageVal" data-sort="CUSTNAME">${i18n.t('search.suppliername')}<!-- custname --></th>
 									<th class = "carVal" data-sort="CAR">${i18n.t('search.car')}<!-- CAR --></th>
 									<th class = "itemcodeVal" data-sort="ITEMCODE">${i18n.t('search.itemCode')}<!-- ITEMCODE --></th>
 									<th class = "cnameVal" data-sort="SPEC">${i18n.t('search.customercode')}<!-- CCODE --></th>
 									<th class = "itemnameMedVal" data-sort="ITEMNAME">${i18n.t('search.itemName')}<!-- ITEMNAME --></th>
 									<th class = "qtyVal" data-sort="QTY" data-type="number">${i18n.t('search.qty')}<!-- QTY --></th>
-									<th class = "loginidVal" data-sort="DOCK">${i18n.t('search.dock')}<!-- DOCK --></th>
-									<th class = "wccodeVal" data-sort="INVOICENO">${i18n.t('search.invoiceNo')}<!-- INVOICENO --></th>
-									<th class = "loginidVal" data-sort="CONTAINER">${i18n.t('search.containerNo')}<!-- CONTAINER --></th>
 								</tr>
 							</thead>
 							<tbody id="loadSummarySummaryTableBody">
@@ -298,10 +250,6 @@ $(document).ready(function() {
 		$("#loadSummary_searchVal_fromDate").val(fromDate);
 		$("#loadSummary_itemsPerPage").val(loadSummaryItemsPerPage);
 
-		// 거래처 데이터 가져오기 - detail로 이동
-		// selectCustomer();
-		// 공장 및 창고 선택
-		renderFactoryStorage();
 		// 테이블 데이터 렌더링
 		renderLoadSummaryTableData();
 		// 페이지네이션 렌더링
@@ -311,34 +259,6 @@ $(document).ready(function() {
 		// 초기 렌더링 후 카운트 업데이트
 		updateLoadSummaryTotalCount();
 	}
-
-	/* 거래처 데이터 - detail로 이동
-	function selectCustomer() {
-		$.ajax({
-			url: "/selectCustomer",
-			type: "POST",
-			contentType: "application/json",
-			success: function(data) {
-				console.log("-- select Customer --");
-				console.log(data);
-				let $select = $("#loadSummaryCustomer");
-				$select.empty();
-				$.each(data, function(index, value) {
-					$select.append($("<option>", {
-						value: value,
-						text: value.split("_")[1]
-					}));
-				});
-				hideLoading();
-			},
-			error: function(xhr, status, error) {
-				console.error("DB 조회 실패:", error);
-				hideLoading();
-				alert("데이터 조회에 실패했습니다. 다시 시도해주세요.");
-			}
-		});
-	}
-	*/
 
 	function fmtLocalDate(d) {
 		const y = d.getFullYear();
@@ -354,31 +274,6 @@ $(document).ready(function() {
 		const fromDate = fmtLocalDate(firstDayOfMonth);
 		return { fromDate, toDate };
 	}
-
-	// 공장 및 창고 선택 함수
-	function renderFactoryStorage() {
-		const storage = $('#loadSummary_searchVal_storage');
-		const savedStorage = getCookie('selectedStorage');
-
-		storage.empty();
-
-		let storageList = ['all', 'INBOUND', 'PRODUCT', 'OUTSIDE'];
-
-		// ILLINOIS 사용자는 OUTSIDE만 선택 가능
-		if (savedStorage === 'ILLINOIS') {
-			storageList = ['OUTSIDE'];
-		}
-
-		storageList.forEach(item => {
-			const text = item === 'all' ? i18n.t('search.all') : item;
-			storage.append(`<option value="${item}">${text}</option>`);
-		});
-
-		storage.val(storageList[0]);
-
-		window.autoSetStorageFields();
-	}
-
 
 	function getCookie(cookieName) {
 		const match = document.cookie.match(new RegExp('(^| )' + cookieName + '=([^;]+)'));
@@ -404,27 +299,17 @@ $(document).ready(function() {
 		for (let i = 0; i < globalLoadSummaryData.length; i++) {
 			let rowNumber = (currentLoadSummaryPage - 1) * loadSummaryItemsPerPage + i + 1;
 			let data = globalLoadSummaryData[i];
-
-			let statusText = data.INTF_YN === 'Y' ? i18n.t('search.input.completed') : i18n.t('search.input.waiting');
-			let statusClass = data.INTF_YN === 'Y' ? 'status-completed' : 'status-waiting';
 			
 			tableBody += `
 				<tr>
-				    <td class = "checkboxVal"><input type="checkbox" class="loadSummary_chk ${statusClass}" 
-	            		data-unique="${data.SDATE}|${data.ITEMCODE}|${data.INTF_YN}|${data.QTY}|${data.FACTORY}|${data.STORAGE}|${data.CUSTCODE}|${data.MES_KEY}|${data.INVOICENO}"></td>
 	                <td class = "noVal">${rowNumber}</td>
-	                <td class = "statusVal_long"><span class="${statusClass}">${statusText}</span></td>
 	                <td class = "dateVal">${data.SDATE || data.sdate || ''}</td>
-					<td class = "storageVal">${data.STORAGE || data.storage || ''}</td>
 					<td class = 'storageVal'>${data.CUSTNAME || data.custname || ''}</td>
 					<td class = "carVal">${data.CAR || data.car || ''}</td>
 					<td class = "itemcodeVal">${data.ITEMCODE || data.itemcode || ''}</td>
 					<td class = "cnameVal">${data.SPEC || data.spec || ''}</td>
 					<td class = "itemnameMedVal">${data.ITEMNAME || data.itemname || ''}</td>
 					<td class = "qtyVal">${Number(data.QTY || data.qty || 0).toLocaleString()}</td>
-					<td class = "loginidVal">${data.DOCK || data.dock || ''}</td>
-					<td class = "wccodeVal">${data.INVOICENO || data.invoiceno || ''}</td>
-					<td class = "loginidVal">${data.CONTAINER || data.container || ''}</td>
 	            </tr>
 			`;
 		}
@@ -531,16 +416,13 @@ $(document).ready(function() {
 
 	function getCurrentSearchCriteria() {
 		return {
-			// intf_yn: $("#loadSummary_searchVal_Condition").val(), // detail로 이동
 			fromDate: $("#loadSummary_searchVal_fromDate").val(),
 			toDate: $("#loadSummary_searchVal_toDate").val(),
-			storage: $("#loadSummary_searchVal_storage").val(),
 			custname: $("#loadSummary_searchVal_custname").val().trim().toUpperCase(),
 			car: $("#loadSummary_searchVal_car").val().trim().toUpperCase(),
 			itemcode: $("#loadSummary_searchVal_itemcode").val().trim().toUpperCase(),
 			oitemcode: $("#loadSummary_searchVal_oitemcode").val().trim().toUpperCase(),
-			itemname: $("#loadSummary_searchVal_itemname").val().trim().toUpperCase(),
-			invoiceNo: $("#loadSummary_searchVal_invoiceNo").val().trim().toUpperCase()
+			itemname: $("#loadSummary_searchVal_itemname").val().trim().toUpperCase()
 		};
 	}
 
@@ -555,7 +437,6 @@ $(document).ready(function() {
 	function resetLoadSummarySearch() {
 		const { fromDate, toDate } = getDefaultDateRange();
 
-		// $("#loadSummary_searchVal_Condition").val(''); // detail로 이동
 		$("#loadSummary_searchVal_fromDate").val(fromDate);
 		$("#loadSummary_searchVal_toDate").val(toDate);
 		$("#loadSummary_searchVal_custname").val('');
@@ -563,13 +444,9 @@ $(document).ready(function() {
 		$("#loadSummary_searchVal_itemcode").val('');
 		$("#loadSummary_searchVal_oitemcode").val('');
 		$("#loadSummary_searchVal_itemname").val('');
-		$("#loadSummary_searchVal_invoiceNo").val('');
-		
-		renderFactoryStorage();
-		const storage = getCookie('selectedStorage') === 'ILLINOIS' ? 'OUTSIDE' : 'all';
 
 		currentLoadSummaryPage = 1;
-		performLoadSummaryDBSearch({ storage, toDate, fromDate });
+		performLoadSummaryDBSearch({  toDate, fromDate });
 
 		console.log('검색 조건이 초기화되었습니다.');
 	}
@@ -600,239 +477,6 @@ $(document).ready(function() {
 			data: filteredData_loadSummary
 		};
 	}
-
-
-	/* 거래처변경 핸들러 - detail로 이동
-	$(document).on("click", "#loadSummaryChangeBtn", function() {
-		if ($(".loadSummary_chk.status-completed:checked").length > 0) {
-			alert(i18n.t('validation.confirm.items'));
-			return;
-		}
-
-		const iidList = [];
-		$(".loadSummary_chk:checked").each(function() {
-			let iid = $(this).data('unique');
-			iidList.push(iid);
-		});
-
-		if (iidList.length === 0) {
-			alert(i18n.t('validation.no.select.items'));
-			return;
-		}
-
-		data = {
-			iidList: iidList,
-			supplier: $("#loadSummaryCustomer").val()
-		}
-
-		if (confirm("Do you want to register the customer?")) {
-			showLoading("data");
-			$.ajax({
-				url: "/loadCustomerUpdate",
-				type: "POST",
-				data: JSON.stringify(data),
-				contentType: "application/json",
-				success: function(data) {
-					console.log("-- load update --");
-					console.log(data);
-					let searchVal = getCurrentSearchCriteria();
-					performLoadSummaryDBSearch(searchVal);
-					hideLoading();
-				},
-				error: function(xhr, status, error) {
-					window.handleAjaxError(xhr, status, error);
-				}
-			});
-		}
-	});
-	*/
-
-	// $(document).on("click", ".btnIntfLoadSummary", function() {
-	//
-	// 	if ($(".loadSummary_chk.status-completed:checked").length > 0) {
-	// 		alert(i18n.t('validation.confirm.items'));
-	// 		return;
-	// 	}
-	//
-	// 	let hasUndefined = false;
-	//
-	// 	const iidList = [];
-	// 	$(".loadSummary_chk:checked").each(function() {
-	// 		let iid = $(this).data('unique');
-	// 		if (!iid || iid.split("_")[6] === 'undefined' || iid.split("_")[6] === 'null') {
-	// 			alert("Cust Code is Empty");
-	// 			hasUndefined = true;
-	// 			return false; // 🔹 each 반복 중단
-	// 		}
-	// 		iidList.push(iid);
-	// 	});
-	//
-	// 	// 하나라도 undefined면 전체 중단
-	// 	if (hasUndefined) return;
-	//
-	// 	// 체크된 요소가 없으면 경고창 표시 후 리턴
-	// 	if (iidList.length === 0) {
-	// 		alert(i18n.t('validation.no.select.items'));
-	// 		return;
-	// 	}
-	//
-	// 	if (!confirm(i18n.t('confirmation.interface.progress'))) {
-	// 		return;
-	// 	}
-	//
-	// 	showLoading("data");
-	// 	console.log(iidList)
-	// 	$.ajax({
-	// 		url: "/load_confirm_summary",
-	// 		type: "POST",
-	// 		data: JSON.stringify(iidList),
-	// 		contentType: "application/json",
-	// 		success: function(data) {
-	// 			let msg = [];
-	// 			if (data.magamCnt > 0) msg.push(`closed: ${data.magamCnt} case(s)`);
-	// 			if (data.lockCnt > 0) msg.push(`lock: ${data.lockCnt} case(s)`);
-	// 			if (msg.length > 0) {
-	// 				alert("The following items were not processed:\n" + msg.join("\n"));
-	// 			} else {
-	//
-	// 			}
-	// 			let searchVal = getCurrentSearchCriteria();
-	// 			performLoadSummaryDBSearch(searchVal);
-	//
-	// 			// 전체 선택 해제
-	// 			$('.loadSummary_chkAll').prop('checked', false);
-	// 		},
-	// 		error: function(xhr, status, error) {
-	// 			// ❌ alert(res.message) <- res 없음 (버그)
-	// 			window.handleAjaxError(xhr, status, error);
-	// 		}
-	//
-	// 	});
-	//
-	// });
-
-	// $(document).on("click", ".btnIntfLoadSummaryDelete", function() {
-	//
-	// 	if ($(".loadSummary_chk.status-waiting:checked").length > 0) {
-	// 		alert(i18n.t('validation.unconfirm.items'));
-	// 		return;
-	// 	}
-	//
-	// 	let hasUndefined = false;
-	//
-	// 	const iidList = [];
-	// 	$(".loadSummary_chk:checked").each(function() {
-	// 		let iid = $(this).data('unique');
-	// 		if (!iid || iid.split("_")[6] === 'undefined' || iid.split("_")[6] === 'null') {
-	// 			alert("Cust Code is Empty");
-	// 			hasUndefined = true;
-	// 			return false; // 🔹 each 반복 중단
-	// 		}
-	// 		iidList.push(iid);
-	// 	});
-	//
-	// 	// 하나라도 undefined면 전체 중단
-	// 	if (hasUndefined) return;
-	//
-	// 	// 체크된 요소가 없으면 경고창 표시 후 리턴
-	// 	if (iidList.length === 0) {
-	// 		alert(i18n.t('validation.no.select.items'));
-	// 		return;
-	// 	}
-	//
-	// 	if (!confirm(i18n.t('confirmation.interface.progress'))) {
-	// 		return;
-	// 	}
-	//
-	// 	showLoading("data");
-	//
-	// 	let loginid = $(".loginId").text().trim();
-	// 	console.log(iidList)
-	// 	$.ajax({
-	// 		url: "/load_confirm_summary_cancel",
-	// 		type: "POST",
-	// 		data: JSON.stringify({ list: iidList, loginid: loginid }),
-	// 		contentType: "application/json",
-	// 		success: function(data) {
-	// 			let msg = [];
-	//
-	// 			if (data.magamCnt > 0) msg.push(`closed: ${data.magamCnt} case(s)`);
-	// 			if (data.lockCnt > 0) msg.push(`lock: ${data.lockCnt} case(s)`);
-	// 			if (data.noExistCnt > 0) msg.push(`No deletable records: ${data.noExistCnt} case(s)`);
-	//
-	// 			if (msg.length > 0) {
-	// 				alert("The following items were not processed:\n" + msg.join("\n"));
-	// 			} else {
-	//
-	// 			}
-	// 			let searchVal = getCurrentSearchCriteria();
-	// 			performLoadSummaryDBSearch(searchVal);
-	//
-	// 			// 전체 선택 해제
-	// 			$('.loadSummary_chkAll').prop('checked', false);
-	// 		},
-	// 		error: function(xhr, status, error) {
-	// 			// ❌ alert(res.message) <- res 없음 (버그)
-	// 			window.handleAjaxError(xhr, status, error);
-	// 		}
-	//
-	// 	});
-	//
-	// });
-
-	/* 날짜변경 핸들러 - detail로 이동
-	$(document).on("click", "#loadSummaryChangeDateBtn", function() {
-		if ($(".loadSummary_chk.status-completed:checked").length > 0) {
-			alert(i18n.t('validation.confirm.items'));
-			return;
-		}
-
-		const iidList = [];
-		$(".loadSummary_chk:checked").each(function() {
-			let iid = $(this).data('unique');
-			iidList.push(iid);
-		});
-
-		if (iidList.length === 0) {
-			alert(i18n.t('validation.no.select.items'));
-			return;
-		}
-
-		var dateVal = $("#loadSummaryChangeDate").val();
-		if (!dateVal) {
-			alert("Select a date.");
-			return;
-		}
-
-		if (!confirm('Do you want to change the date?')) {
-			return;
-		}
-
-		showLoading("data");
-		data = {
-			iidList: iidList,
-			newdate: dateVal
-		}
-		$.ajax({
-			url: "/loadDateUpdate",
-			type: "POST",
-			data: JSON.stringify(data),
-			contentType: "application/json",
-			success: function(data) {
-				console.log("-- load date update --");
-				console.log(data);
-				let searchVal = getCurrentSearchCriteria();
-				performLoadSummaryDBSearch(searchVal);
-				hideLoading();
-			},
-			error: function(xhr, status, error) {
-				window.handleAjaxError(xhr, status, error);
-			}
-		});
-	});
-	*/
-
-
 });
 
 // 전체 데이터 엑셀 다운로드
@@ -841,10 +485,7 @@ window.downloadAllLoadSummaryData = function() {
 
 	const processedData = filteredData_loadSummary.map(item => {
 		return {
-			...item,
-			INTF_YN: item.INTF_YN === 'Y'
-				? i18n.t('search.input.completed')
-				: i18n.t('search.input.waiting')
+			...item
 		};
 	});
 
