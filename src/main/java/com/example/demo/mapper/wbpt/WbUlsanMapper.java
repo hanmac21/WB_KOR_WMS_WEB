@@ -40,6 +40,8 @@ public interface WbUlsanMapper {
 
     int updateLoadInStock(Map<String, Object> param);
 
+    int updateRealStock(Map<String, Object> param);
+
     List<Map<String, Object>> readIncomingDetail(Map<String, Object> queryParams);
 
     List<Map<String, Object>> readIncomingSummary(Map<String, Object> queryParams);

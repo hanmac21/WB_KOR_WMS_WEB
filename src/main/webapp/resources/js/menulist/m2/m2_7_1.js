@@ -37,7 +37,7 @@ $(document).ready(function() {
 		let sdate = fromDate;
 
 		// ✅ 메뉴 타입별 기본 STORAGE 지정
-		let storage = 'INBOUND'; // 기본값
+		let storage = 'MATERIAL'; // 기본값
 
 		performRealStockDBSearch({ sdate, storage });
 	};
@@ -145,6 +145,7 @@ $(document).ready(function() {
 							</span>
 							<div class="action-buttons-right m2_7_1">
 								<div id="defaultActions" class="action-group">
+									<input type="button" value="${i18n.t('btn.delete')}" class="btn btn-danger btnRealStockDelete"/>
 									<button class="btn btn-success" id="realStockExcelBtn" onclick="downloadAllRealStockData()">Excel</button>
 								</div>
 							</div>
@@ -152,6 +153,9 @@ $(document).ready(function() {
 						<table class="data-table m2_7_1">
 							<thead>
 								<tr>
+									<th class='checkboxVal'>
+									    <input type="checkbox" class="realStock_chkAll"/>
+									</th>
 									<th class = "noVal">${i18n.t('table.no')}<!-- No --></th>
 									<th class = "storageVal">${i18n.t('search.storage')}<!-- STORAGE --></th>
 									<th class = "dateVal">${i18n.t('search.date')}<!-- SDATE --></th>
@@ -312,22 +316,26 @@ $(document).ready(function() {
 		for (let i = 0; i < globalRealStockData.length; i++) {
 			let rowNumber = (currentRealStockPage - 1) * realStockItemsPerPage + i + 1;
 
+			let data = globalRealStockData[i];
 			//console.log(`행 ${i}:`, globalRealStockData[i]); // 각 행 데이터 확인
 
 			tableBody += `
             <tr>
+				<td class='checkboxVal'><input type="checkbox" class="realStock_chk"
+					data-delete="${data.iid}|${data.sdate}|${data.factory}|${data.storage}|${data.barcode}">
+				</td>
                 <td class = "noVal">${rowNumber}</td>
-                <td class = "storageVal">${globalRealStockData[i].STORAGE || globalRealStockData[i].storage || ''}</td>
-                <td class = "dateVal">${globalRealStockData[i].SDATE || globalRealStockData[i].sdate || ''}</td>
-                <td class = "carVal">${globalRealStockData[i].CAR || globalRealStockData[i].car || ''}</td>
-                <td class = "itemcodeVal">${globalRealStockData[i].ITEMCODE || globalRealStockData[i].itemcode || ''}</td>
-                <td class = "cnameVal">${globalRealStockData[i].SPEC || globalRealStockData[i].spec || ''}</td>
-                <td class = "itemnameVal">${globalRealStockData[i].ITEMNAME || globalRealStockData[i].itemname || ''}</td>
-                <td class = "qtyVal">${Number(globalRealStockData[i].QTY || globalRealStockData[i].qty || 0).toLocaleString()}</td>
-                <td class = "locationVal">${globalRealStockData[i].LOCATION || globalRealStockData[i].location || ''}</td>
-                <td class = "userVal">${globalRealStockData[i].LOGINID || globalRealStockData[i].loginid || ''}</td>
-                <td class = "hhmmVal">${globalRealStockData[i].HHMM || globalRealStockData[i].hhmm || ''}</td>
-				<td class = "barcodeVal transysBarcodeVal">${globalRealStockData[i].BARCODE || globalRealStockData[i].barcode || ''}</td>
+                <td class = "storageVal">${data.STORAGE || data.storage || ''}</td>
+                <td class = "dateVal">${data.SDATE || data.sdate || ''}</td>
+                <td class = "carVal">${data.CAR || data.car || ''}</td>
+                <td class = "itemcodeVal">${data.ITEMCODE || data.itemcode || ''}</td>
+                <td class = "cnameVal">${data.SPEC || data.spec || ''}</td>
+                <td class = "itemnameVal">${data.ITEMNAME || data.itemname || ''}</td>
+                <td class = "qtyVal">${Number(data.QTY || data.qty || 0).toLocaleString()}</td>
+                <td class = "locationVal">${data.LOCATION || data.location || ''}</td>
+                <td class = "userVal">${data.LOGINID || data.loginid || ''}</td>
+                <td class = "hhmmVal">${data.HHMM || data.hhmm || ''}</td>
+				<td class = "barcodeVal transysBarcodeVal">${data.BARCODE || data.barcode || ''}</td>
             </tr>
         `;
 		}
@@ -390,6 +398,19 @@ $(document).ready(function() {
 
 	// 이벤트 바인딩
 	function bindRealStockEvents() {
+		// 전체 선택 체크박스
+		$(document).off('change', '.realStock_chkAll').on('change', '.realStock_chkAll', function() {
+			let isChecked = $(this).is(':checked');
+			$('.realStock_chk').prop('checked', isChecked);
+		});
+
+		// 개별 체크박스
+		$(document).off('change', '.realStock_chk').on('change', '.realStock_chk', function() {
+			let totalCheckboxes = $('.realStock_chk').length;
+			let checkedCheckboxes = $('.realStock_chk:checked').length;
+			$('.realStock_chkAll').prop('checked', totalCheckboxes === checkedCheckboxes);
+		});
+
 		// 검색 버튼 클릭 - DB에서 새로 조회
 		$(".btnRealStockSearch").off('click').on('click', function() {
 			performRealStockSearch();
@@ -515,6 +536,89 @@ $(document).ready(function() {
 			}
 		});
 	}
+
+
+	//삭제
+	$(document).on("click", ".btnRealStockDelete", function() {
+		const iidList = [];
+		$(".realStock_chk:checked").each(function() {
+			let iid = $(this).data('delete');
+			iidList.push(iid);
+		});
+
+		// 체크된 요소가 없으면 경고창 표시 후 리턴
+		if (iidList.length === 0) {
+			alert(i18n.t('validation.no.select.items'));
+			return;
+		}
+
+		if (!confirm(i18n.t('confirmation.items.delete'))) {
+			return;
+		}
+
+		showLoading("data");
+
+		const loginid = sessionStorage.getItem('userId') || 'Name Not Found';//getCookie("userLoginId");
+
+		console.log(iidList)
+
+		$.ajax({
+			url: "/deleteRealStock",
+			type: "POST",
+			data: JSON.stringify({
+				iidList: iidList,
+				loginid: loginid,
+				admin: false
+			}),
+			contentType: "application/json",
+			success: function(data) {
+				if (!data.success) {
+					hideLoading();
+
+					let message = "";
+
+					// 검증 실패
+					if (data.failList && data.failList.length > 0) {
+						message = "Some items cannot be deleted\n\n"; // 삭제할 수 없는 항목이 있습니다.
+
+						data.failList.forEach(function(item) {
+							if (item.failReason === 'INVALID_KIND') {
+								alert(`Code Error!`);
+								return;
+							} else if (item.failReason === 'POST_PROCESSING') {
+								message += `- Post-processing data exists\n${item.barcode}\n`; // 후처리 데이터 존재
+							} else if (item.failReason === 'MAGAM') {
+								message += `- Monthly closing completed\n${item.barcode}\n`; // 월 마감 완료
+							}
+						});
+
+					}
+					// 삭제 실패
+					else if (data.failReason === 'DELETE_FAILED') {
+						message = "Failed to delete\n\n";
+						message += `Operation: ${data.failedOperation}\n`;
+						message += `Barcode: ${data.failedBarcode}\n\n`;
+					}
+
+
+					alert(message);
+					return;
+				}
+
+				alert("정상적으로 삭제되었습니다");
+
+				let searchVal = getCurrentSearchCriteria();
+				performRealStockDBSearch(searchVal);
+
+				// 전체 선택 해제
+				$('.realStock_chkAll').prop('checked', false);
+			},
+			error: function(xhr, status, error) {
+				// ❌ alert(res.message) <- res 없음 (버그)
+				window.handleAjaxError(xhr, status, error);
+			}
+		});
+	});
 });
 
 

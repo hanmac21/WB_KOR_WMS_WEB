@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class RealStockVO {
+	private String iid;
 	private String source;
 	private String scantype;
 	private String sdate;

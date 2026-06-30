@@ -353,11 +353,8 @@ $(document).ready(function() {
 
 			tableBody += `
 				<tr>
-					<td class='checkboxVal'><input type="checkbox" class="incoming_chk row-checkbox" 
-						data-global-index="${i}" data-filtered-index="${i}" 
-						data-chk-inboundbar="${data.BARCODE || ''}" 
-						data-chk-meskey="${data.MESKEY || ''}"
-	        			data-delete="${data.IID}|${data.SDATE}|${data.FACTORY}|${data.STORAGE}|${data.BARCODE}|${data.MESKEY || ''}">
+					<td class='checkboxVal'><input type="checkbox" class="incoming_chk"
+	        			data-delete="${data.IID}|${data.SDATE}|${data.FACTORY}|${data.STORAGE}|${data.BARCODE}">
 					</td>
 					<td class='noVal'>${rowNumber}</td>
 					<td class='dateVal'>${data.SDATE || ''}</td>
@@ -428,6 +425,13 @@ $(document).ready(function() {
 			$('.incoming_chk').prop('checked', isChecked);
 		});
 
+		// 개별 체크박스
+		$(document).off('change', '.incoming_chk').on('change', '.incoming_chk', function() {
+			let totalCheckboxes = $('.incoming_chk').length;
+			let checkedCheckboxes = $('.incoming_chk:checked').length;
+			$('.incoming_chkAll').prop('checked', totalCheckboxes === checkedCheckboxes);
+		});
+
 		$(".btnIncomingDetailSearch").off('click').on('click', function() {
 			performIncomingDetailSearch();
 		});
@@ -478,7 +482,6 @@ $(document).ready(function() {
 			itemcode: $("#incomingDetail_searchVal_itemcode").val().trim().toUpperCase(),
 			oitemcode: $("#incomingDetail_searchVal_oitemcode").val().trim().toUpperCase(),
 			itemname: $("#incomingDetail_searchVal_itemname").val().trim().toUpperCase(),
-			invoice_no: $("#incomingDetail_searchVal_invoice_no").val().trim().toUpperCase(),
 		};
 	}
 
@@ -501,7 +504,6 @@ $(document).ready(function() {
 		$("#incomingDetail_searchVal_itemcode").val('');
 		$("#incomingDetail_searchVal_oitemcode").val('');
 		$("#incomingDetail_searchVal_itemname").val('');
-		$("#incomingDetail_searchVal_invoice_no").val('');
 
 		renderFactoryStorage();
 		const storage = 'all';

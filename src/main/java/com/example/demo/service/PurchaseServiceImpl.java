@@ -120,36 +120,20 @@ public class PurchaseServiceImpl implements PurchaseService {
 			try {
 				String[] parts = uniqueValue.split("\\|");
 
+
 				Map<String, Object> param = new HashMap<>();
-				String iid = "";
-				String date = "";
-				String factory = "";
-				String storage = "";
-				String barcode = "";
-				String ifno = "";
-				String meskey = "";
-
-				iid = parts[0];
-				date = parts[1];
-				factory = parts[2];
-				storage = parts[3];
-				barcode = parts[4];
-				if (parts.length > 5) meskey = parts[5];
-
+				String iid = parts[0];
+				String date = parts[1];
+				String factory = parts[2];
+				String storage = parts[3];
+				String barcode = parts[4];
 				String loginid = (String) map.get("loginid");
 
 				param.put("iid", iid);
 				param.put("date", date);
 				param.put("factory", factory);
-				param.put("lastfactory", factory);
 				param.put("storage", storage);
-				param.put("laststorage", storage);
 				param.put("barcode", barcode);
-
-				param.put("ifno", ifno);
-				param.put("meskey", meskey);
-				param.put("mes_key", meskey);
-
 				param.put("loginid", loginid);
 				param.put("kind", kind);
 
@@ -217,6 +201,10 @@ public class PurchaseServiceImpl implements PurchaseService {
 			// ===== 출고 =====
 			updateStockForLoad(param, barcode);
 			break;
+		case "STOCKCOUNT":
+			// ===== 출고 =====
+			updateStockForRealStock(param, barcode);
+			break;
 		default:
 			throw new IllegalArgumentException("Unsupported kind: " + kind);
 		}
@@ -246,6 +234,13 @@ public class PurchaseServiceImpl implements PurchaseService {
 		System.out.println("아웃바운드 삭제 완료");
 
 		assertAffected(ulsanMapper.updateLoadInStock(param), "출고-재고", barcode);
+	}
+
+	// 입고
+	private void updateStockForRealStock(Map<String, Object> param, String barcode) {
+		// 입고 삭제
+		assertAffected(ulsanMapper.updateRealStock(param), "재고실사-삭제", barcode);
+		System.out.println("재고실사 삭제 완료");
 	}
 
 	// Helper : 영향행 검증

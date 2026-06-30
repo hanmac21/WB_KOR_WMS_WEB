@@ -8,6 +8,7 @@
 		SELECT *
 		FROM (
 			SELECT
+				a.iid,
 				a.factory,
 				a.storage,
 				a.source,
@@ -397,6 +398,14 @@
 		AND STORAGE = #{storage}
 		AND KIND = 'LOAD'
 		AND BARCODE = #{barcode}
+	</update>
+
+	<update id="updateRealStock">
+		UPDATE T_WMS_REALSTOCK
+		SET useyn = 'N'
+		, ymdhms_d = TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+		, memo_d = 'STOCKCOUNT_D'
+		WHERE IID = #{iid}
 	</update>
 
 	<!-- 입고조회 List -->

@@ -30,7 +30,7 @@ $(document).ready(function() {
 		let sdate = fromDate;
 
 		// ✅ 메뉴 타입별 기본 STORAGE 지정
-		let storage = 'INBOUND'; // 기본값
+		let storage = 'MATERIAL'; // 기본값
 
 		performRealStockSummaryDBSearch({ sdate,  storage });
 	};
@@ -204,12 +204,7 @@ function renderFactoryStorage() {
 
 	storage.empty();
 
-	let storageList = ['INBOUND',  'OUTSIDE', 'all'];
-
-	// ILLINOIS 사용자는 OUTSIDE만 선택 가능
-	if (savedStorage === 'ILLINOIS') {
-		storageList = ['OUTSIDE'];
-	}
+	let storageList = ['MATERIAL',  'PRODUCT', 'WORKSHOP', 'HSD', 'CNF', 'SW', 'all'];
 
 	storageList.forEach(item => {
 		const text = item === 'all' ? i18n.t('search.all') : item;
@@ -302,9 +297,6 @@ function renderRealStockSummaryTableData() {
 	// 서버에서 이미 페이징된 데이터를 받았으므로 startIndex, endIndex 계산 불필요
 	for (let i = 0; i < globalRealStockSummaryData.length; i++) {
 		let rowNumber = (currentRealStockSummaryPage - 1) * realStockSummaryItemsPerPage + i + 1;
-		let un = globalRealStockSummaryData[i]
-		let statusText = globalRealStockSummaryData[i].intf_yn === 'Y' ? 'Completed' : 'Waiting';
-		let statusClass = globalRealStockSummaryData[i].intf_yn === 'Y' ? 'status-completed' : 'status-waiting';
 
 		//console.log(`행 ${i}:`, globalRealStockSummaryData[i]); // 각 행 데이터 확인
 
@@ -434,8 +426,6 @@ function bindRealStockSummaryEvents() {
 // 현재 검색 조건 수집 함수
 function getCurrentSearchCriteria() {
 	return {
-		intf_yn: $("#stockCountSummary_searchVal_Condition").val(),
-		scantype: 'all',
 		storage: $("#stockCountSummary_searchVal_storage").val(),
 		sdate: $("#stockCountSummary_searchVal_sdate").val(),
 		//car: $("#stockCountSummary_searchVal_car").val().trim().toUpperCase(),
@@ -466,7 +456,7 @@ function resetRealStockSummarySearch() {
 	$("#stockCountSummary_searchVal_itemname").val('');
 	
 	renderFactoryStorage();
-	let storage = getCookie('selectedStorage') === 'ILLINOIS' ? 'OUTSIDE' : 'INBOUND'; // 기본값
+	let storage = 'MATERIAL'
 	
 	// 초기화 후 전체 데이터 다시 조회
 	currentRealStockSummaryPage = 1;
@@ -518,9 +508,7 @@ function updateTotalQty() {
 
 window.downloadAllRealStockSummaryData = function() {
 	let searchCriteria = {
-		intf_yn: $("#stockCountSummary_searchVal_Condition").val(),
 		storage: $("#stockCountSummary_searchVal_storage").val(),
-		scantype: 'all',
 		sdate: $("#stockCountSummary_searchVal_sdate").val(),
 		//car: $("#stockCountSummary_searchVal_car").val().trim().toUpperCase(),
 		itemcode: $("#stockCountSummary_searchVal_itemcode").val().trim().toUpperCase(),

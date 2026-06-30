@@ -200,7 +200,6 @@ public class PurchaseController {
 		return purchaseService.show_stockHistory(barcode);
 	}
 
-
 	// 입고 삭제
 	@PostMapping("/deleteIncoming")
 	public ResponseEntity<Map<String, Object>> deleteIncoming(@RequestBody Map<String, Object> body) {
@@ -227,8 +226,6 @@ public class PurchaseController {
 		}
 	}
 
-
-
 	// 출고 삭제
 	@PostMapping("/deleteLoad")
 	public Map<String, Object> deleteLoad(@RequestBody Map<String, Object> body) {
@@ -249,6 +246,33 @@ public class PurchaseController {
 			}
 			return res; // 항상 200 OK + JSON 바디
 		}
-
 	}
+
+	// 재고실사 삭제
+	@PostMapping("/deleteRealStock")
+	public ResponseEntity<Map<String, Object>> deleteRealStock(@RequestBody Map<String, Object> body) {
+		try {
+			Map<String, Object> ok = purchaseService.deleteByKind("STOCKCOUNT", body);
+			return ResponseEntity.ok(ok); // 200
+		} catch (RuntimeException e) {
+			Map<String, Object> res = new HashMap<>();
+			res.put("success", false);
+
+			String msg = e.getMessage();
+			if (msg != null && msg.startsWith("DELETE_FAILED|")) {
+				String[] parts = msg.split("\\|", 3);
+				res.put("failReason", parts[0]);
+				res.put("failedOperation", parts[1]);
+				res.put("failedBarcode", parts[2]);
+
+				// 보통 비즈니스 실패 = 400
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
+			}
+
+			res.put("message", msg != null ? msg : "SERVER_ERROR");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res); // 500
+		}
+	}
+
+
 }
