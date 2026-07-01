@@ -395,7 +395,6 @@
 		WHERE USEYN = 'Y'
 		AND SDATE = #{date}
 		AND FACTORY = #{factory}
-		AND STORAGE = #{storage}
 		AND KIND = 'LOAD'
 		AND BARCODE = #{barcode}
 	</update>

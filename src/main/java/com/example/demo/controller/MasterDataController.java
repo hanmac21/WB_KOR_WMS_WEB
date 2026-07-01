@@ -40,6 +40,7 @@ import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @Slf4j
@@ -203,6 +204,40 @@ public class MasterDataController {
 			result.put("message", e.getMessage());
 		}
 		return result;
+	}
+
+	@PostMapping("/read_sequenceManagement")
+	public Map<String, Object> read_sequenceManagement(@RequestBody Map<String, Object> params) {
+		return mService.read_sequenceManagement(params);
+	}
+
+	@PostMapping("/upload_sequenceInfo")
+	public ResponseEntity<?> upload_sequenceInfo(@RequestParam("file") MultipartFile file) {
+		Map<String, Object> result = new HashMap<>();
+
+		if (file == null || file.isEmpty()) {
+			result.put("message", "업로드된 파일이 없습니다.");
+			return ResponseEntity.badRequest().body(result);
+		}
+
+		String name = file.getOriginalFilename();
+		if (name == null || !(name.toLowerCase().endsWith(".xlsx") || name.toLowerCase().endsWith(".xls"))) {
+			result.put("message", "엑셀 파일 (.xlsx, .xls)만 업로드 가능합니다.");
+			return ResponseEntity.badRequest().body(result);
+		}
+
+		try{
+			int insertCount = mService.upload_sequenceInfo(file);
+			result.put("insertCount", insertCount);
+			return ResponseEntity.ok(result);
+		} catch (IllegalArgumentException e){
+			result.put("message", e.getMessage());
+			return ResponseEntity.badRequest().body(result);
+		} catch (Exception e){
+			e.printStackTrace();
+			result.put("message", "서버 처리 중 오류가 발생했습니다");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
+		}
 	}
 }
 

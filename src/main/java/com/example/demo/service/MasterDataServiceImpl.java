@@ -1,5 +1,8 @@
 package com.example.demo.service;
 
+import java.io.InputStream;
+import java.lang.reflect.Executable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -9,15 +12,26 @@ import java.util.Map;
 import java.util.Set;
 
 import com.example.demo.mapper.wbpt.WbBasicMapper;
+import org.apache.ibatis.session.ExecutorType;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.poi.ss.usermodel.*;
+import org.jfree.util.HashNMap;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.vo.ProductVO;
 import com.example.demo.vo.UserInfoVO;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class MasterDataServiceImpl implements MasterDataService {
+
+	@Autowired
+	@Qualifier("wbptSqlSessionFactory")
+	SqlSessionFactory sqlSessionFactory;
 
 	@Autowired
 	WbBasicMapper basicMapper;
@@ -403,6 +417,176 @@ public class MasterDataServiceImpl implements MasterDataService {
 			count += basicMapper.save_productInfo_changed(record);
 		}
 		return count;
+	}
+
+	@Override
+	public Map<String, Object> read_sequenceManagement(Map<String, Object> params) {
+		Map<String, Object> searchParams = (Map<String, Object>) params.get("searchParams");
+
+		// 결과 객체 초기화 (먼저!)
+		Map<String, Object> result = new HashMap<>();
+
+		try {
+			// 쿼리 실행
+			List<ProductVO> records = basicMapper.read_sequenceManagement(searchParams);
+
+			result.put("records", records);
+
+			// 첫 번째 레코드에서 totalCount, totalQty 추출
+			if (records != null && !records.isEmpty()) {
+				Map<String, Object> firstRecord = (Map<String, Object>) records.get(0);
+				Double totalCount = firstRecord.get("TOTALCOUNT") != null
+						? ((Number) firstRecord.get("TOTALCOUNT")).doubleValue()
+						: 0;
+
+				result.put("totalCount", totalCount);
+			} else {
+				// 데이터가 없을 경우
+				result.put("totalCount", 0);
+			}
+		} catch (Exception e) {
+			// 예외 발생 시 기본값 설정
+			e.printStackTrace();
+			result.put("records", new ArrayList<>());
+			result.put("totalCount", 0);
+		}
+
+		return result;
+	}
+
+
+	@Override
+	public int upload_sequenceInfo(MultipartFile file) throws Exception{
+		List<Map<String, Object>> list = parseExcel(file);
+
+		if (list.isEmpty()) {
+			throw new IllegalArgumentException("업로드할 데이터가 없습니다");
+		}
+
+		// autoCommit = false;
+		try (SqlSession session = sqlSessionFactory.openSession(ExecutorType.BATCH, false)){
+			WbBasicMapper batchMapper = session.getMapper(WbBasicMapper.class);
+
+			// 기존 데이터 전체 삭제 후 새로 insert
+			batchMapper.delete_sequenceInfoAll();
+
+			int count = 0;
+			for (Map<String, Object> map : list) {
+				batchMapper.upload_sequenceInfo(map);
+				count++;
+
+				if (count % 1000 == 0){
+					session.flushStatements();
+				}
+			}
+			session.flushStatements();
+			session.commit();
+			return count;
+		}
+	}
+
+	private List<Map<String, Object>> parseExcel(MultipartFile file) throws Exception {
+		List<Map<String, Object>> result = new ArrayList<>();
+
+		try (InputStream is = file.getInputStream(); Workbook workbook = WorkbookFactory.create(is)) {
+			Sheet sheet = workbook.getSheetAt(3);
+			if (sheet == null) {
+				throw new IllegalArgumentException("시트를 읽을 수 없습니다");
+			}
+
+			// 3행부터 데이터
+			for (int i = 2; i <= sheet.getLastRowNum(); i++) {
+				Row row = sheet.getRow(i);
+				if (row == null || isEmptyRow(row)) continue;
+
+				Map<String, Object> map = new HashMap<>();
+				map.put("sdate", normalizeDate(getString(row.getCell(0))));
+				map.put("colorname", getString(row.getCell(1)));
+				map.put("material", getString(row.getCell(2)));
+				map.put("region", getString(row.getCell(3)));
+				map.put("car", getString(row.getCell(4)));
+				map.put("colorcode", getString(row.getCell(5)));
+				map.put("row1_headrest", getString(row.getCell(6)));
+				map.put("row1_hcode", getString(row.getCell(7)));
+				map.put("row2_headrest", getString(row.getCell(8)));
+				map.put("row2_seat", getString(row.getCell(9)));
+				map.put("row2_hcode", getString(row.getCell(10)));
+				map.put("limousine", getString(row.getCell(11)));
+				map.put("row3_headrest", getString(row.getCell(12)));
+				map.put("row3_hcode", getString(row.getCell(13)));
+				map.put("row1_lh_code", getString(row.getCell(14)));
+				map.put("row1_rh_code", getString(row.getCell(15)));
+				map.put("row2_lh_code", getString(row.getCell(16)));
+				map.put("row2_rh_code", getString(row.getCell(17)));
+				map.put("row2_ctr_code", getString(row.getCell(18)));
+				map.put("row3_lh_code", getString(row.getCell(19)));
+				map.put("row3_rh_code", getString(row.getCell(20)));
+				map.put("row3_ctr_code", getString(row.getCell(21)));
+				map.put("lx2_pe_code", getString(row.getCell(22)));
+				result.add(map);
+			}
+		}
+		return result;
+	}
+
+	// 행이 비어있는지 검사
+	private boolean isEmptyRow(Row row) {
+		for (Cell cell : row) {
+			if (cell != null && !getString(cell).isEmpty()){
+				return false;
+			}
+		}
+		return true;
+ 	}
+
+	// 셀 타입을 문자열로 추출
+	private String getString(Cell cell) {
+		if (cell == null) return "";
+
+		switch (cell.getCellType()) {
+			case STRING:
+				return cell.getStringCellValue().trim();
+			case NUMERIC:
+				if (DateUtil.isCellDateFormatted(cell)) {
+					return new SimpleDateFormat("yyyy-MM-dd").format(cell.getDateCellValue());
+				}
+				double d = cell.getNumericCellValue();
+				if (d == Math.floor(d) && !Double.isInfinite(d)) {
+					return String.valueOf((long)d);
+				}
+				return String.valueOf(d);
+			default:
+				return "";
+		}
+	}
+
+	// 날짜 정규화
+	private String normalizeDate(String s){
+		if (s == null) return "";
+		s = s.trim();
+		if (s.isEmpty()) return "";
+
+		// 구분자 (. 또는 -) 로 분리
+		String[] parts = s.split("[.\\-/]");
+		if (parts.length != 3){
+			// 예상 형식이 아니므로 원본 그대로
+			return s;
+		}
+
+		String y = parts[0].trim();
+		String m = parts[1].trim();
+		String d = parts[2].trim();
+
+		// 연도가 두 자리인 경우 네 자리로 변경
+		if (y.length() == 2){
+			y = "20" + y;
+		}
+
+		// 월/일이 한 자리인 경우 두 자리로 변경
+		if (m.length() == 1) m = "0" + m;
+		if (d.length() == 1) d = "0" + d;
+
+		return y + "-" + m + "-" + d;
 	}
 
 }

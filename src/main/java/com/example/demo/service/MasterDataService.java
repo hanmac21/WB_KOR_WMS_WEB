@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.example.demo.vo.UserInfoVO;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface MasterDataService {
 	int userDelete(List<Map<String, Object>> sList);
@@ -42,4 +43,8 @@ public interface MasterDataService {
 	Map<String, Object> read_productInfo(Map<String, Object> params);
 
     int save_productInfo_changed(List<Map<String, Object>> records);
+
+	Map<String, Object> read_sequenceManagement(Map<String, Object> params);
+
+	int upload_sequenceInfo(MultipartFile file) throws Exception;
 }

@@ -56,7 +56,7 @@ final long v = System.currentTimeMillis();
                             <input type="radio" name="factorySelect" class="btn_factorySelect" id="select_ulsan" value="ULSAN" checked>
                             <label for="select_ulsan" class="storage-label">울산</label>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" style="display:none;">
                             <input type="radio" name="factorySelect" class="btn_factorySelect" id="select_pt" value="PT">
                             <label for="select_pt" class="storage-label">평택</label>
                         </div>

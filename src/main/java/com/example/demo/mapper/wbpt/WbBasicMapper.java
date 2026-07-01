@@ -64,4 +64,10 @@ public interface WbBasicMapper {
     List<ProductVO> read_productInfo(Map<String, Object> queryParams);
 
     int save_productInfo_changed(Map<String, Object> record);
+
+    List<ProductVO> read_sequenceManagement(Map<String, Object> searchParams);
+
+    void upload_sequenceInfo(Map<String, Object> map);
+
+    void delete_sequenceInfoAll();
 }

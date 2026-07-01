@@ -424,6 +424,7 @@
         LEFT OUTER JOIN T_WMS_ITEMINFO f
             ON a.itemcode = f.itemcode
         WHERE a.deldate = ' ' and e.subname is not null
+        and a.branch = '001'
         <include refid="where_productInfo"/>
         ORDER BY a.itemcode
     </select>
@@ -480,4 +481,36 @@
             TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
         )
     </update>
+
+    <select id="read_sequenceManagement" resultType="map">
+        SELECT *
+        FROM T_WMS_SEQUENCE_INFO
+        ORDER BY SDATE DESC
+    </select>
+
+    <delete id="delete_sequenceInfoAll">
+        DELETE FROM T_WMS_SEQUENCE_INFO
+    </delete>
+
+    <insert id="upload_sequenceInfo" parameterType="map">
+        INSERT INTO T_WMS_SEQUENCE_INFO (
+            SDATE, COLORNAME, MATERIAL, REGION, CAR, COLORCODE,
+            ROW1_HEADREST, ROW1_HCODE,
+            ROW2_HEADREST, ROW2_SEAT, ROW2_HCODE,
+            LIMOUSINE, ROW3_HEADREST, ROW3_HCODE,
+            ROW1_LH_CODE, ROW1_RH_CODE,
+            ROW2_LH_CODE, ROW2_RH_CODE, ROW2_CTR_CODE,
+            ROW3_LH_CODE, ROW3_RH_CODE, ROW3_CTR_CODE,
+            LX2_PE_CODE
+        ) VALUES (
+            #{sdate}, #{colorname}, #{material}, #{region}, #{car}, #{colorcode},
+            #{row1_headrest}, #{row1_hcode},
+            #{row2_headrest}, #{row2_seat}, #{row2_hcode},
+            #{limousine}, #{row3_headrest}, #{row3_hcode},
+            #{row1_lh_code}, #{row1_rh_code},
+            #{row2_lh_code}, #{row2_rh_code}, #{row2_ctr_code},
+            #{row3_lh_code}, #{row3_rh_code}, #{row3_ctr_code},
+            #{lx2_pe_code}
+        )
+    </insert>
 </mapper>  
