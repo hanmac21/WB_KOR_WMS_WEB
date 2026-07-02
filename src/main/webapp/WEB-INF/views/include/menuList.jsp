@@ -209,14 +209,26 @@
             <div class="menuListCallBack_6">
                 <div class="menuCommon">
                     <i class="fa-solid fa-list" style="color:#046565;"></i>
-                    <p id="m2_7_1" class="divBlockTrigger" data-menu-type="purchase" data-matching="PURCHASE_STOCKCOUNT" data-group="<spring:message code='purchase.inventory'/>">
-                        <spring:message code="purchase.inventory.counting"/>
+                    <p id="mPurchase_stockcount_detail" class="divBlockTrigger" data-menu-type="purchase" data-matching="PURCHASE_STOCKCOUNT" data-group="<spring:message code='purchase.inventory'/>">
+                        <spring:message code="purchase.inventory.detail"/>
                     </p>
                 </div>
                 <div class="menuCommon">
                     <i class="fa-solid fa-list" style="color:#046565;"></i>
-                    <p id="m2_7_3" class="divBlockTrigger" data-menu-type="purchase" data-matching="PURCHASE_STOCKCOUNT" data-group="<spring:message code='purchase.inventory'/>">
+                    <p id="mPurchase_stockcount_summary" class="divBlockTrigger" data-menu-type="purchase" data-matching="PURCHASE_STOCKCOUNT" data-group="<spring:message code='purchase.inventory'/>">
                         <spring:message code="purchase.inventory.summary"/>
+                    </p>
+                </div>
+                <div class="menuCommon">
+                    <i class="fa-solid fa-list" style="color:#046565;"></i>
+                    <p id="mPurchase_stockcount_out_detail" class="divBlockTrigger" data-menu-type="purchase" data-matching="PURCHASE_STOCKCOUNT" data-group="<spring:message code='purchase.inventory'/>">
+                        <spring:message code="purchase.inventory.out.detail"/>
+                    </p>
+                </div>
+                <div class="menuCommon">
+                    <i class="fa-solid fa-list" style="color:#046565;"></i>
+                    <p id="mPurchase_stockcount_out_summary" class="divBlockTrigger" data-menu-type="purchase" data-matching="PURCHASE_STOCKCOUNT" data-group="<spring:message code='purchase.inventory'/>">
+                        <spring:message code="purchase.inventory.out.summary"/>
                     </p>
                 </div>
             </div>

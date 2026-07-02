@@ -427,9 +427,8 @@ public class MasterDataServiceImpl implements MasterDataService {
 		Map<String, Object> result = new HashMap<>();
 		try {
 			// 쿼리 실행
-			List<Map<String, Object>> records = basicMapper.read_warehouse(searchParams);
-			System.out.println("--------------");
 			System.out.println(searchParams);
+			List<Map<String, Object>> records = basicMapper.read_warehouse(searchParams);
 			result.put("records", records);
 
 			int totalCount = records.size();

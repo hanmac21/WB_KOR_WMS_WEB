@@ -310,16 +310,39 @@ $(document).ready(function() {
 
 		storage.empty();
 
-		let storageList = ['all', 'MATERIAL', 'PRODUCT', 'WORKSHOP', 'HSD', 'CNF', 'SW'];
+		// 전체 옵션을 기본값으로 먼저 추가
+		storage.append(`<option value="all">${i18n.t('search.all')}</option>`);
 
-		storageList.forEach(item => {
-			const text = item === 'all' ? i18n.t('search.all') : item;
-			storage.append(`<option value="${item}">${text}</option>`);
+		$.ajax({
+			url: "/read_warehouse",
+			type: "POST",
+			data: JSON.stringify({
+				searchParams: {}
+			}),
+			contentType: "application/json",
+			success: function(response) {
+				let records = response.records || [];
+
+				// 전체 옵션 아래에 DB 창고 목록 추가
+				records.forEach(item => {
+					const val = item.STORAGE || '';
+					if (val !== '') {
+						storage.append(`<option value="${val}">${val}</option>`);
+					}
+				});
+
+				// 기본값을 전체로
+				storage.val('all');
+
+				window.autoSetStorageFields();
+			},
+			error: function(xhr, status, error) {
+				console.error("창고 목록 조회 실패:", error);
+				// 실패해도 전체 옵션은 유지되고 기본값 세팅
+				storage.val('all');
+				window.autoSetStorageFields();
+			}
 		});
-
-		storage.val(storageList[0]);
-
-		window.autoSetStorageFields();
 	}
 
 	function getCookie(cookieName) {

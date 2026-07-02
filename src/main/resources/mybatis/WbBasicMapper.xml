@@ -485,6 +485,10 @@
     <select id="read_warehouse" resultType="map">
         SELECT *
         FROM T_WMS_WAREHOUSE
+        WHERE 1 = 1
+        <if test="type != null and type != '' and (type == '사내' or type == '사외')">
+            AND MEMO2 = #{type}
+        </if>
         ORDER BY FACTORY, MEMO2, STORAGE
     </select>
 

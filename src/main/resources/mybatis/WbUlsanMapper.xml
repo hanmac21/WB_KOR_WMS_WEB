@@ -62,9 +62,28 @@
 		SELECT DISTINCT sdate
 		FROM t_wms_realstock
 		WHERE useyn = 'Y'
-		<if test="storage != null and storage != '' and storage != 'all'">
-			AND storage = #{storage}
-		</if>
+		<choose>
+			<when test="storage != null and storage != '' and storage != '사내' and storage != '사외'">
+				AND UPPER(storage) = UPPER(#{storage})
+			</when>
+			<when test="storage != null and storage != '' and storage == &quot;사내&quot;">
+				AND UPPER(storage) IN (
+					SELECT DISTINCT STORAGE
+					FROM T_WMS_WAREHOUSE
+					WHERE MEMO2 = '사내'
+				)
+			</when>
+			<when test="storage != null and storage != '' and storage == &quot;사외&quot;">
+				AND UPPER(storage) IN (
+					SELECT DISTINCT STORAGE
+					FROM T_WMS_WAREHOUSE
+					WHERE MEMO2 = '사외'
+				)
+			</when>
+			<otherwise>
+				<!-- storage == 'all'인 경우: 조건 추가 안함 (전체 조회) -->
+			</otherwise>
+		</choose>
 		<if test="yearMonth != null and yearMonth != ''">
 			AND SUBSTR(sdate, 1, 7) = #{yearMonth}
 		</if>

@@ -24,13 +24,13 @@ $(document).ready(function() {
 	];
 
 	// 메인 호출 함수 - 메뉴 클릭 시 호출
-	window.call_m2_7_3 = function(menuId) {
+	window.call_mPurchase_stockcount_summary = function(menuId) {
 		showLoading("data");
 		const { fromDate, toDate } = getDefaultDateRange();
 		let sdate = fromDate;
 
 		// ✅ 메뉴 타입별 기본 STORAGE 지정
-		let storage = 'MATERIAL'; // 기본값
+		let storage = '사내'; // 기본값
 
 		performRealStockSummaryDBSearch({ sdate,  storage });
 	};
@@ -72,7 +72,7 @@ function performRealStockSummaryDBSearch(searchCriteria) {
 			window.filteredRealStockSummaryData = globalRealStockSummaryData;
 
 			// 첫 번째 검색이라면 뷰를 렌더링
-			if (!$('#view_m2_7_3').length) {
+			if (!$('#view_mPurchase_stockcount_summary').length) {
 				renderRealStockSummaryView();
 			} else {
 				// 기존 뷰가 있다면 테이블만 업데이트
@@ -96,7 +96,7 @@ function performRealStockSummaryDBSearch(searchCriteria) {
 // 사용자 뷰 렌더링 함수
 function renderRealStockSummaryView() {
 	let content_output = `
-			<div class="divBlockControl" id="view_m2_7_3">
+			<div class="divBlockControl" id="view_mPurchase_stockcount_summary">
 				<div class="content-body">
 					<!-- 검색 영역 -->
 					<div class="search-area">
@@ -146,13 +146,13 @@ function renderRealStockSummaryView() {
 								${i18n.t('table.page')} <strong id="realStockSummaryCurrentPageInfo">${currentRealStockSummaryPage}</strong>/<strong id="realStockSummaryTotalPageInfo">${totalRealStockSummaryPages}</strong> |  
 								<span class="tqtyTitle">${i18n.t('table.info.qty')} : </span><span class="stockCountSummaryTotalQty" style="color:#007bff"></span> 
 							</span>
-							<div class="action-buttons-right m2_7_3">
+							<div class="action-buttons-right mPurchase_stockcount_summary">
 								<div id="defaultActions" class="action-group">
 									<button class="btn btn-success" id="realStockSummaryExcelBtn" onclick="downloadAllRealStockSummaryData()">Excel</button>
 								</div>
 							</div>
 						</div>
-						<table class="data-table m2_7_3">
+						<table class="data-table mPurchase_stockcount_summary">
 							<thead>
 								<tr>
 									<th class = "noVal">${i18n.t('table.no')}<!-- No --></th>
@@ -200,20 +200,44 @@ function renderRealStockSummaryView() {
 // 공장 및 창고 선택 함수
 function renderFactoryStorage() {
 	const storage = $('#stockCountSummary_searchVal_storage');
-	const savedStorage = getCookie('selectedStorage');
 
 	storage.empty();
 
-	let storageList = ['MATERIAL',  'PRODUCT', 'WORKSHOP', 'HSD', 'CNF', 'SW', 'all'];
+	// 전체 옵션을 기본값으로 먼저 추가
+	storage.append(`<option value="사내">${i18n.t('search.all')}</option>`);
 
-	storageList.forEach(item => {
-		const text = item === 'all' ? i18n.t('search.all') : item;
-		storage.append(`<option value="${item}">${text}</option>`);
+	$.ajax({
+		url: "/read_warehouse",
+		type: "POST",
+		data: JSON.stringify({
+			searchParams: {
+				type: "사내"
+			}
+		}),
+		contentType: "application/json",
+		success: function(response) {
+			let records = response.records || [];
+
+			// DB 창고 목록 추가 (사내만)
+			records.forEach(item => {
+				const val = item.STORAGE || '';
+				if (val !== '') {
+					storage.append(`<option value="${val}">${val}</option>`);
+				}
+			});
+
+			// 기본값을 전체로
+			storage.val('사내');
+
+			window.autoSetStorageFields();
+		},
+		error: function(xhr, status, error) {
+			console.error("창고 목록 조회 실패:", error);
+			// 실패해도 전체 옵션은 유지되고 기본값 세팅
+			storage.val('사내');
+			window.autoSetStorageFields();
+		}
 	});
-
-	storage.val(storageList[0]);
-	
-	window.autoSetStorageFields();
 }
 
 // 달력 초기화 - jQuery UI Datepicker로 데이터 있는 날 하이라이트
@@ -257,7 +281,7 @@ function toYearMonthSummary(year, month) {
 // DB에서 해당 월에 데이터 있는 날짜 목록 로드
 function loadRealStockSummaryDates(storage, yearMonth, callback) {
 	const paramMap = { yearMonth: yearMonth };
-	if (storage && storage !== 'all') {
+	if (storage && storage !== '사내') {
 		paramMap.storage = storage;
 	}
 	$.ajax({
@@ -416,7 +440,7 @@ function bindRealStockSummaryEvents() {
 	});
 
 	// 엔터키 검색
-	$('#view_m2_7_3 input[type="text"]').off('keypress').on('keypress', function(e) {
+	$('#view_mPurchase_stockcount_summary input[type="text"]').off('keypress').on('keypress', function(e) {
 		if (e.which === 13) {
 			performRealStockSummarySearch();
 		}
@@ -456,7 +480,7 @@ function resetRealStockSummarySearch() {
 	$("#stockCountSummary_searchVal_itemname").val('');
 	
 	renderFactoryStorage();
-	let storage = 'MATERIAL'
+	let storage = '사내'
 	
 	// 초기화 후 전체 데이터 다시 조회
 	currentRealStockSummaryPage = 1;

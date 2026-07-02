@@ -6,11 +6,25 @@
     <sql id="where_realstock">
 
         <choose>
-            <when test="storage != null and storage != '' and storage != 'all'">
+            <when test="storage != null and storage != '' and storage != '사내' and storage != '사외'">
                 AND UPPER(a.storage) = UPPER(#{storage})
             </when>
             <when test="storage == null or storage == ''">
                 AND UPPER(a.storage) = UPPER('MATERIAL')
+            </when>
+            <when test="storage != null and storage != '' and storage == &quot;사내&quot;">
+                AND UPPER(a.storage) IN (
+                    SELECT DISTINCT STORAGE
+                    FROM T_WMS_WAREHOUSE
+                    WHERE MEMO2 = '사내'
+                )
+            </when>
+            <when test="storage != null and storage != '' and storage == &quot;사외&quot;">
+                AND UPPER(a.storage) IN (
+                    SELECT DISTINCT STORAGE
+                    FROM T_WMS_WAREHOUSE
+                    WHERE MEMO2 = '사외'
+                )
             </when>
             <otherwise>
                 <!-- storage == 'all'인 경우: 조건 추가 안함 (전체 조회) -->
