@@ -2652,3 +2652,138 @@ input:checked + .modal_userUpdateForm_toggle_slider::before {
 	justify-content: center;    /* 가로 가운데 */
 	background: rgba(0, 0, 0, 0.35);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* 창고 모달 */
+.warehouse-modal-overlay{
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0,0,0,0.45);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 9999;
+}
+
+.warehouse-modal-box{
+	background: #fff;
+	width: 380px;
+	border-radius: 10px;
+	box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+	overflow: hidden;
+}
+
+.warehouse-modal-header{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 14px 20px;
+	background: #2C3E50;
+	color: #fff;
+	font-size: 15px;
+	font-weight: 700;
+}
+
+.warehouse-modal-close{
+	background: none;
+	border: none;
+	color: #cfd6dd;
+	font-size: 20px;
+	cursor: pointer;
+	line-height: 1;
+	padding: 0;
+	transition: color 0.15s;
+}
+.warehouse-modal-close:hover{
+	color: #fff;
+}
+
+.warehouse-modal-body{
+	padding: 22px 20px;
+	display: flex;
+	flex-direction: column;
+	gap: 18px;
+}
+
+.warehouse-form-row{
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.warehouse-form-row label{
+	font-size: 13px;
+	font-weight: 600;
+	color: #34495e;
+}
+
+.warehouse-form-row input[type="text"]{
+	padding: 10px 12px;
+	border: 1px solid #d5dbe0;
+	border-radius: 6px;
+	font-size: 14px;
+	transition: border-color 0.15s, box-shadow 0.15s;
+}
+.warehouse-form-row input[type="text"]:focus{
+	outline: none;
+	border-color: #2C3E50;
+	box-shadow: 0 0 0 3px rgba(44,62,80,0.12);
+}
+.warehouse-form-row input[type="text"]::placeholder{
+	color: #aab3bb;
+}
+
+.warehouse-radio-group{
+	display: flex;
+	gap: 12px;
+	align-items: center;
+}
+
+.warehouse-radio{
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	padding: 8px 14px;
+	border: 1px solid #d5dbe0;
+	border-radius: 6px;
+	cursor: pointer;
+	font-size: 14px;
+	font-weight: 400;
+	color: #34495e;
+	transition: border-color 0.15s, background 0.15s;
+}
+.warehouse-radio:has(input:checked){
+	border-color: #2C3E50;
+	background: #f4f6f8;
+	font-weight: 600;
+}
+.warehouse-radio input[type="radio"]{
+	margin: 0;
+	accent-color: #2C3E50;
+}
+
+.warehouse-modal-footer{
+	display: flex;
+	justify-content: flex-end;
+	gap: 8px;
+	padding: 14px 20px;
+	background: #f8f9fa;
+	border-top: 1px solid #eceff1;
+}

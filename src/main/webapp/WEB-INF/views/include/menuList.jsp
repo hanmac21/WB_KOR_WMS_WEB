@@ -126,6 +126,12 @@
 				</div>
 				<div class="menuCommon menu1Tap3">
 					<i class="fa-solid fa-list" style="color : white;"></i>
+					<p id="mBasicData_warehouse" class="divBlockTrigger" data-matching="BASICDATA_PRODUCTINFO" data-group="<spring:message code ="menu.group.basicData"/>">
+						<spring:message code ="basicData.storageStructure"/><!-- 창고구조정보 -->
+					</p>
+				</div>
+				<div class="menuCommon menu1Tap3">
+					<i class="fa-solid fa-list" style="color : white;"></i>
 					<p id="mBasicData_sequenceManagement" class="divBlockTrigger" data-matching="BASICDATA_PRODUCTINFO" data-group="<spring:message code ="menu.group.basicData"/>">
 						서열 정보
 					</p>

@@ -15,8 +15,8 @@ let currentSortOrder = 'asc';
 
 let totalQty = 0;
 
-// 출력 라벨 타입 옵션
-const LABELINFO_OPTIONS = ['내부 일반', '출고 일반', '내부 소형', 'H/REST'];
+// 대차 라벨 타입 옵션
+const LABELINFO_OPTIONS = ['출고 일반', '내부 일반',  '내부 소형', 'H/REST'];
 
 $(document).ready(function() {
 
@@ -224,11 +224,11 @@ $(document).ready(function() {
 								<div class="searchVal_delivery">납품처<!-- CUSTCODE --></div>
 								<input type="text" id="productInfo_searchVal_delivery" />
 							</div><div class="search-label">
-							<div class="searchVal_labelinfo">출력 라벨 타입<!-- LABELINFO --></div>
+							<div class="searchVal_labelinfo">대차 라벨 타입<!-- LABELINFO --></div>
 								<select id="productInfo_searchVal_labelinfo">
 									<option value="">전체</option>
-									<option value="내부 일반">내부 일반</option>
 									<option value="출고 일반">출고 일반</option>
+									<option value="내부 일반">내부 일반</option>
 									<option value="내부 소형">내부 소형</option>
 									<option value="H/REST">H/REST</option>
 								</select>
@@ -285,7 +285,7 @@ $(document).ready(function() {
 									<th class = 'locationVal' data-sort="CUSTCODE">${i18n.t('search.customercode')}<!-- CUCODE --></th>
 									<th class = "itemcodeVal" data-sort="CLOSE_CUSTOMER">마감처<!-- ITEMCODE --></th>
 									<th class = "itemcodeVal" data-sort="DELIVERY_CUSTOMER">납품처<!-- ITEMCODE --></th>
-									<th class = "itemcodeVal" data-sort="LABELINFO">출력 라벨 타입<!-- ITEMCODE --></th>
+									<th class = "itemcodeVal" data-sort="LABELINFO">대차 라벨 타입<!-- ITEMCODE --></th>
 									<th class = "itemcodeVal" data-sort="LABEL1">라벨 1<!-- ITEMCODE --></th>
 									<th class = "itemcodeVal" data-sort="LABEL2">라벨 2<!-- ITEMCODE --></th>
 									<th class = "itemcodeVal" data-sort="LABEL3">라벨 3<!-- ITEMCODE --></th>
@@ -397,7 +397,7 @@ $(document).ready(function() {
 			const l5Changed = l5Str !== ol5;
 			const rowChanged = ccChanged || dcChanged || liChanged || l1Changed || l2Changed || l3Changed || l4Changed || l5Changed;
 
-			// 출력 라벨 타입(labelinfo) select 옵션 생성
+			// 대차 라벨 타입(labelinfo) select 옵션 생성
 			// 현재값이 목록에 없으면 빈 선택 + 해당 값을 옵션으로 추가하여 유실 방지
 			let liOptions = `<option value=""></option>`;
 			let liFound = false;

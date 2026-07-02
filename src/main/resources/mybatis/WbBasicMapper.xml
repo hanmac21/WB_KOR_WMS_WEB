@@ -482,6 +482,32 @@
         )
     </update>
 
+    <select id="read_warehouse" resultType="map">
+        SELECT *
+        FROM T_WMS_WAREHOUSE
+        ORDER BY FACTORY, MEMO2, STORAGE
+    </select>
+
+    <insert id="create_warehouse">
+        INSERT INTO T_WMS_WAREHOUSE (
+            FACTORY,
+            STORAGE,
+            MEMO2
+        ) VALUES (
+            'ULSAN',
+            #{storage},
+            #{type}
+        )
+    </insert>
+
+    <delete id="delete_warehouse">
+        DELETE T_WMS_WAREHOUSE
+        WHERE IID IN
+        <foreach collection="iids" item = "iid" open="(" separator="," close=")">
+            #{iid}
+        </foreach>
+    </delete>
+
     <select id="read_sequenceManagement" resultType="map">
         SELECT *
         FROM T_WMS_SEQUENCE_INFO

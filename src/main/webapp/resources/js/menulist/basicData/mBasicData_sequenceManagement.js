@@ -202,7 +202,7 @@ $(document).ready(function() {
 									<th class='noVal'>${i18n.t('table.no')}</th>
 									<th class='dateVal' data-sort="SDATE" data-type="date">${i18n.t('search.date')}</th>
 									<th class='cnameVal' data-sort="COLORNAME">색상 명</th>
-									<th class='carVal' data-sort="MATERIAL">재질<!-- CNAME --></th>
+									<th class='carVal' data-sort="MATERIAL">재질</th>
 									<th class='carVal' data-sort="REGION">지역</th>
 									<th class='carVal' data-sort="CAR">LX3</th>
 									<th class='carVal' data-sort="COLORCODE">색상코드</th>

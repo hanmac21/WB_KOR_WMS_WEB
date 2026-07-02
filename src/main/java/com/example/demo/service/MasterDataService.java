@@ -47,4 +47,10 @@ public interface MasterDataService {
 	Map<String, Object> read_sequenceManagement(Map<String, Object> params);
 
 	int upload_sequenceInfo(MultipartFile file) throws Exception;
+
+	Map<String, Object> read_warehouse(Map<String, Object> params);
+
+	void create_warehouse(Map<String, Object> param);
+
+	void delete_warehouse(Map<String, Object> param);
 }

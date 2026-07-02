@@ -70,4 +70,10 @@ public interface WbBasicMapper {
     void upload_sequenceInfo(Map<String, Object> map);
 
     void delete_sequenceInfoAll();
+
+    List<Map<String, Object>> read_warehouse(Map<String, Object> searchParams);
+
+    void create_warehouse(Map<String, Object> param);
+
+    void delete_warehouse(Map<String, Object> param);
 }

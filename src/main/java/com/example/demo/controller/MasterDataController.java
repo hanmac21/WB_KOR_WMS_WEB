@@ -239,6 +239,23 @@ public class MasterDataController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
 		}
 	}
+
+	@PostMapping("/read_warehouse")
+	public Map<String, Object> read_warehouse(@RequestBody Map<String, Object> params) {
+		return mService.read_warehouse(params);
+	}
+
+	@PostMapping("/create_warehouse")
+	@ResponseBody
+	public void create_warehouse(@RequestBody Map<String, Object> param) {
+		mService.create_warehouse(param);
+	}
+
+	@PostMapping("/delete_warehouse")
+	@ResponseBody
+	public void delete_warehouse(@RequestBody Map<String, Object> param) {
+		mService.delete_warehouse(param);
+	}
 }
 
 

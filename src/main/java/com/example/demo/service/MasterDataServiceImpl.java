@@ -420,6 +420,40 @@ public class MasterDataServiceImpl implements MasterDataService {
 	}
 
 	@Override
+	public Map<String, Object> read_warehouse(Map<String, Object> params) {
+		@SuppressWarnings("unchecked")
+		Map<String, Object> searchParams = (Map<String, Object>) params.get("searchParams");
+		// 결과 객체 초기화 (먼저!)
+		Map<String, Object> result = new HashMap<>();
+		try {
+			// 쿼리 실행
+			List<Map<String, Object>> records = basicMapper.read_warehouse(searchParams);
+			System.out.println("--------------");
+			System.out.println(searchParams);
+			result.put("records", records);
+
+			int totalCount = records.size();
+			result.put("totalCount", totalCount);
+		} catch (Exception e) {
+			// 예외 발생 시 기본값 설정
+			e.printStackTrace();
+			result.put("records", new ArrayList<>());
+			result.put("totalCount", 0);
+		}
+		return result;
+	}
+
+	@Override
+	public void create_warehouse (Map<String, Object> param) {
+		basicMapper.create_warehouse(param);
+	}
+
+	@Override
+	public void delete_warehouse (Map<String, Object> param) {
+		basicMapper.delete_warehouse(param);
+	}
+
+	@Override
 	public Map<String, Object> read_sequenceManagement(Map<String, Object> params) {
 		Map<String, Object> searchParams = (Map<String, Object>) params.get("searchParams");
 

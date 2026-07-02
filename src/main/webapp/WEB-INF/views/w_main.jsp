@@ -401,7 +401,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 		                    <div class="modal_userInsertForm_group">
 		                        <label class="modal_userInsertForm_label"><spring:message code ="modal.factory"/></label>
 		                        <select class="modal_userInsertForm_label" id="userInsert_factory" >
-		                        	<option value="WBTA">WBTA</option>
+		                        	<option value="ULSAN">ULSAN</option>
 		                        </select>
 		                    </div>
 
