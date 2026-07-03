@@ -219,7 +219,7 @@ public class PurchaseServiceImpl implements PurchaseService {
 		assertAffected(ulsanMapper.updateIncoming(param), "입고-삭제", barcode);
 		System.out.println("인바운드 삭제 완료");
 
-		assertAffected(ulsanMapper.updateIncomingInStock(param), "입고-재고", barcode);
+//		assertAffected(ulsanMapper.updateIncomingInStock(param), "입고-재고", barcode);
 	}
 
 	// 출고
@@ -233,7 +233,7 @@ public class PurchaseServiceImpl implements PurchaseService {
 		assertAffected(ulsanMapper.updateLoad(param), "출고-삭제", barcode);
 		System.out.println("아웃바운드 삭제 완료");
 
-		assertAffected(ulsanMapper.updateLoadInStock(param), "출고-재고", barcode);
+//		assertAffected(ulsanMapper.updateLoadInStock(param), "출고-재고", barcode);
 	}
 
 	// 입고

@@ -247,6 +247,7 @@ $(document).ready(function() {
 									<th class='loginidVal' data-sort="LOGINID">${i18n.t('search.user')}</th>
 									<th class='hhmmVal' data-sort="HHMM">${i18n.t('table.time')}</th>
 									<th class='barcodeVal' data-sort="BARCODE">${i18n.t('search.barcode')}</th>
+									<th class='itemcodeVal' data-sort="TRADEBARCODE">거래명세서 바코드</th>
 								</tr>
 							</thead>
 							<tbody id="incomingDetailDetailTableBody">
@@ -391,6 +392,7 @@ $(document).ready(function() {
 					<td class='loginidVal'>${data.LOGINID || ''}</td>
 					<td class='hhmmVal'>${hhmm || ''}</td>
 					<td class='barcodeVal'>${data.BARCODE || ''}</td>
+					<td class='itemcodeVal'>${data.TRADEBARCODE || ''}</td>
 	            </tr>
 			`;
 		}

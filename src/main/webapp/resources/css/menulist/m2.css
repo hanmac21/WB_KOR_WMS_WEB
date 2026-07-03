@@ -2551,9 +2551,9 @@ div.table-info div.action-buttons-right{
 	padding-right: 10px;
 }
 .data-table .cnameVal{
-	width: 150px;
-    min-width: 150px;
-    max-width: 150px;
+	width: 250px;
+    min-width: 250px;
+    max-width: 250px;
 }
 .data-table .exStatusVal{
     width: 130px;

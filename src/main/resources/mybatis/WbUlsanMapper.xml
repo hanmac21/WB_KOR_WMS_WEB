@@ -448,6 +448,7 @@
 			SUBSTR(a.ymdhms, 9, 2) || ':' || SUBSTR(a.ymdhms, 11, 2) AS HHMM,
 			a.bdate AS BDATE,
 			a.iid AS IID,
+			a.tradebarcode,
 
 			/* 전체 개수 - 모든 행에 반복 */
 			(SELECT COUNT(*)
