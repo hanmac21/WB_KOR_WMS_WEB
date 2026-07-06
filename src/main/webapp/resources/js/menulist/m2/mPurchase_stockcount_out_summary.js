@@ -102,26 +102,26 @@ function renderRealStockOutSummaryView() {
 					<div class="search-area">
 						<div class="search-row">
 							<div class="search-label">
-								<div class="stockCountSummary_searchVal_sdate">${i18n.t('search.date')}<!-- SDATE --></div>
-								<input type="text" id="stockCountSummary_searchVal_sdate" readonly="readonly" class="realstock-datepicker" placeholder="YYYY-MM-DD" />
+								<div class="stockCountOutSummary_searchVal_sdate">${i18n.t('search.date')}<!-- SDATE --></div>
+								<input type="text" id="stockCountOutSummary_searchVal_sdate" readonly="readonly" class="realstock-datepicker" placeholder="YYYY-MM-DD" />
 							</div>
 							<div class="search-label">
-								<div class="stockCountSummary_searchVal_storage">${i18n.t('search.storage')}<!-- STORAGE --></div>
-								<select id="stockCountSummary_searchVal_storage" >
+								<div class="stockCountOutSummary_searchVal_storage">${i18n.t('search.storage')}<!-- STORAGE --></div>
+								<select id="stockCountOutSummary_searchVal_storage" >
 									<!-- 동적으로 추가 -->
 								</select>
 							</div>
 							<div class="search-label">
-								<div class="stockCountSummary_searchVal_itemcode">${i18n.t('search.itemCode')}<!-- ITEMCODE --></div>
-								<input type="text" id="stockCountSummary_searchVal_itemcode" />
+								<div class="stockCountOutSummary_searchVal_itemcode">${i18n.t('search.itemCode')}<!-- ITEMCODE --></div>
+								<input type="text" id="stockCountOutSummary_searchVal_itemcode" />
 							</div>
 							<div class="search-label">
-								<div class="stockCountSummary_searchVal_oitemcode">${i18n.t('search.customercode')}<!-- ITEMCODE --></div>
-								<input type="text" id="stockCountSummary_searchVal_oitemcode" />
+								<div class="stockCountOutSummary_searchVal_oitemcode">${i18n.t('search.customercode')}<!-- ITEMCODE --></div>
+								<input type="text" id="stockCountOutSummary_searchVal_oitemcode" />
 							</div>
 							<div class="search-label">
-								<div class="stockCountSummary_searchVal_itemname">${i18n.t('search.itemName')}<!-- ITEMNAME --></div>
-								<input type="text" id="stockCountSummary_searchVal_itemname" />
+								<div class="stockCountOutSummary_searchVal_itemname">${i18n.t('search.itemName')}<!-- ITEMNAME --></div>
+								<input type="text" id="stockCountOutSummary_searchVal_itemname" />
 							</div>
 						</div>
 							<div class="search_button_area">
@@ -144,7 +144,7 @@ function renderRealStockOutSummaryView() {
 						<div class="table-info">
 							<span>${i18n.t('table.info.total')} <strong id="realStockOutSummaryTotalCount">${totalRealStockOutSummaryCount}</strong> ${i18n.t('table.info.records')} | 
 								${i18n.t('table.page')} <strong id="realStockOutSummaryCurrentPageInfo">${currentRealStockOutSummaryPage}</strong>/<strong id="realStockOutSummaryTotalPageInfo">${totalRealStockOutSummaryPages}</strong> |  
-								<span class="tqtyTitle">${i18n.t('table.info.qty')} : </span><span class="stockCountSummaryTotalQty" style="color:#007bff"></span> 
+								<span class="tqtyTitle">${i18n.t('table.info.qty')} : </span><span class="stockCountOutSummaryTotalQty" style="color:#007bff"></span> 
 							</span>
 							<div class="action-buttons-right mPurchase_stockcount_out_summary">
 								<div id="defaultActions" class="action-group">
@@ -180,7 +180,7 @@ function renderRealStockOutSummaryView() {
 	// ⬇️ 추가: 화면에 기본 날짜 세팅 (datepicker 초기화 전 raw val 세팅)
 	(function() {
 		const { fromDate } = getDefaultDateRange();
-		$("#stockCountSummary_searchVal_sdate").val(fromDate);
+		$("#stockCountOutSummary_searchVal_sdate").val(fromDate);
 	})();
 
 	// 공장 및 창고 선택
@@ -199,7 +199,7 @@ function renderRealStockOutSummaryView() {
 
 // 공장 및 창고 선택 함수
 function renderFactoryStorage() {
-	const storage = $('#stockCountSummary_searchVal_storage');
+	const storage = $('#stockCountOutSummary_searchVal_storage');
 
 	storage.empty();
 
@@ -242,10 +242,10 @@ function renderFactoryStorage() {
 
 // 달력 초기화 - jQuery UI Datepicker로 데이터 있는 날 하이라이트
 function initRealStockOutSummaryDatepicker() {
-	const storage = $("#stockCountSummary_searchVal_storage").val() || '';
+	const storage = $("#stockCountOutSummary_searchVal_storage").val() || '';
 	const yearMonth = toYearMonthSummary(realStockOutSummaryCalYear, realStockOutSummaryCalMonth);
 	loadRealStockOutSummaryDates(storage, yearMonth, function() {
-		$("#stockCountSummary_searchVal_sdate").datepicker({
+		$("#stockCountOutSummary_searchVal_sdate").datepicker({
 			dateFormat: "yy-mm-dd",
 			beforeShow: function(input, inst) {
 				setTimeout(function() {
@@ -265,9 +265,9 @@ function initRealStockOutSummaryDatepicker() {
 			onChangeMonthYear: function(year, month) {
 				realStockOutSummaryCalYear = year;
 				realStockOutSummaryCalMonth = month;
-				const storage = $("#stockCountSummary_searchVal_storage").val() || '';
+				const storage = $("#stockCountOutSummary_searchVal_storage").val() || '';
 				loadRealStockOutSummaryDates(storage, toYearMonthSummary(year, month), function() {
-					$("#stockCountSummary_searchVal_sdate").datepicker("refresh");
+					$("#stockCountOutSummary_searchVal_sdate").datepicker("refresh");
 				});
 			}
 		});
@@ -397,16 +397,16 @@ function renderRealStockOutSummaryPagination() {
 // 이벤트 바인딩
 function bindRealStockOutSummaryEvents() {
 	// 전체 선택 체크박스
-	$(document).off('change', '.stockCountSummary_chkAll').on('change', '.stockCountSummary_chkAll', function() {
+	$(document).off('change', '.stockCountOutSummary_chkAll').on('change', '.stockCountOutSummary_chkAll', function() {
 		let isChecked = $(this).is(':checked');
-		$('.stockCountSummary_chk').prop('checked', isChecked);
+		$('.stockCountOutSummary_chk').prop('checked', isChecked);
 	});
 
 	// 개별 체크박스
-	$(document).off('change', '.stockCountSummary_chk').on('change', '.stockCountSummary_chk', function() {
-		let totalCheckboxes = $('.stockCountSummary_chk').length;
-		let checkedCheckboxes = $('.stockCountSummary_chk:checked').length;
-		$('.stockCountSummary_chkAll').prop('checked', totalCheckboxes === checkedCheckboxes);
+	$(document).off('change', '.stockCountOutSummary_chk').on('change', '.stockCountOutSummary_chk', function() {
+		let totalCheckboxes = $('.stockCountOutSummary_chk').length;
+		let checkedCheckboxes = $('.stockCountOutSummary_chk:checked').length;
+		$('.stockCountOutSummary_chkAll').prop('checked', totalCheckboxes === checkedCheckboxes);
 	});
 	// 검색 버튼 클릭 - DB에서 새로 조회
 	$(".btnRealStockOutSummarySearch").off('click').on('click', function() {
@@ -432,10 +432,10 @@ function bindRealStockOutSummaryEvents() {
 	});
 
 	// storage 변경 시 달력 날짜 하이라이트 갱신 (현재 표시 중인 달 기준)
-	$("#stockCountSummary_searchVal_storage").off('change.datepicker').on('change.datepicker', function() {
+	$("#stockCountOutSummary_searchVal_storage").off('change.datepicker').on('change.datepicker', function() {
 		const storage = $(this).val() || '';
 		loadRealStockOutSummaryDates(storage, toYearMonthSummary(realStockOutSummaryCalYear, realStockOutSummaryCalMonth), function() {
-			$("#stockCountSummary_searchVal_sdate").datepicker("refresh");
+			$("#stockCountOutSummary_searchVal_sdate").datepicker("refresh");
 		});
 	});
 
@@ -450,12 +450,12 @@ function bindRealStockOutSummaryEvents() {
 // 현재 검색 조건 수집 함수
 function getCurrentSearchCriteria() {
 	return {
-		storage: $("#stockCountSummary_searchVal_storage").val(),
-		sdate: $("#stockCountSummary_searchVal_sdate").val(),
-		//car: $("#stockCountSummary_searchVal_car").val().trim().toUpperCase(),
-		itemcode: $("#stockCountSummary_searchVal_itemcode").val().trim().toUpperCase(),
-		oitemcode: $("#stockCountSummary_searchVal_oitemcode").val().trim().toUpperCase(),
-		itemname: $("#stockCountSummary_searchVal_itemname").val().trim().toUpperCase(),
+		storage: $("#stockCountOutSummary_searchVal_storage").val(),
+		sdate: $("#stockCountOutSummary_searchVal_sdate").val(),
+		//car: $("#stockCountOutSummary_searchVal_car").val().trim().toUpperCase(),
+		itemcode: $("#stockCountOutSummary_searchVal_itemcode").val().trim().toUpperCase(),
+		oitemcode: $("#stockCountOutSummary_searchVal_oitemcode").val().trim().toUpperCase(),
+		itemname: $("#stockCountOutSummary_searchVal_itemname").val().trim().toUpperCase(),
 	};
 }
 
@@ -475,9 +475,9 @@ function resetRealStockOutSummarySearch() {
 	const { fromDate, toDate } = getDefaultDateRange();
 	const sdate = fromDate;
 
-	$("#stockCountSummary_searchVal_sdate").datepicker("setDate", fromDate);
-	$("#stockCountSummary_searchVal_itemcode").val('');
-	$("#stockCountSummary_searchVal_itemname").val('');
+	$("#stockCountOutSummary_searchVal_sdate").datepicker("setDate", fromDate);
+	$("#stockCountOutSummary_searchVal_itemcode").val('');
+	$("#stockCountOutSummary_searchVal_itemname").val('');
 	
 	renderFactoryStorage();
 	let storage = '사외'
@@ -517,7 +517,7 @@ function updateTotalQty() {
 		data: JSON.stringify(searchMap),
 		contentType: "application/json",
 		success: function(data) {
-			$(".stockCountSummaryTotalQty").text(Number(data).toLocaleString());
+			$(".stockCountOutSummaryTotalQty").text(Number(data).toLocaleString());
 		},
 		error: function(xhr, status, error) {
 			console.error("요청 실패");
@@ -532,11 +532,11 @@ function updateTotalQty() {
 
 window.downloadAllRealStockOutSummaryData = function() {
 	let searchCriteria = {
-		storage: $("#stockCountSummary_searchVal_storage").val(),
-		sdate: $("#stockCountSummary_searchVal_sdate").val(),
-		//car: $("#stockCountSummary_searchVal_car").val().trim().toUpperCase(),
-		itemcode: $("#stockCountSummary_searchVal_itemcode").val().trim().toUpperCase(),
-		itemname: $("#stockCountSummary_searchVal_itemname").val().trim().toUpperCase(),
+		storage: $("#stockCountOutSummary_searchVal_storage").val(),
+		sdate: $("#stockCountOutSummary_searchVal_sdate").val(),
+		//car: $("#stockCountOutSummary_searchVal_car").val().trim().toUpperCase(),
+		itemcode: $("#stockCountOutSummary_searchVal_itemcode").val().trim().toUpperCase(),
+		itemname: $("#stockCountOutSummary_searchVal_itemname").val().trim().toUpperCase(),
 	};
 
 	showLoading("export");

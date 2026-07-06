@@ -95,30 +95,30 @@ $(document).ready(function() {
 					<div class="search-area">
 						<div class="search-row">
 							<div class="search-label">
-								<div class="stockCountDetail_searchVal_sdate">${i18n.t('search.date')}<!-- SDATE --></div>
-								<input type="text" id="stockCountDetail_searchVal_sdate" readonly="readonly" class="realstock-datepicker" placeholder="YYYY-MM-DD" />
+								<div class="stockCountOutDetail_searchVal_sdate">${i18n.t('search.date')}<!-- SDATE --></div>
+								<input type="text" id="stockCountOutDetail_searchVal_sdate" readonly="readonly" class="realstock-datepicker" placeholder="YYYY-MM-DD" />
 							</div>
 							<div class="search-label">
-								<div class="stockCountDetail_searchVal_storage">${i18n.t('search.storage')}<!-- STORAGE --></div>
-								<select id="stockCountDetail_searchVal_storage" >
+								<div class="stockCountOutDetail_searchVal_storage">${i18n.t('search.storage')}<!-- STORAGE --></div>
+								<select id="stockCountOutDetail_searchVal_storage" >
 									<!-- 동적으로 추가 -->
 								</select>
 							</div>
 							<div class="search-label">
-								<div class="stockCountDetail_searchVal_itemcode">${i18n.t('search.itemCode')}<!-- ITEMCODE --></div>
-								<input type="text" id="stockCountDetail_searchVal_itemcode" />
+								<div class="stockCountOutDetail_searchVal_itemcode">${i18n.t('search.itemCode')}<!-- ITEMCODE --></div>
+								<input type="text" id="stockCountOutDetail_searchVal_itemcode" />
 							</div>
 							<div class="search-label">
-								<div class="stockCountDetail_searchVal_oitemcode">${i18n.t('search.customercode')}<!-- ITEMCODE --></div>
-								<input type="text" id="stockCountDetail_searchVal_oitemcode" />
+								<div class="stockCountOutDetail_searchVal_oitemcode">${i18n.t('search.customercode')}<!-- ITEMCODE --></div>
+								<input type="text" id="stockCountOutDetail_searchVal_oitemcode" />
 							</div>
 							<div class="search-label">
-								<div class="stockCountDetail_searchVal_itemname">${i18n.t('search.itemName')}<!-- ITEMNAME --></div>
-								<input type="text" id="stockCountDetail_searchVal_itemname" />
+								<div class="stockCountOutDetail_searchVal_itemname">${i18n.t('search.itemName')}<!-- ITEMNAME --></div>
+								<input type="text" id="stockCountOutDetail_searchVal_itemname" />
 							</div>
 							<div class="search-label">
-								<div class="stockCountDetail_searchVal_loginid">${i18n.t('search.user')}<!-- USER --></div>
-								<input type="text" id="stockCountDetail_searchVal_loginid" />
+								<div class="stockCountOutDetail_searchVal_loginid">${i18n.t('search.user')}<!-- USER --></div>
+								<input type="text" id="stockCountOutDetail_searchVal_loginid" />
 							</div>
 						</div>
 							<div class="search_button_area">
@@ -141,7 +141,7 @@ $(document).ready(function() {
 						<div class="table-info">
 							<span>${i18n.t('table.info.total')} <strong id="realStockOutTotalCount">${totalRealStockOutCount}</strong> ${i18n.t('table.info.records')} | 
 								${i18n.t('table.page')} <strong id="realStockOutCurrentPageInfo">${currentRealStockOutPage}</strong>/<strong id="realStockOutTotalPageInfo">${totalRealStockOutPages}</strong> |  
-								<span class="tqtyTitle">${i18n.t('table.info.qty')} : </span><span class="stockCountDetailTotalQty" style="color:#007bff"></span> 
+								<span class="tqtyTitle">${i18n.t('table.info.qty')} : </span><span class="stockCountOutDetailTotalQty" style="color:#007bff"></span> 
 							</span>
 							<div class="action-buttons-right mPurchase_stockcount_out_detail">
 								<div id="defaultActions" class="action-group">
@@ -187,7 +187,7 @@ $(document).ready(function() {
 		// ⬇️ 추가: 화면에 기본 날짜 세팅 (datepicker 초기화 전 raw val 세팅)
 		(function() {
 			const { fromDate } = getDefaultDateRange();
-			$("#stockCountDetail_searchVal_sdate").val(fromDate);
+			$("#stockCountOutDetail_searchVal_sdate").val(fromDate);
 		})();
 		// 공장 및 창고 선택
 		renderFactoryStorage();
@@ -218,7 +218,7 @@ $(document).ready(function() {
 
 	// 공장 및 창고 선택 함수
 	function renderFactoryStorage() {
-	    const storage = $('#stockCountDetail_searchVal_storage');
+	    const storage = $('#stockCountOutDetail_searchVal_storage');
 
 		storage.empty();
 
@@ -261,10 +261,10 @@ $(document).ready(function() {
 	
 	// 달력 초기화 - jQuery UI Datepicker로 데이터 있는 날 하이라이트
 	function initRealStockOutDatepicker() {
-		const storage = $("#stockCountDetail_searchVal_storage").val() || '';
+		const storage = $("#stockCountOutDetail_searchVal_storage").val() || '';
 		const yearMonth = toYearMonth(realStockOutCalYear, realStockOutCalMonth);
 		loadRealStockOutDates(storage, yearMonth, function() {
-			$("#stockCountDetail_searchVal_sdate").datepicker({
+			$("#stockCountOutDetail_searchVal_sdate").datepicker({
 				dateFormat: "yy-mm-dd",
 				beforeShow: function(input, inst) {
 					setTimeout(function() {
@@ -284,9 +284,9 @@ $(document).ready(function() {
 				onChangeMonthYear: function(year, month) {
 					realStockOutCalYear = year;
 					realStockOutCalMonth = month;
-					const storage = $("#stockCountDetail_searchVal_storage").val() || '';
+					const storage = $("#stockCountOutDetail_searchVal_storage").val() || '';
 					loadRealStockOutDates(storage, toYearMonth(year, month), function() {
-						$("#stockCountDetail_searchVal_sdate").datepicker("refresh");
+						$("#stockCountOutDetail_searchVal_sdate").datepicker("refresh");
 					});
 				}
 			});
@@ -459,10 +459,10 @@ $(document).ready(function() {
 		});
 
 		// storage 변경 시 달력 날짜 하이라이트 갱신 (현재 표시 중인 달 기준)
-		$("#stockCountDetail_searchVal_storage").off('change.datepicker').on('change.datepicker', function() {
+		$("#stockCountOutDetail_searchVal_storage").off('change.datepicker').on('change.datepicker', function() {
 			const storage = $(this).val() || '';
 			loadRealStockOutDates(storage, toYearMonth(realStockOutCalYear, realStockOutCalMonth), function() {
-				$("#stockCountDetail_searchVal_sdate").datepicker("refresh");
+				$("#stockCountOutDetail_searchVal_sdate").datepicker("refresh");
 			});
 		});
 
@@ -477,14 +477,14 @@ $(document).ready(function() {
 	// 현재 검색 조건 수집 함수
 	function getCurrentSearchCriteria() {
 		return {
-			storage: $("#stockCountDetail_searchVal_storage").val(),
-			sdate: $("#stockCountDetail_searchVal_sdate").val(),
-			//car: $("#stockCountDetail_searchVal_car").val().trim().toUpperCase(),
-			itemcode: $("#stockCountDetail_searchVal_itemcode").val().trim().toUpperCase(),
-			oitemcode: $("#stockCountDetail_searchVal_oitemcode").val().trim().toUpperCase(),
-			itemname: $("#stockCountDetail_searchVal_itemname").val().trim().toUpperCase(),
-			//location: $("#stockCountDetail_searchVal_location").val().trim().toUpperCase(),
-			loginid: $("#stockCountDetail_searchVal_loginid").val().trim().toUpperCase()
+			storage: $("#stockCountOutDetail_searchVal_storage").val(),
+			sdate: $("#stockCountOutDetail_searchVal_sdate").val(),
+			//car: $("#stockCountOutDetail_searchVal_car").val().trim().toUpperCase(),
+			itemcode: $("#stockCountOutDetail_searchVal_itemcode").val().trim().toUpperCase(),
+			oitemcode: $("#stockCountOutDetail_searchVal_oitemcode").val().trim().toUpperCase(),
+			itemname: $("#stockCountOutDetail_searchVal_itemname").val().trim().toUpperCase(),
+			//location: $("#stockCountOutDetail_searchVal_location").val().trim().toUpperCase(),
+			loginid: $("#stockCountOutDetail_searchVal_loginid").val().trim().toUpperCase()
 		};
 	}
 
@@ -504,11 +504,11 @@ $(document).ready(function() {
 		const { fromDate, toDate } = getDefaultDateRange();
 		const sdate = fromDate;
 
-		$("#stockCountDetail_searchVal_sdate").datepicker("setDate", toDate);
-		$("#stockCountDetail_searchVal_itemcode").val('');
-		$("#stockCountDetail_searchVal_oitemcode").val('');
-		$("#stockCountDetail_searchVal_itemname").val('');
-		$("#stockCountDetail_searchVal_loginid").val('');
+		$("#stockCountOutDetail_searchVal_sdate").datepicker("setDate", toDate);
+		$("#stockCountOutDetail_searchVal_itemcode").val('');
+		$("#stockCountOutDetail_searchVal_oitemcode").val('');
+		$("#stockCountOutDetail_searchVal_itemname").val('');
+		$("#stockCountOutDetail_searchVal_loginid").val('');
 
 		renderFactoryStorage();
 		let storage = '사외'; // 기본값
@@ -549,7 +549,7 @@ $(document).ready(function() {
 			data: JSON.stringify(searchMap),
 			contentType: "application/json",
 			success: function(data) {
-				$(".stockCountDetailTotalQty").text(Number(data).toLocaleString());
+				$(".stockCountOutDetailTotalQty").text(Number(data).toLocaleString());
 			},
 			error: function(xhr, status, error) {
 				console.error("요청 실패");
@@ -648,12 +648,12 @@ $(document).ready(function() {
 
 window.downloadAllRealStockOutData = function() {
 	let searchCriteria = {
-		storage: $("#stockCountDetail_searchVal_storage").val(),
-		sdate: $("#stockCountDetail_searchVal_sdate").val(),
-		itemcode: $("#stockCountDetail_searchVal_itemcode").val().trim().toUpperCase(),
-		oitemcode: $("#stockCountDetail_searchVal_oitemcode").val().trim().toUpperCase(),
-		itemname: $("#stockCountDetail_searchVal_itemname").val().trim().toUpperCase(),
-		loginid: $("#stockCountDetail_searchVal_loginid").val().trim().toUpperCase()
+		storage: $("#stockCountOutDetail_searchVal_storage").val(),
+		sdate: $("#stockCountOutDetail_searchVal_sdate").val(),
+		itemcode: $("#stockCountOutDetail_searchVal_itemcode").val().trim().toUpperCase(),
+		oitemcode: $("#stockCountOutDetail_searchVal_oitemcode").val().trim().toUpperCase(),
+		itemname: $("#stockCountOutDetail_searchVal_itemname").val().trim().toUpperCase(),
+		loginid: $("#stockCountOutDetail_searchVal_loginid").val().trim().toUpperCase()
 	};
 
 	showLoading("export");
