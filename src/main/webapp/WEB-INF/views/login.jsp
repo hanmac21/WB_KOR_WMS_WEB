@@ -13,6 +13,7 @@ final long v = System.currentTimeMillis();
 <head>
 <meta charset="UTF-8">
 <title>WOOBOTECH KOR WMS</title>
+	<script src="/resources/js/common/cookie-namespace.js"></script>
 <link rel="shortcut icon"
 	href="https://www.hanmacsystem.com/web/upload/atom.ico">
 <link

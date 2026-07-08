@@ -13,6 +13,7 @@ final long v = System.currentTimeMillis();
 <head>
 <meta charset="UTF-8">
 <title>WOOBOTECH WMS</title>
+<script src="/resources/js/common/cookie-namespace.js"></script>
 <link href='/resources/css/core-main.css' rel='stylesheet' />
 <link href='/resources/css/daygrid-main.css' rel='stylesheet' />
 <link href='/resources/css/w_inbound.css' rel='stylesheet' />
