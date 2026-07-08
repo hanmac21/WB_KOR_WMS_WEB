@@ -161,7 +161,7 @@ $(document).ready(function() {
 								<input type="date" id="loadSummary_searchVal_toDate" />
 							</div>
 							<div class="search-label">
-								<div class="searchVal_custname">${i18n.t('search.suppliername')}<!-- custname --></div>
+								<div class="searchVal_custname">${i18n.t('search.custname')}<!-- custname --></div>
 								<input type="text" id="loadSummary_searchVal_custname" />
 							</div>
 							<div class="search-label">
@@ -214,7 +214,7 @@ $(document).ready(function() {
 								<tr>
 									<th class = "noVal">${i18n.t('table.no')}<!-- No --></th>
 									<th class = "dateVal" data-sort="SDATE">${i18n.t('search.date')}<!-- DATE --></th>
-									<th class = "storageVal" data-sort="CUSTNAME">${i18n.t('search.suppliername')}<!-- custname --></th>
+									<th class = "storageVal" data-sort="CUSTNAME">${i18n.t('search.custname')}<!-- custname --></th>
 									<th class = "carVal" data-sort="CAR">${i18n.t('search.car')}<!-- CAR --></th>
 									<th class = "itemcodeVal" data-sort="ITEMCODE">${i18n.t('search.itemCode')}<!-- ITEMCODE --></th>
 									<th class = "cnameVal" data-sort="SPEC">${i18n.t('search.customercode')}<!-- CCODE --></th>
