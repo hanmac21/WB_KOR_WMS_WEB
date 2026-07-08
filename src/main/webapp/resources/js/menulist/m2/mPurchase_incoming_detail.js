@@ -26,10 +26,10 @@ $(document).ready(function() {
 		{ key: 'OITEMCODE', header: 'spec' },
 		{ key: 'ITEMNAME', header: 'itemname' },
 		{ key: 'QTY', header: 'qty', type: 'number' },
-		{ key: 'INVOICENO', header: 'invoiceno' },
 		{ key: 'LOGINID', header: 'user' },
 		{ key: 'HHMM', header: 'time' },
-		{ key: 'BARCODE', header: 'barcode' }
+		{ key: 'BARCODE', header: 'barcode' },
+		{ key: 'TRADEBARCODE', header: 'trade barcode' }
 	];
 
 	// 메인 호출 함수 - 초기 로딩 시 전체 데이터 조회

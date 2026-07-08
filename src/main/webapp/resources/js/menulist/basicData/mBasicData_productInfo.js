@@ -16,7 +16,12 @@ let currentSortOrder = 'asc';
 let totalQty = 0;
 
 // 대차 라벨 타입 옵션
-const LABELINFO_OPTIONS = ['출고 일반', '내부 일반',  '내부 소형', 'H/REST'];
+const LABELINFO_OPTIONS = [
+	{ value: 'CART_OUT',   text: '출고 일반' },
+	{ value: 'CART_IN',    text: '내부 일반' },
+	{ value: 'CART_SMALL', text: '내부 소형' },
+	{ value: 'HEADREST',   text: 'H/REST' }
+];
 
 $(document).ready(function() {
 
@@ -227,10 +232,10 @@ $(document).ready(function() {
 							<div class="searchVal_labelinfo">대차 라벨 타입<!-- LABELINFO --></div>
 								<select id="productInfo_searchVal_labelinfo">
 									<option value="">전체</option>
-									<option value="출고 일반">출고 일반</option>
-									<option value="내부 일반">내부 일반</option>
-									<option value="내부 소형">내부 소형</option>
-									<option value="H/REST">H/REST</option>
+									<option value="CART_OUT">출고 일반</option>
+									<option value="CART_IN">내부 일반</option>
+									<option value="CART_SMALL">내부 소형</option>
+									<option value="HEADREST">H/REST</option>
 								</select>
 							</div>
 						</div>
@@ -401,14 +406,14 @@ $(document).ready(function() {
 			// 현재값이 목록에 없으면 빈 선택 + 해당 값을 옵션으로 추가하여 유실 방지
 			let liOptions = `<option value=""></option>`;
 			let liFound = false;
+
 			for (let k = 0; k < LABELINFO_OPTIONS.length; k++) {
 				const opt = LABELINFO_OPTIONS[k];
-				const sel = (liStr === opt) ? 'selected' : '';
+				const sel = (liStr === opt.value) ? 'selected' : '';
+
 				if (sel) liFound = true;
-				liOptions += `<option value="${opt}" ${sel}>${opt}</option>`;
-			}
-			if (!liFound && liStr !== "") {
-				liOptions += `<option value="${liStr}" selected>${liStr}</option>`;
+
+				liOptions += `<option value="${opt.value}" ${sel}>${opt.text}</option>`;
 			}
 
 			tableBody += `

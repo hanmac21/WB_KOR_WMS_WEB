@@ -16,7 +16,6 @@ $(document).ready(function() {
 
 	window.filteredRealStockOutData = []; // 현재 표시되는 데이터 (엑셀 다운로드용)
 	window.realStockOutColumns = [
-		{ key: 'SCANTYPE', header: 'scantype' },
 		{ key: 'STORAGE', header: 'storage' },
 		{ key: 'SDATE', header: 'date' },
 		{ key: 'CAR', header: 'car' },
@@ -300,9 +299,12 @@ $(document).ready(function() {
 	// DB에서 해당 월에 데이터 있는 날짜 목록 로드
 	function loadRealStockOutDates(storage, yearMonth, callback) {
 		const paramMap = { yearMonth: yearMonth };
-		if (storage && storage !== '사외') {
+		if (storage && storage !== 'all') {
 			paramMap.storage = storage;
+		} else {
+			paramMap.storage = "사외";
 		}
+
 		$.ajax({
 			url: "/read_realStock_dates",
 			type: "POST",
