@@ -5,11 +5,7 @@ import java.io.FileInputStream;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -185,6 +181,82 @@ public class PurchaseController {
 	@PostMapping("/read_validationDetail")
 	public Map<String, Object> readValidationDetail(@RequestBody Map<String, Object> params) {
 		return purchaseService.readValidationDetail(params);
+	}
+
+
+	@PostMapping("/read_sequenceSummary")
+	public Map<String, Object> read_sequenceSummary(@RequestBody Map<String, Object> params) {
+		return purchaseService.read_sequenceSummary(params);
+	}
+
+	@PostMapping("/upload_sequenceAll")
+	public ResponseEntity<?> upload_sequenceAll(@RequestParam("file") MultipartFile file) {
+		Map<String, Object> result = new HashMap<>();
+
+		if (file == null || file.isEmpty()) {
+			result.put("message", "업로드된 파일이 없습니다.");
+			return ResponseEntity.badRequest().body(result);
+		}
+
+		String name = file.getOriginalFilename();
+		if (name == null || !(name.toLowerCase().endsWith(".xlsx") || name.toLowerCase().endsWith(".xls"))) {
+			result.put("message", "엑셀 파일 (.xlsx, .xls)만 업로드 가능합니다.");
+			return ResponseEntity.badRequest().body(result);
+		}
+
+		try{
+			int insertCount = purchaseService.upload_sequenceAll(file);
+			result.put("insertCount", insertCount);
+			return ResponseEntity.ok(result);
+		} catch (IllegalArgumentException e){
+			result.put("message", e.getMessage());
+			return ResponseEntity.badRequest().body(result);
+		} catch (Exception e){
+			e.printStackTrace();
+			result.put("message", "서버 처리 중 오류가 발생했습니다");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
+		}
+	}
+
+	@PostMapping("/read_sequence")
+	public Map<String, Object> read_sequence(@RequestBody Map<String, Object> params) {
+		return purchaseService.read_sequence(params);
+	}
+
+	@PostMapping("/upload_sequenceLine")
+	public ResponseEntity<?> upload_sequenceLine(@RequestParam("file") MultipartFile file,
+	                                             @RequestParam("line") String line) {
+		Map<String, Object> result = new HashMap<>();
+
+		// 라인 값 검증
+		if (line == null || !Arrays.asList("T", "R", "F").contains(line)) {
+			result.put("message", "잘못된 라인입니다. (T / R / F)");
+			return ResponseEntity.badRequest().body(result);
+		}
+
+		if (file == null || file.isEmpty()) {
+			result.put("message", "업로드된 파일이 없습니다.");
+			return ResponseEntity.badRequest().body(result);
+		}
+
+		String name = file.getOriginalFilename();
+		if (name == null || !(name.toLowerCase().endsWith(".xlsx") || name.toLowerCase().endsWith(".xls"))) {
+			result.put("message", "엑셀 파일 (.xlsx, .xls)만 업로드 가능합니다.");
+			return ResponseEntity.badRequest().body(result);
+		}
+
+		try {
+			int insertCount = purchaseService.upload_sequenceLine(file, line);
+			result.put("insertCount", insertCount);
+			return ResponseEntity.ok(result);
+		} catch (IllegalArgumentException e) {
+			result.put("message", e.getMessage());
+			return ResponseEntity.badRequest().body(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("message", "서버 처리 중 오류가 발생했습니다");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
+		}
 	}
 
 

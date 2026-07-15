@@ -50,4 +50,11 @@ public interface PurchaseService {
 
 	Map<String, Object> readValidationDetail(Map<String, Object> params);
 
+	Map<String, Object> read_sequenceSummary(Map<String, Object> params);
+
+	int upload_sequenceAll(MultipartFile file) throws Exception;
+
+	int upload_sequenceLine(MultipartFile file, String line) throws Exception;
+
+	Map<String, Object> read_sequence(Map<String, Object> params);
 }

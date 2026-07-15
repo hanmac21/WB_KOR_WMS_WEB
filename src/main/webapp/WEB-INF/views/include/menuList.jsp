@@ -198,6 +198,41 @@
                 </div>
             </div>
 
+            <!-- 서열관리 대분류 -->
+            <input type="checkbox" class="answer" id="answer05">
+            <label for="answer05" data-matching="PURCHASE_SEQUENCE">
+                <img class="menuIconCommon" src="../resources/images/menuicon/WMS Web Icon-10.png">
+                <span class="normalLink">서열관리</span>
+                <i class="fa-solid fa-plus" style="color:white; position:absolute; top:16px; right:13px;"></i>
+            </label>
+
+            <div class="menuListCallBack_5">
+                <div class="menuCommon">
+                    <i class="fa-solid fa-list" style="color:#046565;"></i>
+                    <p id="mPurchase_sequence_summary" class="divBlockTrigger" data-menu-type="purchase" data-matching="PURCHASE_STOCKCOUNT" data-group="<spring:message code='purchase.inventory'/>">
+                        전체 서열 내역
+                    </p>
+                </div>
+                <div class="menuCommon">
+                    <i class="fa-solid fa-list" style="color:#046565;"></i>
+                    <p id="mPurchase_sequence_f" class="divBlockTrigger" data-menu-type="purchase" data-matching="PURCHASE_STOCKCOUNT" data-group="<spring:message code='purchase.inventory'/>">
+                        LINE F
+                    </p>
+                </div>
+                <div class="menuCommon">
+                    <i class="fa-solid fa-list" style="color:#046565;"></i>
+                    <p id="mPurchase_sequence_r" class="divBlockTrigger" data-menu-type="purchase" data-matching="PURCHASE_STOCKCOUNT" data-group="<spring:message code='purchase.inventory'/>">
+                        LINE R
+                    </p>
+                </div>
+                <div class="menuCommon">
+                    <i class="fa-solid fa-list" style="color:#046565;"></i>
+                    <p id="mPurchase_sequence_t" class="divBlockTrigger" data-menu-type="purchase" data-matching="PURCHASE_STOCKCOUNT" data-group="<spring:message code='purchase.inventory'/>">
+                        LINE T
+                    </p>
+                </div>
+            </div>
+
             <!-- 재고실사 대분류 -->
             <input type="checkbox" class="answer" id="answer06">
             <label for="answer06" data-matching="PURCHASE_STOCKCOUNT">

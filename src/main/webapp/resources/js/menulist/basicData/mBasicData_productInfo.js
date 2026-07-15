@@ -291,10 +291,10 @@ $(document).ready(function() {
 									<th class = "itemcodeVal" data-sort="CLOSE_CUSTOMER">마감처<!-- ITEMCODE --></th>
 									<th class = "itemcodeVal" data-sort="DELIVERY_CUSTOMER">납품처<!-- ITEMCODE --></th>
 									<th class = "itemcodeVal" data-sort="LABELINFO">대차 라벨 타입<!-- ITEMCODE --></th>
-									<th class = "itemcodeVal" data-sort="LABEL1">라벨 1<!-- ITEMCODE --></th>
-									<th class = "itemcodeVal" data-sort="LABEL2">라벨 2<!-- ITEMCODE --></th>
-									<th class = "itemcodeVal" data-sort="LABEL3">라벨 3<!-- ITEMCODE --></th>
-									<th class = "itemcodeVal" data-sort="LABEL4">라벨 4<!-- ITEMCODE --></th>
+									<th class = "itemcodeVal" data-sort="LABEL1">좌석 구분<!-- ITEMCODE --></th>
+									<th class = "itemcodeVal" data-sort="LABEL2">제품 사양<!-- ITEMCODE --></th>
+									<th class = "itemcodeVal" data-sort="LABEL3">색상 코드<!-- ITEMCODE --></th>
+									<th class = "itemcodeVal" data-sort="LABEL4">색상 명<!-- ITEMCODE --></th>
 									<th class = "itemcodeVal" data-sort="LABEL5">라벨 5<!-- ITEMCODE --></th>
 								</tr>
 							</thead>

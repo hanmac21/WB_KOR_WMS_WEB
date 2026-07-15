@@ -686,4 +686,93 @@
 		<include refid="searchCondition_validation"/>
 		ORDER BY A.SDATE DESC, A.CARTBARCODE, A.ASSYBARCODE
 	</select>
+
+	<select id="read_sequenceSummary" resultType="map">
+		SELECT
+			SDATE,
+			LINE,
+			TIME,
+			COUNT(SEQ) AS SEQ,
+			SUM(QTY) AS QTY,
+			SUM(CASE WHEN COMPLETEYN = 'Y' THEN 1 ELSE 0 END) AS YQTY,
+			SUM(CASE WHEN COMPLETEYN = 'N' THEN 1 ELSE 0 END) AS NQTY
+		FROM T_WMS_SEQUENCE
+		WHERE USEYN = 'Y'
+		GROUP BY SDATE, LINE, TIME
+		ORDER BY LINE
+	</select>
+
+	<update id="updateSequenceN">
+		UPDATE T_WMS_SEQUENCE
+		SET USEYN = 'N',
+			YMDHMS_D = TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+		WHERE SDATE = #{sdate}
+		  AND LINE = #{line}
+		  AND USEYN = 'Y'
+	</update>
+
+	<insert id="insertSequence">
+		INSERT INTO T_WMS_SEQUENCE (
+			SDATE,
+			J,
+			HALC,
+			SKID,
+			PRODUCTCODE,
+			SPEC,
+			ITEMNAME,
+			TIME,
+			SEQ,
+			QTY,
+			LINE,
+			YMDHMS,
+			OP1,
+			OP2,
+			OP3,
+			OP4
+		) VALUES (
+			#{sdate},
+			#{j},
+			#{halc},
+			#{skid},
+			#{productcode},
+			#{spec},
+			#{itemname},
+			#{time},
+			#{seq},
+			#{qty},
+			#{line},
+			TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS'),
+			#{op1},
+			#{op2},
+			#{op3},
+			#{op4}
+		)
+	</insert>
+
+	<select id="read_sequence" resultType="map">
+		SELECT
+			A.SDATE,
+			A.COMPLETEYN,
+			A.HALC,
+			A.SPEC,
+			A.ITEMNAME,
+			A.OP4,
+			A.TIME,
+			A.SEQ,
+			A.QTY,
+			B.COLORCODE,
+			B.ROW1_LH_CODE,
+			B.ROW1_RH_CODE,
+			B.ROW2_LH_CODE,
+			B.ROW2_RH_CODE,
+			B.ROW2_CTR_CODE,
+			B.ROW3_LH_CODE,
+			B.ROW3_RH_CODE,
+			B.ROW3_CTR_CODE
+		FROM T_WMS_SEQUENCE A
+		LEFT JOIN T_WMS_SEQUENCE_INFO B ON A.HALC = B.LX2_PE_CODE
+		WHERE A.USEYN = 'Y'
+		<include refid="searchCondition_sequence"/>
+		ORDER BY A.TIME, A.SEQ
+	</select>
 </mapper>  

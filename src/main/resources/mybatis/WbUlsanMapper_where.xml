@@ -283,4 +283,38 @@
             AND UPPER(a.oitemcode) LIKE '%' || UPPER(#{searchParams.oitemcode}) || '%'
         </if>
     </sql>
+
+
+    <sql id="searchCondition_sequence">
+        <choose>
+            <when test='line != null and line == "F"'>
+                AND A.LINE = 'F'
+                AND UPPER(A.OP4) = UPPER(B.ROW1_HEADREST)
+            </when>
+            <when test='line != null and line == "R"'>
+                AND A.LINE = 'R'
+                AND UPPER(B.ROW2_HEADREST) LIKE '%' || UPPER(A.OP4) || '%'
+            </when>
+            <when test='line != null and line == "T"'>
+                AND A.LINE = 'T'
+                AND UPPER(A.OP4) LIKE '%' || UPPER(B.ROW3_HEADREST) || '%'
+            </when>
+        </choose>
+
+        <if test="fromDate != null and fromDate != ''">
+            AND a.sdate = #{fromDate}
+        </if>
+
+        <if test="status != null and status != ''">
+            AND a.COMPLETEYN = #{status}
+        </if>
+
+        <if test="oitemcode != null and oitemcode != ''">
+            AND UPPER(a.spec) LIKE '%' || UPPER(#{oitemcode}) || '%'
+        </if>
+
+        <if test="itemname != null and itemname != ''">
+            AND UPPER(a.itemname) LIKE '%' || UPPER(#{itemname}) || '%'
+        </if>
+    </sql>
 </mapper>  

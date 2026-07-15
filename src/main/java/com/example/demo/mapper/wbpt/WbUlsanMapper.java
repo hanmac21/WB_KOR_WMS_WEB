@@ -1,5 +1,6 @@
 package com.example.demo.mapper.wbpt;
 
+import com.example.demo.vo.ProductVO;
 import com.example.demo.vo.RealStockVO;
 import org.springframework.stereotype.Repository;
 
@@ -51,4 +52,12 @@ public interface WbUlsanMapper {
     List<Map<String, Object>> readLoadSummary(Map<String, Object> queryParams);
 
     List<Map<String, Object>> readValidationDetail(Map<String, Object> queryParams);
+
+    List<Map<String, Object>> read_sequenceSummary(Map<String, Object> searchParams);
+
+    void updateSequenceN(Map<String, Object> key);
+
+    void insertSequence(Map<String, Object> row);
+
+    List<Map<String, Object>> read_sequence(Map<String, Object> searchParams);
 }
