@@ -400,8 +400,10 @@
             a.itemname,
             c.subname AS spec,
             a.spec AS custcode,
+            cu.cu_sangho AS cname,
             f.close_customer,
             f.delivery_customer,
+            f.delivery_location,
             f.labelinfo,
             f.label1,
             f.label2,
@@ -423,6 +425,14 @@
             AND e.typecode = 'MI002'
         LEFT OUTER JOIN T_WMS_ITEMINFO f
             ON a.itemcode = f.itemcode
+        LEFT JOIN  (
+            SELECT
+                itemcode,
+                MAX(custcode) KEEP (DENSE_RANK FIRST ORDER BY condate DESC) AS custcode
+            FROM t_mi_price_buycust
+            GROUP BY itemcode
+        ) p ON a.itemcode = p.itemcode
+        LEFT JOIN c_cust cu ON cu.cu_code = p.custcode
         WHERE a.deldate = ' ' and e.subname is not null
         and a.branch = '001'
         <include refid="where_productInfo"/>
@@ -440,6 +450,9 @@
             </if>
             <if test="delivery != null">
                 DELIVERY_CUSTOMER = #{delivery},
+            </if>
+            <if test="location != null">
+                DELIVERY_LOCATION = #{location},
             </if>
             <if test="labelinfo != null">
                 LABELINFO = #{labelinfo},
@@ -463,13 +476,14 @@
             YMDHMS  = TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
         </set>
         WHEN NOT MATCHED THEN INSERT (
-            ITEMCODE, CLOSE_CUSTOMER, DELIVERY_CUSTOMER, LABELINFO,
+            ITEMCODE, CLOSE_CUSTOMER, DELIVERY_CUSTOMER, DELIVERY_LOCATION, LABELINFO,
             LABEL1, LABEL2, LABEL3, LABEL4, LABEL5,
             USEYN, LOGINID, YMDHMS
         ) VALUES (
             #{itemcode,  jdbcType=VARCHAR},
             #{close,     jdbcType=VARCHAR},
             #{delivery,  jdbcType=VARCHAR},
+            #{location,  jdbcType=VARCHAR},
             #{labelinfo, jdbcType=VARCHAR},
             #{label1,    jdbcType=VARCHAR},
             #{label2,    jdbcType=VARCHAR},

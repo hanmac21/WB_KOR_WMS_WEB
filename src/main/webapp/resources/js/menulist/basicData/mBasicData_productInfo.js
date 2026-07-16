@@ -27,8 +27,22 @@ $(document).ready(function() {
 
 	window.filteredProductInfoData = [];
 	window.productInfoColumns = [
-		{ key: 'ITEMCODE', header: 'itemcode' },
-		{ key: 'ITEMNAME', header: 'itemname' },
+		{ key: 'ITEMTYPE',  header: '품목구분' },
+		{ key: 'CAR', header: '차종' },
+		{ key: 'ITEMCODE', header: '품목코드' },
+		{ key: 'ITEMNAME', header: '품목명' },
+		{ key: 'SPEC', header: '규격' },
+		{ key: 'CUSTCODE', header: '거래처코드' },
+		{ key: 'CNAME', header: '협력사명' },
+		{ key: 'CLOSE_CUSTOMER', header: '마감처' },
+		{ key: 'DELIVERY_CUSTOMER', header: '납품처' },
+		{ key: 'DELIVERY_LOCATION', header: '납품장소' },
+		{ key: 'LABELINFO', header: '대차 라벨 타입' },
+		{ key: 'LABEL1', header: '좌석 구분' },
+		{ key: 'LABEL2', header: '제품 사양' },
+		{ key: 'LABEL3', header: '색상 코드' },
+		{ key: 'LABEL4', header: '색상 명' },
+		{ key: 'LABEL5', header: '라벨 5' }
 	];
 
 	// 메인 호출 함수 - 초기 로딩 시 전체 데이터 조회
@@ -64,6 +78,7 @@ $(document).ready(function() {
 				allServerData.forEach(r => {
 					r.__ORIGIN_CLOSE_CUSTOMER    = toOrigin(r.CLOSE_CUSTOMER    ?? r.close_customer);
 					r.__ORIGIN_DELIVERY_CUSTOMER = toOrigin(r.DELIVERY_CUSTOMER  ?? r.delibery_customer);
+					r.__ORIGIN_DELIVERY_LOCATION = toOrigin(r.DELIVERY_LOCATION  ?? r.delibery_location);
 					r.__ORIGIN_LABEL_INFO        = toOrigin(r.LABELINFO          ?? r.labelinfo);
 					r.__ORIGIN_LABEL_1           = toOrigin(r.LABEL1             ?? r.label1);
 					r.__ORIGIN_LABEL_2           = toOrigin(r.LABEL2             ?? r.label2);
@@ -272,8 +287,8 @@ $(document).ready(function() {
 						
 							<div class="action-buttons-right mBasicData_productInfo">
 								<div id="defaultActions" class="action-group">
-									<button class="btn btn-success" id="productInfoSaveBtn">Save</button>
-									<button class="btn btn-success" id="productInfoExcelBtn" onclick="downloadAllProductInfoData()" style="display:none;">Execl</button>
+									<button class="btn btn-primary" id="productInfoSaveBtn">저장</button>
+									<button class="btn btn-success" id="productInfoExcelBtn" onclick="downloadAllProductInfoData()">Execl</button>
 								</div>
 							</div>
 						</div>
@@ -285,11 +300,13 @@ $(document).ready(function() {
 								    <th class = "cucodeVal" data-sort="ITEMTYPE">${i18n.t('search.itemType')}<!-- ITEMTYPE --></th>
 									<th class = "cucodeVal" data-sort="CAR">${i18n.t('search.car')}<!-- CAR --></th>
 									<th class = "itemcodeVal" data-sort="ITEMCODE">${i18n.t('search.itemCode')}<!-- ITEMCODE --></th>
-									<th class = 'itemnameLongVal' data-sort="ITEMNAME">${i18n.t('search.itemName')}<!-- ITEMNAME --></th>
+									<th class = 'itemnameVal' data-sort="ITEMNAME">${i18n.t('search.itemName')}<!-- ITEMNAME --></th>
 									<th class = 'specVal' data-sort="SPEC">${i18n.t('search.spec')}<!-- SPEC --></th>									
 									<th class = 'locationVal' data-sort="CUSTCODE">${i18n.t('search.customercode')}<!-- CUCODE --></th>
+									<th class = 'cnameVal' data-sort="CNAME">${i18n.t('search.suppliername')}<!-- CUCODE --></th>
 									<th class = "itemcodeVal" data-sort="CLOSE_CUSTOMER">마감처<!-- ITEMCODE --></th>
 									<th class = "itemcodeVal" data-sort="DELIVERY_CUSTOMER">납품처<!-- ITEMCODE --></th>
+									<th class = "itemcodeVal" data-sort="DELIVERY_LOCATION">납품장소<!-- ITEMCODE --></th>
 									<th class = "itemcodeVal" data-sort="LABELINFO">대차 라벨 타입<!-- ITEMCODE --></th>
 									<th class = "itemcodeVal" data-sort="LABEL1">좌석 구분<!-- ITEMCODE --></th>
 									<th class = "itemcodeVal" data-sort="LABEL2">제품 사양<!-- ITEMCODE --></th>
@@ -365,6 +382,7 @@ $(document).ready(function() {
 			// 현재값(화면 표시용) - null/undefined만 공백, 0은 유지
 			const ccVal = (data.CLOSE_CUSTOMER ?? data.close_customer);
 			const dcVal = (data.DELIVERY_CUSTOMER ?? data.delibery_customer);
+			const dlVal = (data.DELIVERY_LOCATION ?? data.delibery_location);
 			const liVal = (data.LABELINFO ?? data.labelinfo);
 			const l1Val = (data.LABEL1 ?? data.label1);
 			const l2Val = (data.LABEL2 ?? data.label2);
@@ -374,6 +392,7 @@ $(document).ready(function() {
 
 			const ccStr = (ccVal === null || ccVal === undefined) ? "" : String(ccVal);
 			const dcStr = (dcVal === null || dcVal === undefined) ? "" : String(dcVal);
+			const dlStr = (dlVal === null || dlVal === undefined) ? "" : String(dlVal);
 			const liStr = (liVal === null || liVal === undefined) ? "" : String(liVal);
 			const l1Str = (l1Val === null || l1Val === undefined) ? "" : String(l1Val);
 			const l2Str = (l2Val === null || l2Val === undefined) ? "" : String(l2Val);
@@ -384,6 +403,7 @@ $(document).ready(function() {
 			// 최초 기준값(origin)
 			const occ = String(data.__ORIGIN_CLOSE_CUSTOMER ?? "");
 			const odc = String(data.__ORIGIN_DELIVERY_CUSTOMER ?? "");
+			const odl = String(data.__ORIGIN_DELIVERY_LOCATION ?? "");
 			const oli = String(data.__ORIGIN_LABEL_INFO ?? "");
 			const ol1 = String(data.__ORIGIN_LABEL_1 ?? "");
 			const ol2 = String(data.__ORIGIN_LABEL_2 ?? "");
@@ -394,13 +414,14 @@ $(document).ready(function() {
 			// changed 계산(문자열 기준)
 			const ccChanged = ccStr !== occ;
 			const dcChanged = dcStr !== odc;
+			const dlChanged = dlStr !== odl;
 			const liChanged = liStr !== oli;
 			const l1Changed = l1Str !== ol1;
 			const l2Changed = l2Str !== ol2;
 			const l3Changed = l3Str !== ol3;
 			const l4Changed = l4Str !== ol4;
 			const l5Changed = l5Str !== ol5;
-			const rowChanged = ccChanged || dcChanged || liChanged || l1Changed || l2Changed || l3Changed || l4Changed || l5Changed;
+			const rowChanged = ccChanged || dcChanged || dlChanged || liChanged || l1Changed || l2Changed || l3Changed || l4Changed || l5Changed;
 
 			// 대차 라벨 타입(labelinfo) select 옵션 생성
 			// 현재값이 목록에 없으면 빈 선택 + 해당 값을 옵션으로 추가하여 유실 방지
@@ -422,9 +443,10 @@ $(document).ready(function() {
 					<td class = "cucodeVal">${data.ITEMTYPE || data.itemcodetype || ''}</td>
 					<td class = "cucodeVal">${data.CAR || data.car || ''}</td>
 					<td class = "itemcodeVal">${data.ITEMCODE || data.itemcode || ''}</td>
-					<td class = "itemnameLongVal">${data.ITEMNAME || data.itemname || ''}</td>
+					<td class = "itemnameVal">${data.ITEMNAME || data.itemname || ''}</td>
 					<td class = "specVal">${data.SPEC || data.spec || ''}</td>
 					<td class = "locationVal">${data.CUSTCODE || data.custcode || ''}</td>
+					<td class = "cnameVal">${data.CNAME || data.cname || ''}</td>
 					<td class = "itemcodeVal">
 						<input type='text' class="text-input ${ccChanged ? 'changed' : ''}" data-field="close" 
 							value="${ccStr}" data-origin="${occ}">
@@ -432,6 +454,10 @@ $(document).ready(function() {
 					<td class = "itemcodeVal">
 						<input type='text' class="text-input ${dcChanged ? 'changed' : ''}" data-field="delivery" 
 							value="${dcStr}" data-origin="${odc}">
+					</td>
+					<td class = "itemcodeVal">
+						<input type='text' class="text-input ${dlChanged ? 'changed' : ''}" data-field="location" 
+							value="${dlStr}" data-origin="${odl}">
 					</td>
 					<td class = "itemcodeVal">
 						<select class="text-input ${liChanged ? 'changed' : ''}" data-field="labelinfo" data-origin="${oli}">
@@ -705,6 +731,7 @@ $(document).ready(function() {
 				const ORIGIN_MAP = {
 					close:     '__ORIGIN_CLOSE_CUSTOMER',
 					delivery:  '__ORIGIN_DELIVERY_CUSTOMER',
+					location:  '__ORIGIN_DELIVERY_LOCATION',
 					labelinfo: '__ORIGIN_LABEL_INFO',
 					label1:    '__ORIGIN_LABEL_1',
 					label2:    '__ORIGIN_LABEL_2',
@@ -756,3 +783,45 @@ $(document).ready(function() {
 	});
 
 });
+
+window.downloadAllProductInfoData = function() {
+	showLoading("export");
+
+	const LABEL_TEXT = {
+		CART_OUT: '출고 일반',
+		CART_IN: '내부 일반',
+		CART_SMALL: '내부 소형',
+		HEADREST: 'H/REST'
+	};
+
+	// 화면 편집값(소문자 field)이 있으면 우선, 없으면 원본
+	const processedData = filteredData.map(item => {
+		const li = item.labelinfo ?? item.LABELINFO ?? '';
+
+		return {
+			ITEMTYPE: item.ITEMTYPE ?? item.itemcodetype ?? '',
+			CAR: item.CAR ?? item.car ?? '',
+			ITEMCODE: item.ITEMCODE ?? item.itemcode ?? '',
+			ITEMNAME: item.ITEMNAME ?? item.itemname ?? '',
+			SPEC: item.SPEC ?? item.spec ?? '',
+			CUSTCODE: item.CUSTCODE ?? item.custcode ?? '',
+			CNAME: item.CNAME ?? item.cname ?? '',
+			CLOSE_CUSTOMER: item.close    ?? item.CLOSE_CUSTOMER    ?? item.close_customer ?? '',
+			DELIVERY_CUSTOMER: item.delivery ?? item.DELIVERY_CUSTOMER ?? item.delibery_customer ?? '',
+			DELIVERY_LOCATION: item.location ?? item.DELIVERY_LOCATION ?? item.delibery_location ?? '',
+			LABELINFO: LABEL_TEXT[li] ?? li,
+			LABEL1: item.label1 ?? item.LABEL1 ?? '',
+			LABEL2: item.label2 ?? item.LABEL2 ?? '',
+			LABEL3: item.label3 ?? item.LABEL3 ?? '',
+			LABEL4: item.label4 ?? item.LABEL4 ?? '',
+			LABEL5: item.label5 ?? item.LABEL5 ?? ''
+		};
+	});
+
+	ExcelExporter.downloadExcel(processedData, window.productInfoColumns, {
+		fileName: 'productInfo_All',
+		sheetName: 'productInfo'
+	});
+
+	hideLoading();
+};
