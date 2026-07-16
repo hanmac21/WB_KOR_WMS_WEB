@@ -237,6 +237,10 @@ $(document).ready(function() {
 								<input type="text" id="productInfo_searchVal_custcode" />
 							</div>
 							<div class="search-label">
+								<div class="searchVal_cname">${i18n.t('search.suppliername')}<!-- CNAME --></div>
+								<input type="text" id="productInfo_searchVal_cname" />
+							</div>
+							<div class="search-label">
 								<div class="searchVal_close">마감처<!-- CUSTCODE --></div>
 								<input type="text" id="productInfo_searchVal_close" />
 							</div>
@@ -613,6 +617,7 @@ $(document).ready(function() {
 			itemname: $("#productInfo_searchVal_itemname").val().trim().toUpperCase(),
 			spec: $("#productInfo_searchVal_spec").val().trim().toUpperCase(),
 			custcode: $("#productInfo_searchVal_custcode").val().trim().toUpperCase(),
+			cname: $("#productInfo_searchVal_cname").val().trim().toUpperCase(),
 			close: $("#productInfo_searchVal_close").val().trim().toUpperCase(),
 			delivery: $("#productInfo_searchVal_delivery").val().trim().toUpperCase(),
 			labelinfo: $("#productInfo_searchVal_labelinfo").val(),
@@ -636,6 +641,7 @@ $(document).ready(function() {
 		$("#productInfo_searchVal_itemname").val('');
 		$("#productInfo_searchVal_spec").val('');
 		$("#productInfo_searchVal_custcode").val('');
+		$("#productInfo_searchVal_cname").val('');
 		$("#productInfo_searchVal_close").val('');
 		$("#productInfo_searchVal_delivery").val('');
 		$("#productInfo_searchVal_labelinfo").val('');   // select → 전체

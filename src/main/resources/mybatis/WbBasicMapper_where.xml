@@ -46,8 +46,11 @@
         <if test="searchParams.spec != null and searchParams.spec != ''">
             AND UPPER(TRIM(c.subname)) LIKE '%' || UPPER(TRIM(#{searchParams.spec})) || '%'
         </if>
-        <if test="searchParams.cucode != null and searchParams.cucode != ''">
-            AND UPPER(TRIM(a.spec)) LIKE '%' || UPPER(TRIM(#{searchParams.cucode})) || '%'
+        <if test="searchParams.custcode != null and searchParams.custcode != ''">
+            AND UPPER(TRIM(a.spec)) LIKE '%' || UPPER(TRIM(#{searchParams.custcode})) || '%'
+        </if>
+        <if test="searchParams.cname != null and searchParams.cname != ''">
+            AND UPPER(TRIM(cu.cu_sangho)) LIKE '%' || UPPER(TRIM(#{searchParams.cname})) || '%'
         </if>
         <if test="searchParams.close != null and searchParams.close != ''">
             AND UPPER(f.close_customer) LIKE '%' || #{searchParams.close} || '%'
