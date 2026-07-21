@@ -37,7 +37,7 @@ $(document).ready(function() {
 		const { fromDate, toDate } = getDefaultDateRange();
 		const line = 'R'
 
-		performSequenceRDBSearch({ line });
+		performSequenceRDBSearch({ line, fromDate });
 	}
 
 	// DB에서 전체 데이터 조회 (검색 조건 변경 시에만 호출)
@@ -412,6 +412,7 @@ $(document).ready(function() {
 			status: $("#sequenceR_searchVal_status").val(),
 			oitemcode: $("#sequenceR_searchVal_oitemcode").val().trim().toUpperCase(),
 			itemname: $("#sequenceR_searchVal_itemname").val().trim().toUpperCase(),
+			line : "R"
 		};
 	}
 
@@ -435,7 +436,7 @@ $(document).ready(function() {
 
 		let line = 'R';
 
-		performSequenceRDBSearch({ line });
+		performSequenceRDBSearch({ line, fromDate });
 
 		console.log('검색 조건이 초기화되었습니다.');
 	}

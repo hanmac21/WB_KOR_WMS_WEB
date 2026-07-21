@@ -209,25 +209,25 @@
             <div class="menuListCallBack_5">
                 <div class="menuCommon">
                     <i class="fa-solid fa-list" style="color:#046565;"></i>
-                    <p id="mPurchase_sequence_summary" class="divBlockTrigger" data-menu-type="purchase" data-matching="PURCHASE_STOCKCOUNT" data-group="<spring:message code='purchase.inventory'/>">
+                    <p id="mPurchase_sequence_summary" class="divBlockTrigger" data-menu-type="purchase" data-matching="PURCHASE_STOCKCOUNT" data-group="서열관리">
                         전체 서열 내역
                     </p>
                 </div>
                 <div class="menuCommon">
                     <i class="fa-solid fa-list" style="color:#046565;"></i>
-                    <p id="mPurchase_sequence_f" class="divBlockTrigger" data-menu-type="purchase" data-matching="PURCHASE_STOCKCOUNT" data-group="<spring:message code='purchase.inventory'/>">
+                    <p id="mPurchase_sequence_f" class="divBlockTrigger" data-menu-type="purchase" data-matching="PURCHASE_STOCKCOUNT" data-group="서열관리">
                         LINE F
                     </p>
                 </div>
                 <div class="menuCommon">
                     <i class="fa-solid fa-list" style="color:#046565;"></i>
-                    <p id="mPurchase_sequence_r" class="divBlockTrigger" data-menu-type="purchase" data-matching="PURCHASE_STOCKCOUNT" data-group="<spring:message code='purchase.inventory'/>">
+                    <p id="mPurchase_sequence_r" class="divBlockTrigger" data-menu-type="purchase" data-matching="PURCHASE_STOCKCOUNT" data-group="서열관리">
                         LINE R
                     </p>
                 </div>
                 <div class="menuCommon">
                     <i class="fa-solid fa-list" style="color:#046565;"></i>
-                    <p id="mPurchase_sequence_t" class="divBlockTrigger" data-menu-type="purchase" data-matching="PURCHASE_STOCKCOUNT" data-group="<spring:message code='purchase.inventory'/>">
+                    <p id="mPurchase_sequence_t" class="divBlockTrigger" data-menu-type="purchase" data-matching="PURCHASE_STOCKCOUNT" data-group="서열관리">
                         LINE T
                     </p>
                 </div>

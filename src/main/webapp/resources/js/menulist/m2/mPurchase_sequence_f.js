@@ -36,7 +36,7 @@ $(document).ready(function() {
 		const { fromDate, toDate } = getDefaultDateRange();
 		const line = 'F'
 
-		performSequenceFDBSearch({ line });
+		performSequenceFDBSearch({ line, fromDate });
 	}
 
 	// DB에서 전체 데이터 조회 (검색 조건 변경 시에만 호출)
@@ -409,6 +409,7 @@ $(document).ready(function() {
 			status: $("#sequenceF_searchVal_status").val(),
 			oitemcode: $("#sequenceF_searchVal_oitemcode").val().trim().toUpperCase(),
 			itemname: $("#sequenceF_searchVal_itemname").val().trim().toUpperCase(),
+			line : "F"
 		};
 	}
 
@@ -432,7 +433,7 @@ $(document).ready(function() {
 
 		let line = 'F';
 
-		performSequenceFDBSearch({ line });
+		performSequenceFDBSearch({ line, fromDate });
 
 		console.log('검색 조건이 초기화되었습니다.');
 	}

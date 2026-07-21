@@ -317,4 +317,14 @@
             AND UPPER(a.itemname) LIKE '%' || UPPER(#{itemname}) || '%'
         </if>
     </sql>
+
+    <sql id="searchCondition_sequenceSummary">
+        <if test="fromDate != null and fromDate != '' and toDate != null and toDate != ''">
+            AND sdate BETWEEN #{fromDate} AND #{toDate}
+        </if>
+
+        <if test="line != null and line != ''">
+            AND UPPER(line) LIKE '%' || UPPER(#{line}) || '%'
+        </if>
+    </sql>
 </mapper>  

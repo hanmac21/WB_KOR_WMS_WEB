@@ -16,25 +16,21 @@ $(document).ready(function() {
 
 	window.filteredSequenceSummaryData = [];
 	window.sequenceSummaryColumns = [
-		{ key: 'SDATE', header: 'date' },
-		{ key: 'STORAGE', header: 'storage' },
-		{ key: 'CUSTNAME', header: 'Supplier' },
-		{ key: 'CAR', header: 'car' },
-		{ key: 'ITEMCODE', header: 'itemcode' },
-		{ key: 'OITEMCODE', header: 'spec' },
-		{ key: 'ITEMNAME', header: 'itemname' },
-		{ key: 'QTY', header: 'qty', type: 'number' },
-		{ key: 'INVOICENO', header: 'invoiceno' },
-		{ key: 'LOGINID', header: 'user' },
-		{ key: 'HHMM', header: 'time' },
-		{ key: 'BARCODE', header: 'barcode' }
+		{ key: 'SDATE', header: 'Date' },
+		{ key: 'LINE', header: 'Line' },
+		{ key: 'TIME', header: 'Time' },
+		{ key: 'SEQ', header: 'SEQ' },
+		{ key: 'YQTY', header: 'Y COUNT' },
+		{ key: 'NQTY', header: 'N COUNT' },
+		{ key: 'QTY', header: 'QTY' },
 	];
 
 	// 메인 호출 함수 - 초기 로딩 시 전체 데이터 조회
 	window.call_mPurchase_sequence_summary = function(menuId) {
 		showLoading("data");
+		const { fromDate, toDate } = getDefaultDateRange();
 
-		performSequenceSummaryDBSearch({ });
+		performSequenceSummaryDBSearch({ fromDate, toDate });
 	}
 
 	// DB에서 전체 데이터 조회 (검색 조건 변경 시에만 호출)
@@ -152,20 +148,21 @@ $(document).ready(function() {
 					<div class="search-area">
 						<div class="search-row">
 							<div class="search-label">
-								<div class="search_car">${i18n.t('search.car')}</div>
-								<input type="text" id="sequenceSummary_searchVal_car" />
+								<div class="searchVal_fromDate">${i18n.t('search.date')}</div>
+								<input type="date" id="sequenceSummary_searchVal_fromDate" /> 
 							</div>
 							<div class="search-label">
-								<div class="search_itemcode">${i18n.t('search.itemCode')}</div>
-								<input type="text" id="sequenceSummary_searchVal_itemcode" />
+								<div class="searchVal_toDate">　</div>
+								<input type="date" id="sequenceSummary_searchVal_toDate" />
 							</div>
 							<div class="search-label">
-								<div class="search_oitemcode">${i18n.t('search.customercode')}</div>
-								<input type="text" id="sequenceSummary_searchVal_oitemcode" />
-							</div>
-							<div class="search-label">
-								<div class="search_itemname">${i18n.t('search.itemName')}</div>
-								<input type="text" id="sequenceSummary_searchVal_itemname" />
+								<div class="search_line">라인</div>
+								<select id="sequenceSummary_searchVal_line">
+									<option value="">${i18n.t('search.all')}<!-- 전체 --></option>
+									<option value="F">LINE F</option>
+									<option value="R">LINE R</option>
+									<option value="T">LINE T</option>
+								</select>
 							</div>
 						</div>
 						<div class="search_button_area">
@@ -232,6 +229,9 @@ $(document).ready(function() {
 
 		$(".w_contentArea").append(content_output);
 
+		const { fromDate, toDate } = getDefaultDateRange();
+		$("#sequenceSummary_searchVal_fromDate").val(fromDate);
+		$("#sequenceSummary_searchVal_toDate").val(toDate);
 		$("#sequenceSummary_itemsPerPage").val(sequenceSummaryItemsPerPage);
 
 		// 테이블 데이터 렌더링
@@ -403,14 +403,7 @@ $(document).ready(function() {
 	function getCurrentSearchCriteria() {
 		return {
 			fromDate: $("#sequenceSummary_searchVal_fromDate").val(),
-			toDate: $("#sequenceSummary_searchVal_toDate").val(),
-			useyn: $("#sequenceSummary_searchVal_useyn").val(),
-			storage: $("#sequenceSummary_searchVal_storage").val(),
-			cname: $("#sequenceSummary_searchVal_cname").val().trim().toUpperCase(),
-			car: $("#sequenceSummary_searchVal_car").val().trim().toUpperCase(),
-			itemcode: $("#sequenceSummary_searchVal_itemcode").val().trim().toUpperCase(),
-			oitemcode: $("#sequenceSummary_searchVal_oitemcode").val().trim().toUpperCase(),
-			itemname: $("#sequenceSummary_searchVal_itemname").val().trim().toUpperCase(),
+			line: $("#sequenceSummary_searchVal_line").val()
 		};
 	}
 
@@ -427,16 +420,10 @@ $(document).ready(function() {
 
 		$("#sequenceSummary_searchVal_fromDate").val(fromDate);
 		$("#sequenceSummary_searchVal_toDate").val(toDate);
-		$("#sequenceSummary_searchVal_useyn").val('Y');
-		$("#sequenceSummary_searchVal_cname").val('');
-		$("#sequenceSummary_searchVal_car").val('');
-		$("#sequenceSummary_searchVal_itemcode").val('');
-		$("#sequenceSummary_searchVal_oitemcode").val('');
-		$("#sequenceSummary_searchVal_itemname").val('');
-
+		$("#sequenceSummary_searchVal_line").val('');
 
 		currentSequenceSummaryPage = 1;
-		performSequenceSummaryDBSearch({ });
+		performSequenceSummaryDBSearch({ fromDate, toDate });
 
 		console.log('검색 조건이 초기화되었습니다.');
 	}

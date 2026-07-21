@@ -698,8 +698,9 @@
 			SUM(CASE WHEN COMPLETEYN = 'N' THEN 1 ELSE 0 END) AS NQTY
 		FROM T_WMS_SEQUENCE
 		WHERE USEYN = 'Y'
+		<include refid="searchCondition_sequenceSummary"/>
 		GROUP BY SDATE, LINE, TIME
-		ORDER BY LINE
+		ORDER BY SDATE DESC, LINE
 	</select>
 
 	<update id="updateSequenceN">
