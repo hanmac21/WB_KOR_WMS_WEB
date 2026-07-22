@@ -180,6 +180,18 @@
                         <spring:message code="purchase.load.summary"/>
                     </p>
                 </div>
+                <div class="menuCommon">
+                    <i class="fa-solid fa-list" style="color:#046565;"></i>
+                    <p id="mPurchase_load_domestic_detail" class="divBlockTrigger" data-menu-type="purchase" data-matching="PURCHASE_LOAD" data-group="<spring:message code='purchase.load'/>">
+                        <spring:message code="purchase.load.domestic.detail"/>
+                    </p>
+                </div>
+                <div class="menuCommon">
+                    <i class="fa-solid fa-list" style="color:#046565;"></i>
+                    <p id="mPurchase_load_domestic_summary" class="divBlockTrigger" data-menu-type="purchase" data-matching="PURCHASE_LOAD" data-group="<spring:message code='purchase.load'/>">
+                        <spring:message code="purchase.load.domestic.summary"/>
+                    </p>
+                </div>
             </div>
 
             <!-- 대차검증 대분류 -->

@@ -202,6 +202,10 @@
             AND a.sdate BETWEEN #{searchParams.fromDate} AND #{searchParams.toDate}
         </if>
 
+        <if test="searchParams.source2 != null and searchParams.source2 != ''">
+            AND UPPER(a.source2) = #{searchParams.source2}
+        </if>
+
         <if test="searchParams.custcode != null and searchParams.custcode != ''">
             AND UPPER(
                 NVL(

@@ -4,19 +4,19 @@
  * -------------------------------------------------------------- */
 
 let allServerData = [];
-let filteredData_loadDetail = [];
-let globalLoadDetailData = [];
-let currentLoadDetailPage = 1;
-let loadDetailItemsPerPage = 100;
-let totalLoadDetailCount = 0;
-let totalLoadDetailPages = 0;
+let filteredData_loadDomesticDetail = [];
+let globalLoadDomesticDetailData = [];
+let currentLoadDomesticDetailPage = 1;
+let loadDomesticDetailItemsPerPage = 100;
+let totalLoadDomesticDetailCount = 0;
+let totalLoadDomesticDetailPages = 0;
 let totalQty = 0;
 let currentSortColumn = null;
 let currentSortOrder = 'asc';
 
 $(document).ready(function() {
-	window.filteredLoadDetailData = [];
-	window.loadDetailColumns = [
+	window.filteredLoadDomesticDetailData = [];
+	window.loadDomesticDetailColumns = [
 		{ key: 'SDATE', header: 'Date' },
 		{ key: 'SOURCE2', header: 'Type' },
 		{ key: 'CUSTNAME', header: 'Supplier' },
@@ -31,16 +31,16 @@ $(document).ready(function() {
 	];
 
 	// 메인 호출 함수 - 메뉴 클릭 시 호출
-	window.call_mPurchase_load_detail = function(menuId) {
+	window.call_mPurchase_load_domestic_detail = function(menuId) {
 		showLoading("data");
 		const { fromDate, toDate } = getDefaultDateRange();
-		let source2 = '수출품';
+		const source2 = '내수품';
 
-		performLoadDetailDBSearch({ fromDate, toDate, source2 });
+		performLoadDomesticDetailDBSearch({ fromDate, toDate, source2 });
 	};
 
 	// DB에서 전체 데이터 조회 (검색 조건 변경 시에만 호출)
-	function performLoadDetailDBSearch(searchCriteria) {
+	function performLoadDomesticDetailDBSearch(searchCriteria) {
 		showLoading("data");
 
 		$.ajax({
@@ -56,11 +56,11 @@ $(document).ready(function() {
 
 				// 서버에서 받은 전체 데이터 저장
 				allServerData = response.records || [];
-				filteredData_loadDetail = [...allServerData];
+				filteredData_loadDomesticDetail = [...allServerData];
 				totalQty = response.totalQty || 0;
 
 				// 페이지 초기화
-				currentLoadDetailPage = 1;
+				currentLoadDomesticDetailPage = 1;
 				currentSortColumn = null;
 				currentSortOrder = 'asc';
 
@@ -68,12 +68,12 @@ $(document).ready(function() {
 				applyClientPagination();
 
 				// 첫 번째 검색이라면 뷰를 렌더링
-				if (!$('#view_mPurchase_load_detail').length) {
-					renderLoadDetailView();
+				if (!$('#view_mPurchase_load_domestic_detail').length) {
+					renderLoadDomesticDetailView();
 				} else {
-					renderLoadDetailTableData();
-					renderLoadDetailPagination();
-					updateLoadDetailTotalCount();
+					renderLoadDomesticDetailTableData();
+					renderLoadDomesticDetailPagination();
+					updateLoadDomesticDetailTotalCount();
 				}
 
 				// 총 수량 업데이트
@@ -91,16 +91,16 @@ $(document).ready(function() {
 
 	// 클라이언트에서 페이징 처리
 	function applyClientPagination() {
-		loadDetailItemsPerPage = parseInt(getCookie('itemsPerPage')) || 100;
+		loadDomesticDetailItemsPerPage = parseInt(getCookie('itemsPerPage')) || 100;
 
-		totalLoadDetailCount = filteredData_loadDetail.length;
-		totalLoadDetailPages = Math.ceil(totalLoadDetailCount / loadDetailItemsPerPage);
+		totalLoadDomesticDetailCount = filteredData_loadDomesticDetail.length;
+		totalLoadDomesticDetailPages = Math.ceil(totalLoadDomesticDetailCount / loadDomesticDetailItemsPerPage);
 
-		const startIndex = (currentLoadDetailPage - 1) * loadDetailItemsPerPage;
-		const endIndex = startIndex + loadDetailItemsPerPage;
+		const startIndex = (currentLoadDomesticDetailPage - 1) * loadDomesticDetailItemsPerPage;
+		const endIndex = startIndex + loadDomesticDetailItemsPerPage;
 
-		globalLoadDetailData = filteredData_loadDetail.slice(startIndex, endIndex);
-		window.filteredLoadDetailData = globalLoadDetailData;
+		globalLoadDomesticDetailData = filteredData_loadDomesticDetail.slice(startIndex, endIndex);
+		window.filteredLoadDomesticDetailData = globalLoadDomesticDetailData;
 	}
 
 	// 클라이언트에서 정렬 처리
@@ -112,7 +112,7 @@ $(document).ready(function() {
 			currentSortOrder = 'asc';
 		}
 
-		filteredData_loadDetail.sort((a, b) => {
+		filteredData_loadDomesticDetail.sort((a, b) => {
 			let valA = a[column] || a[column.toLowerCase()] || '';
 			let valB = b[column] || b[column.toLowerCase()] || '';
 
@@ -132,12 +132,12 @@ $(document).ready(function() {
 			return 0;
 		});
 
-		currentLoadDetailPage = 1;
+		currentLoadDomesticDetailPage = 1;
 		applyClientPagination();
 
-		renderLoadDetailTableData();
-		renderLoadDetailPagination();
-		updateLoadDetailTotalCount();
+		renderLoadDomesticDetailTableData();
+		renderLoadDomesticDetailPagination();
+		updateLoadDomesticDetailTotalCount();
 
 		updateSortIndicators(column);
 
@@ -150,45 +150,45 @@ $(document).ready(function() {
 	}
 
 	// 사용자 뷰 렌더링 함수
-	function renderLoadDetailView() {
+	function renderLoadDomesticDetailView() {
 		let content_output = `
-			<div class="divBlockControl" id="view_mPurchase_load_detail">
+			<div class="divBlockControl" id="view_mPurchase_load_domestic_detail">
 				<div class="content-body">
 					<!-- 검색 영역 -->
 					<div class="search-area">
 						<div class="search-row">
 							<div class="search-label">
 								<div class="searchVal_fromDate">${i18n.t('search.date')}<!-- DATE --></div>
-								<input type="date" id="loadDetail_searchVal_fromDate" />
+								<input type="date" id="loadDomesticDetail_searchVal_fromDate" />
 							</div>
 							<div class="search-label">
 								<div class="searchVal_toDate">　</div>
-								<input type="date" id="loadDetail_searchVal_toDate" />
+								<input type="date" id="loadDomesticDetail_searchVal_toDate" />
 							</div>
 							<div class="search-label">
 								<div class="searchVal_custname">${i18n.t('search.custname')}<!-- custname --></div>
-								<input type="text" id="loadDetail_searchVal_custname" />
+								<input type="text" id="loadDomesticDetail_searchVal_custname" />
 							</div>
 							<div class="search-label">
 								<div class="searchVal_car">${i18n.t('search.car')}<!-- CAR --></div>
-								<input type="text" id="loadDetail_searchVal_car" />
+								<input type="text" id="loadDomesticDetail_searchVal_car" />
 							</div>
 							<div class="search-label">
 								<div class="searchVal_itemcode">${i18n.t('search.itemCode')}<!-- ITEMCODE --></div>
-								<input type="text" id="loadDetail_searchVal_itemcode" />
+								<input type="text" id="loadDomesticDetail_searchVal_itemcode" />
 							</div>
 							<div class="search-label">
 								<div class="searchVal_oitemcode">${i18n.t('search.customercode')}<!-- OITEMCODE --></div>
-								<input type="text" id="loadDetail_searchVal_oitemcode" />
+								<input type="text" id="loadDomesticDetail_searchVal_oitemcode" />
 							</div>
 							<div class="search-label">
 								<div class="searchVal_itemname">${i18n.t('search.itemName')}<!-- ITEMNAME --></div>
-								<input type="text" id="loadDetail_searchVal_itemname" />
+								<input type="text" id="loadDomesticDetail_searchVal_itemname" />
 							</div>	
 						</div>
 						<div class="search_button_area">
-							<button class="btn btn-primary btnLoadDetailSearch">${i18n.t('btn.search')}</button>
-							<button class="btn btn-secondary btnLoadDetailSearchInit">${i18n.t('btn.clear')}</button>
+							<button class="btn btn-primary btnLoadDomesticDetailSearch">${i18n.t('btn.search')}</button>
+							<button class="btn btn-secondary btnLoadDomesticDetailSearchInit">${i18n.t('btn.clear')}</button>
 						</div>
 					</div>
 					
@@ -204,22 +204,22 @@ $(document).ready(function() {
 						</div>
 						
 						<div class="table-info">
-							<span>${i18n.t('table.info.total')} <strong id="loadDetailTotalCount">${totalLoadDetailCount}</strong> ${i18n.t('table.info.records')} | 
-								${i18n.t('table.page')} <strong id="loadDetailCurrentPageInfo">${currentLoadDetailPage}</strong>/<strong id="loadDetailTotalPageInfo">${totalLoadDetailPages}</strong> |  
-								<span class="tqtyTitle">${i18n.t('table.info.qty')} : </span><span class="loadDetailTotalQty" style="color:#007bff"></span> 
+							<span>${i18n.t('table.info.total')} <strong id="loadDomesticDetailTotalCount">${totalLoadDomesticDetailCount}</strong> ${i18n.t('table.info.records')} | 
+								${i18n.t('table.page')} <strong id="loadDomesticDetailCurrentPageInfo">${currentLoadDomesticDetailPage}</strong>/<strong id="loadDomesticDetailTotalPageInfo">${totalLoadDomesticDetailPages}</strong> |  
+								<span class="tqtyTitle">${i18n.t('table.info.qty')} : </span><span class="loadDomesticDetailTotalQty" style="color:#007bff"></span> 
 							</span>
-							<div class="action-buttons-right mPurchase_load_detail">
+							<div class="action-buttons-right mPurchase_load_domestic_detail">
 								<div id="defaultActions" class="action-group">
-									<input type="button" value="${i18n.t('btn.delete')}" class="btn btn-danger btnLoadDetailDelete"/>
-									<button class="btn btn-success" id="loadDetailExcelBtn" onclick="downloadAllLoadDetailData()">Excel</button>
+									<input type="button" value="${i18n.t('btn.delete')}" class="btn btn-danger btnLoadDomesticDetailDelete"/>
+									<button class="btn btn-success" id="loadDomesticDetailExcelBtn" onclick="downloadAllLoadDomesticDetailData()">Excel</button>
 								</div>
 							</div>
 						</div>
-						<table class="data-table mPurchase_load_detail" id="loadDetailTable">
+						<table class="data-table mPurchase_load_domestic_detail" id="loadDomesticDetailTable">
 							<thead>
 								<tr>
 									<th class = "checkboxVal">
-										<input type="checkbox" class="loadDetail_chkAll">
+										<input type="checkbox" class="loadDomesticDetail_chkAll">
 									</th>
 									<th class = "noVal">${i18n.t('table.no')}<!-- No --></th>
 									<th class = "dateVal" data-sort="SDATE">${i18n.t('search.date')}<!-- DATE --></th>
@@ -235,16 +235,16 @@ $(document).ready(function() {
 									<th class = "barcodeVal transysBarcodeVal" data-sort="BARCODE">${i18n.t('search.barcode')}<!-- LOT --></th>
 								</tr>
 							</thead>
-							<tbody id="loadDetailDetailTableBody">
+							<tbody id="loadDomesticDetailDetailTableBody">
 							</tbody>
 						</table>
 						
 						<!-- 페이지네이션 -->
-						<div class="pagination" id="loadDetailPaginationContainer">
+						<div class="pagination" id="loadDomesticDetailPaginationContainer">
 						</div>
 						<div class="items-per-page-selector">
-					        <label for="loadDetail_itemsPerPage">${i18n.t('table.itemsPerPage')}:</label>
-					        <select id="loadDetail_itemsPerPage" class="items-per-page-select">
+					        <label for="loadDomesticDetail_itemsPerPage">${i18n.t('table.itemsPerPage')}:</label>
+					        <select id="loadDomesticDetail_itemsPerPage" class="items-per-page-select">
 					            <option value="100" selected>100</option>
 					            <option value="300">300</option>
 					            <option value="1000">1000</option>
@@ -259,18 +259,18 @@ $(document).ready(function() {
 
 		// 화면에 기본 날짜 세팅
 		const { fromDate, toDate } = getDefaultDateRange();
-		$("#loadDetail_searchVal_toDate").val(toDate);
-		$("#loadDetail_searchVal_fromDate").val(fromDate);
-		$("#loadDetail_itemsPerPage").val(loadDetailItemsPerPage);
+		$("#loadDomesticDetail_searchVal_toDate").val(toDate);
+		$("#loadDomesticDetail_searchVal_fromDate").val(fromDate);
+		$("#loadDomesticDetail_itemsPerPage").val(loadDomesticDetailItemsPerPage);
 
 		// 테이블 데이터 렌더링
-		renderLoadDetailTableData();
+		renderLoadDomesticDetailTableData();
 		// 페이지네이션 렌더링
-		renderLoadDetailPagination();
+		renderLoadDomesticDetailPagination();
 		// 이벤트 바인딩
-		bindLoadDetailEvents();
+		bindLoadDomesticDetailEvents();
 		// 초기 렌더링 후 카운트 업데이트
-		updateLoadDetailTotalCount();
+		updateLoadDomesticDetailTotalCount();
 	}
 
 	function fmtLocalDate(d) {
@@ -300,22 +300,22 @@ $(document).ready(function() {
 		document.cookie = cookieName + "=" + encodeURIComponent(value) + ";" + expires + ";path=/";
 	}
 
-	function updateLoadDetailTotalCount() {
-		$('#loadDetailTotalCount').text(Number(totalLoadDetailCount).toLocaleString());
-		$('#loadDetailCurrentPageInfo').text(currentLoadDetailPage);
-		$('#loadDetailTotalPageInfo').text(totalLoadDetailPages);
+	function updateLoadDomesticDetailTotalCount() {
+		$('#loadDomesticDetailTotalCount').text(Number(totalLoadDomesticDetailCount).toLocaleString());
+		$('#loadDomesticDetailCurrentPageInfo').text(currentLoadDomesticDetailPage);
+		$('#loadDomesticDetailTotalPageInfo').text(totalLoadDomesticDetailPages);
 	}
 
-	function renderLoadDetailTableData() {
+	function renderLoadDomesticDetailTableData() {
 		let tableBody = "";
 
-		for (let i = 0; i < globalLoadDetailData.length; i++) {
-			let rowNumber = (currentLoadDetailPage - 1) * loadDetailItemsPerPage + i + 1;
-			let data = globalLoadDetailData[i];
+		for (let i = 0; i < globalLoadDomesticDetailData.length; i++) {
+			let rowNumber = (currentLoadDomesticDetailPage - 1) * loadDomesticDetailItemsPerPage + i + 1;
+			let data = globalLoadDomesticDetailData[i];
 
 			tableBody += `
 				<tr>
-				    <td class = "checkboxVal"><input type="checkbox" class="loadDetail_chk" 
+				    <td class = "checkboxVal"><input type="checkbox" class="loadDomesticDetail_chk" 
 		    			data-delete="${data.IID}|${data.SDATE}|${data.FACTORY}|${data.STORAGE}|${data.BARCODE}|${data.MESKEY || ''}">
 		    		</td>
 				    <td class = "noVal">${rowNumber}</td>
@@ -334,176 +334,177 @@ $(document).ready(function() {
 			`;
 		}
 
-		$("#loadDetailDetailTableBody").html(tableBody);
-		$(".loadDetail_chkAll").prop("checked", false);
+		$("#loadDomesticDetailDetailTableBody").html(tableBody);
+		$(".loadDomesticDetail_chkAll").prop("checked", false);
 	}
 
-	function renderLoadDetailPagination() {
+	function renderLoadDomesticDetailPagination() {
 		let paginationHtml = "";
 
-		if (currentLoadDetailPage > 1) {
-			paginationHtml += `<button class="loadDetail-page-btn" data-page="${currentLoadDetailPage - 1}">&lt;</button>`;
+		if (currentLoadDomesticDetailPage > 1) {
+			paginationHtml += `<button class="loadDomesticDetail-page-btn" data-page="${currentLoadDomesticDetailPage - 1}">&lt;</button>`;
 		} else {
-			paginationHtml += `<button class="loadDetail-page-btn disabled">&lt;</button>`;
+			paginationHtml += `<button class="loadDomesticDetail-page-btn disabled">&lt;</button>`;
 		}
 
-		let startPage = Math.max(1, currentLoadDetailPage - 5);
-		let endPage = Math.min(totalLoadDetailPages, currentLoadDetailPage + 5);
+		let startPage = Math.max(1, currentLoadDomesticDetailPage - 5);
+		let endPage = Math.min(totalLoadDomesticDetailPages, currentLoadDomesticDetailPage + 5);
 
 		if (startPage > 1) {
-			paginationHtml += `<button class="loadDetail-page-btn" data-page="1">1</button>`;
+			paginationHtml += `<button class="loadDomesticDetail-page-btn" data-page="1">1</button>`;
 			if (startPage > 2) {
 				paginationHtml += `<span class="page-dots">...</span>`;
 			}
 		}
 
 		for (let i = startPage; i <= endPage; i++) {
-			if (i === currentLoadDetailPage) {
-				paginationHtml += `<button class="loadDetail-page-btn active" data-page="${i}">${i}</button>`;
+			if (i === currentLoadDomesticDetailPage) {
+				paginationHtml += `<button class="loadDomesticDetail-page-btn active" data-page="${i}">${i}</button>`;
 			} else {
-				paginationHtml += `<button class="loadDetail-page-btn" data-page="${i}">${i}</button>`;
+				paginationHtml += `<button class="loadDomesticDetail-page-btn" data-page="${i}">${i}</button>`;
 			}
 		}
 
-		if (endPage < totalLoadDetailPages) {
-			if (endPage < totalLoadDetailPages - 1) {
+		if (endPage < totalLoadDomesticDetailPages) {
+			if (endPage < totalLoadDomesticDetailPages - 1) {
 				paginationHtml += `<span class="page-dots">...</span>`;
 			}
-			paginationHtml += `<button class="loadDetail-page-btn" data-page="${totalLoadDetailPages}">${totalLoadDetailPages}</button>`;
+			paginationHtml += `<button class="loadDomesticDetail-page-btn" data-page="${totalLoadDomesticDetailPages}">${totalLoadDomesticDetailPages}</button>`;
 		}
 
-		if (currentLoadDetailPage < totalLoadDetailPages) {
-			paginationHtml += `<button class="loadDetail-page-btn" data-page="${currentLoadDetailPage + 1}">&gt;</button>`;
+		if (currentLoadDomesticDetailPage < totalLoadDomesticDetailPages) {
+			paginationHtml += `<button class="loadDomesticDetail-page-btn" data-page="${currentLoadDomesticDetailPage + 1}">&gt;</button>`;
 		} else {
-			paginationHtml += `<button class="loadDetail-page-btn disabled">&gt;</button>`;
+			paginationHtml += `<button class="loadDomesticDetail-page-btn disabled">&gt;</button>`;
 		}
 
-		$("#loadDetailPaginationContainer").html(paginationHtml);
+		$("#loadDomesticDetailPaginationContainer").html(paginationHtml);
 	}
 
-	function bindLoadDetailEvents() {
+	function bindLoadDomesticDetailEvents() {
 		// 전체 선택 체크박스
-		$(document).off('change', '.loadDetail_chkAll').on('change', '.loadDetail_chkAll', function() {
+		$(document).off('change', '.loadDomesticDetail_chkAll').on('change', '.loadDomesticDetail_chkAll', function() {
 			let isChecked = $(this).is(':checked');
-			$('.loadDetail_chk').prop('checked', isChecked);
+			$('.loadDomesticDetail_chk').prop('checked', isChecked);
 		});
 
 		// 개별 체크박스
-		$(document).off('change', '.loadDetail_chk').on('change', '.loadDetail_chk', function() {
-			let totalCheckboxes = $('.loadDetail_chk').length;
-			let checkedCheckboxes = $('.loadDetail_chk:checked').length;
-			$('.loadDetail_chkAll').prop('checked', totalCheckboxes === checkedCheckboxes);
+		$(document).off('change', '.loadDomesticDetail_chk').on('change', '.loadDomesticDetail_chk', function() {
+			let totalCheckboxes = $('.loadDomesticDetail_chk').length;
+			let checkedCheckboxes = $('.loadDomesticDetail_chk:checked').length;
+			$('.loadDomesticDetail_chkAll').prop('checked', totalCheckboxes === checkedCheckboxes);
 		});
 
-		$(".btnLoadDetailSearch").off('click').on('click', function() {
-			performLoadDetailSearch();
+		$(".btnLoadDomesticDetailSearch").off('click').on('click', function() {
+			performLoadDomesticDetailSearch();
 		});
 
-		$(".btnLoadDetailSearchInit").off('click').on('click', function() {
-			resetLoadDetailSearch();
+		$(".btnLoadDomesticDetailSearchInit").off('click').on('click', function() {
+			resetLoadDomesticDetailSearch();
 		});
 
-		$('#loadDetail_itemsPerPage').off('change').on('change', function() {
+		$('#loadDomesticDetail_itemsPerPage').off('change').on('change', function() {
 			const newItemsPerPage = parseInt($(this).val());
-			changeLoadDetailItemsPerPage(newItemsPerPage);
+			changeLoadDomesticDetailItemsPerPage(newItemsPerPage);
 		});
 
-		$(document).off('click', '.loadDetail-page-btn').on('click', '.loadDetail-page-btn', function() {
+		$(document).off('click', '.loadDomesticDetail-page-btn').on('click', '.loadDomesticDetail-page-btn', function() {
 			if (!$(this).hasClass('disabled') && !$(this).hasClass('active')) {
 				let page = parseInt($(this).data('page'));
 				if (page && page > 0) {
-					currentLoadDetailPage = page;
+					currentLoadDomesticDetailPage = page;
 					applyClientPagination();
-					renderLoadDetailTableData();
-					renderLoadDetailPagination();
-					updateLoadDetailTotalCount();
+					renderLoadDomesticDetailTableData();
+					renderLoadDomesticDetailPagination();
+					updateLoadDomesticDetailTotalCount();
 				}
 			}
 		});
 
-		$('#loadDetailTable thead th[data-sort]').off('click').on('click', function() {
+		$('#loadDomesticDetailTable thead th[data-sort]').off('click').on('click', function() {
 			const column = $(this).data('sort');
 			const dataType = $(this).data('type') || 'string';
 			applyClientSort(column, dataType);
 		});
 
-		$('#view_mPurchase_load_detail input[type="text"], #view_mPurchase_load_detail input[type="date"]').off('keypress').on('keypress', function(e) {
+		$('#view_mPurchase_load_domestic_detail input[type="text"], #view_mPurchase_load_domestic_detail input[type="date"]').off('keypress').on('keypress', function(e) {
 			if (e.which === 13) {
-				performLoadDetailSearch();
+				performLoadDomesticDetailSearch();
 			}
 		});
 	}
 
 	function getCurrentSearchCriteria() {
 		return {
-			fromDate: $("#loadDetail_searchVal_fromDate").val(),
-			toDate: $("#loadDetail_searchVal_toDate").val(),
-			custname: $("#loadDetail_searchVal_custname").val().trim().toUpperCase(),
-			car: $("#loadDetail_searchVal_car").val().trim().toUpperCase(),
-			itemcode: $("#loadDetail_searchVal_itemcode").val().trim().toUpperCase(),
-			oitemcode: $("#loadDetail_searchVal_oitemcode").val().trim().toUpperCase(),
-			itemname: $("#loadDetail_searchVal_itemname").val().trim().toUpperCase(),
-			source2: "수출품"
+			fromDate: $("#loadDomesticDetail_searchVal_fromDate").val(),
+			toDate: $("#loadDomesticDetail_searchVal_toDate").val(),
+			custname: $("#loadDomesticDetail_searchVal_custname").val().trim().toUpperCase(),
+			car: $("#loadDomesticDetail_searchVal_car").val().trim().toUpperCase(),
+			itemcode: $("#loadDomesticDetail_searchVal_itemcode").val().trim().toUpperCase(),
+			oitemcode: $("#loadDomesticDetail_searchVal_oitemcode").val().trim().toUpperCase(),
+			itemname: $("#loadDomesticDetail_searchVal_itemname").val().trim().toUpperCase(),
+			source2 : "내수품"
 		};
 	}
 
-	function performLoadDetailSearch() {
+	function performLoadDomesticDetailSearch() {
 		let searchCriteria = getCurrentSearchCriteria();
 		console.log("검색 조건:", searchCriteria);
 
-		currentLoadDetailPage = 1;
-		performLoadDetailDBSearch(searchCriteria);
+		currentLoadDomesticDetailPage = 1;
+		performLoadDomesticDetailDBSearch(searchCriteria);
 	}
 
-	function resetLoadDetailSearch() {
+	function resetLoadDomesticDetailSearch() {
 		const { fromDate, toDate } = getDefaultDateRange();
-		$("#loadDetail_searchVal_fromDate").val(fromDate);
-		$("#loadDetail_searchVal_toDate").val(toDate);
-		$("#loadDetail_searchVal_custname").val('');
-		$("#loadDetail_searchVal_car").val('');
-		$("#loadDetail_searchVal_itemcode").val('');
-		$("#loadDetail_searchVal_oitemcode").val('');
-		$("#loadDetail_searchVal_itemname").val('');
+		$("#loadDomesticDetail_searchVal_fromDate").val(fromDate);
+		$("#loadDomesticDetail_searchVal_toDate").val(toDate);
+		$("#loadDomesticDetail_searchVal_custname").val('');
+		$("#loadDomesticDetail_searchVal_car").val('');
+		$("#loadDomesticDetail_searchVal_itemcode").val('');
+		$("#loadDomesticDetail_searchVal_oitemcode").val('');
+		$("#loadDomesticDetail_searchVal_itemname").val('');
 
-		let source2 = "수출품";
+		currentLoadDomesticDetailPage = 1;
 
-		currentLoadDetailPage = 1;
-		performLoadDetailDBSearch({  toDate, fromDate, source2});
+		const source2 = '내수품';
+
+		performLoadDomesticDetailDBSearch({  toDate, fromDate, source2 });
 
 		console.log('검색 조건이 초기화되었습니다.');
 	}
 
 	function updateTotalQty() {
-		$(".loadDetailTotalQty").text(Number(totalQty).toLocaleString());
+		$(".loadDomesticDetailTotalQty").text(Number(totalQty).toLocaleString());
 	}
 
-	window.changeLoadDetailItemsPerPage = function(newItemsPerPage) {
-		loadDetailItemsPerPage = newItemsPerPage;
-		currentLoadDetailPage = 1;
+	window.changeLoadDomesticDetailItemsPerPage = function(newItemsPerPage) {
+		loadDomesticDetailItemsPerPage = newItemsPerPage;
+		currentLoadDomesticDetailPage = 1;
 
 		setCookie('itemsPerPage', newItemsPerPage);
 
 		applyClientPagination();
-		renderLoadDetailTableData();
-		renderLoadDetailPagination();
-		updateLoadDetailTotalCount();
+		renderLoadDomesticDetailTableData();
+		renderLoadDomesticDetailPagination();
+		updateLoadDomesticDetailTotalCount();
 
 		console.log(`페이지당 항목 수가 ${newItemsPerPage}개로 변경되었습니다.`);
 	}
 
-	window.exportLoadDetailData = function() {
+	window.exportLoadDomesticDetailData = function() {
 		return {
-			total: filteredData_loadDetail.length,
-			currentPage: currentLoadDetailPage,
-			itemsPerPage: loadDetailItemsPerPage,
-			data: filteredData_loadDetail
+			total: filteredData_loadDomesticDetail.length,
+			currentPage: currentLoadDomesticDetailPage,
+			itemsPerPage: loadDomesticDetailItemsPerPage,
+			data: filteredData_loadDomesticDetail
 		};
 	}
 
 	//삭제
-	$(document).on("click", ".btnLoadDetailDelete", function() {
+	$(document).on("click", ".btnLoadDomesticDetailDelete", function() {
 		const iidList = [];
-		$(".loadDetail_chk:checked").each(function() {
+		$(".loadDomesticDetail_chk:checked").each(function() {
 			let iid = $(this).data('delete');
 			iidList.push(iid);
 		});
@@ -563,10 +564,10 @@ $(document).ready(function() {
 				}
 
 				let searchVal = getCurrentSearchCriteria();
-				performLoadDetailDBSearch(searchVal);
+				performLoadDomesticDetailDBSearch(searchVal);
 
 				// 전체 선택 해제
-				$('.loadDetail_chkAll').prop('checked', false);
+				$('.loadDomesticDetail_chkAll').prop('checked', false);
 			},
 			error: function(xhr, status, error) {
 				// ❌ alert(res.message) <- res 없음 (버그)
@@ -578,18 +579,18 @@ $(document).ready(function() {
 });
 
 // 전체 데이터 엑셀 다운로드
-window.downloadAllLoadDetailData = function() {
+window.downloadAllLoadDomesticDetailData = function() {
 	showLoading("export");
 
-	const processedData = filteredData_loadDetail.map(item => {
+	const processedData = filteredData_loadDomesticDetail.map(item => {
 		return {
 			...item
 		};
 	});
 
-	ExcelExporter.downloadExcel(processedData, window.loadDetailColumns, {
-		fileName: 'loadDetail_All',
-		sheetName: 'loadDetail'
+	ExcelExporter.downloadExcel(processedData, window.loadDomesticDetailColumns, {
+		fileName: 'loadDomesticDetail_All',
+		sheetName: 'loadDomesticDetail'
 	});
 
 	hideLoading();

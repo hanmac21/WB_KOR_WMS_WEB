@@ -587,6 +587,7 @@
 			a.container,
 			b.spec,
 			a.mes_key as meskey,
+			a.source2,
 			SUM(NVL(A.QTY, 0))   OVER () AS TOTALQTY
 		FROM t_wms_outbound a
 		LEFT JOIN t_mi_item b
@@ -650,6 +651,7 @@
 				a.dock,
 				a.container,
 				a.invoiceno,
+				a.source2,
 				b.spec
 			FROM t_wms_outbound a
 			LEFT JOIN t_mi_item b
@@ -664,7 +666,7 @@
 			GROUP BY
 			a.sdate, a.storage, c.subname, a.itemcode, b.itemname,
 			a.factory, a.intf_yn, a.custcode, a.custname,
-			a.dock, a.source3, a.container, a.invoiceno, b.spec
+			a.dock, a.source3, a.container, a.invoiceno, a.source2, b.spec
 		) x
 		ORDER BY x.sdate DESC, itemcode
 	</select>

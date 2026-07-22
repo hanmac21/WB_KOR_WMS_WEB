@@ -18,6 +18,7 @@ $(document).ready(function() {
 	window.filteredLoadSummaryData = [];
 	window.loadSummaryColumns = [
 		{ key: 'SDATE', header: 'Date' },
+		{ key: 'SOURCE2', header: 'Type' },
 		{ key: 'CUSTNAME', header: 'Supplier' },
 		{ key: 'CAR', header: 'Car' },
 		{ key: 'ITEMCODE', header: 'Item Code' },
@@ -30,8 +31,9 @@ $(document).ready(function() {
 	window.call_mPurchase_load_summary = function(menuId) {
 		showLoading("data");
 		const { fromDate, toDate } = getDefaultDateRange();
+		let source2 = "수출품";
 
-		performLoadSummaryDBSearch({ fromDate, toDate });
+		performLoadSummaryDBSearch({ fromDate, toDate, source2 });
 	};
 
 	// DB에서 전체 데이터 조회 (검색 조건 변경 시에만 호출)
@@ -214,6 +216,7 @@ $(document).ready(function() {
 								<tr>
 									<th class = "noVal">${i18n.t('table.no')}<!-- No --></th>
 									<th class = "dateVal" data-sort="SDATE">${i18n.t('search.date')}<!-- DATE --></th>
+									<th class = "dateVal" data-sort="SOURCE2">${i18n.t('search.type')}<!-- TYPE --></th>
 									<th class = "storageVal" data-sort="CUSTNAME">${i18n.t('search.custname')}<!-- custname --></th>
 									<th class = "carVal" data-sort="CAR">${i18n.t('search.car')}<!-- CAR --></th>
 									<th class = "itemcodeVal" data-sort="ITEMCODE">${i18n.t('search.itemCode')}<!-- ITEMCODE --></th>
@@ -304,6 +307,7 @@ $(document).ready(function() {
 				<tr>
 	                <td class = "noVal">${rowNumber}</td>
 	                <td class = "dateVal">${data.SDATE || data.sdate || ''}</td>
+	                <td class = "dateVal">${data.SOURCE2 || data.source2 || ''}</td>
 					<td class = 'storageVal'>${data.CUSTNAME || data.custname || ''}</td>
 					<td class = "carVal">${data.CAR || data.car || ''}</td>
 					<td class = "itemcodeVal">${data.ITEMCODE || data.itemcode || ''}</td>
@@ -422,7 +426,8 @@ $(document).ready(function() {
 			car: $("#loadSummary_searchVal_car").val().trim().toUpperCase(),
 			itemcode: $("#loadSummary_searchVal_itemcode").val().trim().toUpperCase(),
 			oitemcode: $("#loadSummary_searchVal_oitemcode").val().trim().toUpperCase(),
-			itemname: $("#loadSummary_searchVal_itemname").val().trim().toUpperCase()
+			itemname: $("#loadSummary_searchVal_itemname").val().trim().toUpperCase(),
+			source2: "수출품"
 		};
 	}
 
@@ -445,8 +450,10 @@ $(document).ready(function() {
 		$("#loadSummary_searchVal_oitemcode").val('');
 		$("#loadSummary_searchVal_itemname").val('');
 
+		let source2 = "수출품";
+
 		currentLoadSummaryPage = 1;
-		performLoadSummaryDBSearch({  toDate, fromDate });
+		performLoadSummaryDBSearch({  toDate, fromDate, source2});
 
 		console.log('검색 조건이 초기화되었습니다.');
 	}
