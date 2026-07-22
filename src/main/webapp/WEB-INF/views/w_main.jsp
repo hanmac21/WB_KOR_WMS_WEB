@@ -916,10 +916,10 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 	                	<span class = 'label'><spring:message code ="search.itemName"/></span>
 	                	<span class = 'value'></span>
 	                </div>
-	                <div class="modal-title-location">
+	                <!-- <div class="modal-title-location">
 	                	<span class = 'label'><spring:message code ="search.location"/></span>
 	                	<span class = 'value'></span>
-	                </div>
+	                </div> -->
 	            </div>
 	            <div class="modal-body">
 	                <div class="history-div" id="modalHistoryDiv">

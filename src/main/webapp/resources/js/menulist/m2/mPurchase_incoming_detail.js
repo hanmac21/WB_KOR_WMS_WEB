@@ -705,7 +705,7 @@ $(document).on('click', '.barcodeVal', function(e) {
 		}
         $('.modal-title-barcode .value').text(barcodeValue);
         $('.modal-title-itemcode .value').text(stockInfoData.SPEC);
-        $('.modal-title-itemname .value').text(stockInfoData.ITEMNAME);
+        $('.modal-title-itemname .value').text(stockInfoData.PNAME);
         $('.modal-title-location .value').text(location ?? '');
 
 		renderModal(historyData);

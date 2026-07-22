@@ -310,14 +310,14 @@
 
 	<select id="search_stockInfo" resultType = "map">
 		SELECT
-			A.ITEMCODE,
+			A.PNO,
 			B.SPEC,
-			A.ITEMNAME,
+			A.PNAME,
 			A.LOCATION,
 			A.LASTSTATUS
 		FROM V_STOCKINFO_N A
-		LEFT JOIN T_MI_ITEM B ON B.ITEMCODE = A.ITEMCODE AND B.DELDATE = ' '
-		WHERE BARCODE = #{barcode}
+		LEFT JOIN T_MI_ITEM B ON B.ITEMCODE = A.PNO AND B.DELDATE = ' '
+		WHERE A.BARCODE = #{barcode}
 	</select>
 
 	<select id="show_stockHistory" resultType ="map">
