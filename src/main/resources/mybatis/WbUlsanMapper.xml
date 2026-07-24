@@ -28,21 +28,7 @@
 				a.lotdate as bdate,
 				b.spec,
 				ROW_NUMBER() OVER (ORDER BY a.ymdhms DESC, a.itemcode) AS rn
-			FROM (
-				SELECT *
-				FROM (
-					SELECT
-						r.*,
-						ROW_NUMBER() OVER (
-							PARTITION BY r.barcode
-							ORDER BY r.sdate DESC, r.ymdhms DESC
-						) AS rn_barcode
-					FROM t_wms_realstock r
-					WHERE r.useyn = 'Y'
-					and r.sdate = #{sdate}
-				) t
-				WHERE rn_barcode = 1
-			)  a
+			FROM t_wms_realstock a
 			LEFT OUTER JOIN t_mi_item b
 				ON a.itemcode = b.itemcode
 			LEFT OUTER JOIN t_mi_typesub c
@@ -105,21 +91,7 @@
 					b.itemname,
 					SUM(a.qty) AS qty,
 					b.spec
-				FROM (
-					select *
-					from (
-						SELECT
-							r.*,
-							ROW_NUMBER() OVER (
-								PARTITION BY r.barcode
-								ORDER BY r.sdate DESC, r.ymdhms DESC
-							) AS rn
-						FROM t_wms_realstock r
-						WHERE r.useyn = 'Y'
-						and r.sdate = #{sdate}
-					) x
-					WHERE rn = 1
-				) a
+				FROM t_wms_realstock a
 				LEFT JOIN t_mi_item b
 					ON a.itemcode = b.itemcode
 				LEFT JOIN t_mi_typesub c
@@ -137,21 +109,7 @@
 	<!-- 재고실사 총 개수 조회 -->
 	<select id="getRealStockTotalCount" parameterType="map" resultType="int">
 		SELECT COUNT(*)
-		FROM (
-			SELECT *
-			FROM (
-				SELECT
-					r.*,
-					ROW_NUMBER() OVER (
-						PARTITION BY r.barcode
-						ORDER BY r.sdate DESC, r.ymdhms DESC
-					) AS rn_barcode
-				FROM t_wms_realstock r
-				WHERE r.useyn = 'Y'
-				and r.sdate = #{sdate}
-			) t
-			WHERE rn_barcode = 1
-		)  a
+		FROM t_wms_realstock  a
 		LEFT OUTER JOIN t_mi_item b
 			ON a.itemcode = b.itemcode
 		LEFT OUTER JOIN t_mi_typesub c
@@ -172,21 +130,7 @@
 				a.itemcode,
 				b.itemname,
 				SUM(a.qty) AS qty
-			FROM (
-				SELECT *
-				FROM (
-					SELECT
-						r.*,
-						ROW_NUMBER() OVER (
-							PARTITION BY r.barcode
-							ORDER BY r.sdate DESC, r.ymdhms DESC
-						) AS rn
-					FROM t_wms_realstock r
-					WHERE r.useyn = 'Y'
-					and r.sdate = #{sdate}
-				) x
-				WHERE rn = 1
-			) a
+			FROM t_wms_realstock a
 			LEFT OUTER JOIN t_mi_item b
 				ON a.itemcode = b.itemcode
 			LEFT OUTER JOIN t_mi_typesub c
@@ -219,21 +163,7 @@
 			SUBSTR(a.ymdhms, 9, 2) || ':' || SUBSTR(a.ymdhms, 11, 2) as hhmm,
 			b.spec,
 			a.lotdate as bdate
-		FROM (
-			SELECT *
-			FROM (
-				SELECT
-					r.*,
-					ROW_NUMBER() OVER (
-						PARTITION BY r.barcode
-						ORDER BY r.sdate DESC, r.ymdhms DESC
-					) AS rn_barcode
-				FROM t_wms_realstock r
-				WHERE r.useyn = 'Y'
-				and r.sdate = #{sdate}
-			) t
-			WHERE rn_barcode = 1
-		)  a
+		FROM t_wms_realstock a
 		LEFT OUTER JOIN t_mi_item b
 			ON a.itemcode = b.itemcode
 		LEFT OUTER JOIN t_mi_typesub c
@@ -254,21 +184,7 @@
 			b.itemname,
 			SUM(a.qty) AS qty,
 			b.spec
-		FROM (
-			select *
-			from (
-				SELECT
-					r.*,
-					ROW_NUMBER() OVER (
-						PARTITION BY r.barcode
-						ORDER BY r.sdate DESC, r.ymdhms DESC
-					) AS rn
-				FROM t_wms_realstock r
-				WHERE r.useyn = 'Y'
-				and r.sdate = #{sdate}
-			) x
-			WHERE rn = 1
-		) a
+		FROM t_wms_realstock a
 		LEFT JOIN t_mi_item b
 			ON a.itemcode = b.itemcode
 		LEFT JOIN t_mi_typesub c
@@ -283,21 +199,7 @@
 	<select id="updateTotalQtyStockCount" resultType="string">
 		SELECT
 		SUM(a.qty) AS total_qty
-		FROM (
-			SELECT *
-			FROM (
-				SELECT
-					r.*,
-					ROW_NUMBER() OVER (
-						PARTITION BY r.barcode
-						ORDER BY r.sdate DESC, r.ymdhms DESC
-					) AS rn
-				FROM t_wms_realstock r
-				WHERE r.useyn = 'Y'
-				and r.sdate = #{sdate}
-			) x
-			WHERE rn = 1
-		) a
+		FROM t_wms_realstock a
 		LEFT OUTER JOIN t_mi_item b
 			ON a.itemcode = b.itemcode
 		LEFT OUTER JOIN t_mi_typesub c
