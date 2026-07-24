@@ -152,7 +152,7 @@ body {
 }
 
 .btn {
-	padding: 8px 16px;
+	padding: 3px 16px;
 	border: none;
 	border-radius: 3px;
 	cursor: pointer;
@@ -309,22 +309,59 @@ body {
 .data-table th:nth-child(14), .data-table td:nth-child(14){}
 .data-table th:nth-child(15), .data-table td:nth-child(15){}
 
+/* 남는 가로 공간을 특정 컬럼에 나눠주는 표 (table 에 fluid-cols, 늘릴 컬럼의 th/td 에 col-grow) */
+.data-table.fluid-cols > thead,
+.data-table.fluid-cols > tbody{
+	width: max-content;
+	min-width: 100%;
+}
+
+.data-table.fluid-cols > thead > tr,
+.data-table.fluid-cols > tbody > tr{
+	width: 100%;
+}
+
+.data-table th.col-grow, .data-table td.col-grow{
+	max-width: none;
+	flex-grow: 1;
+	flex-shrink: 0;
+	flex-basis: auto;
+}
+
 /* 스크롤바 스타일 */
-.data-table tbody::-webkit-scrollbar {
-	width: 8px;
+.data-table tbody::-webkit-scrollbar,
+.table-wrapper::-webkit-scrollbar {
+	width: 10px;
+	height: 10px;
 }
 
-.data-table tbody::-webkit-scrollbar-track {
+.data-table tbody::-webkit-scrollbar-button,
+.table-wrapper::-webkit-scrollbar-button {
+	display: none;
+	width: 0;
+	height: 0;
+}
+
+.data-table tbody::-webkit-scrollbar-track,
+.table-wrapper::-webkit-scrollbar-track {
 	background: #f1f1f1;
+	border-radius: 0;
 }
 
-.data-table tbody::-webkit-scrollbar-thumb {
+.data-table tbody::-webkit-scrollbar-thumb,
+.table-wrapper::-webkit-scrollbar-thumb {
 	background: #c1c1c1;
-	border-radius: 4px;
+	border: 0;
+	border-radius: 0;
 }
 
-.data-table tbody::-webkit-scrollbar-thumb:hover {
+.data-table tbody::-webkit-scrollbar-thumb:hover,
+.table-wrapper::-webkit-scrollbar-thumb:hover {
 	background: #a8a8a8;
+}
+
+.table-wrapper::-webkit-scrollbar-corner {
+	background: #f1f1f1;
 }
 
 /* 페이지네이션 */
@@ -383,18 +420,25 @@ body {
 	border-radius: 5px;
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 	display:flex;
+	align-items: stretch;
+	gap: 15px;
 }
 
 .search-row {
     display: flex;
-    gap: 15px;
+    flex-wrap: wrap;
+    gap: 8px 12px;
     align-items: center;
     margin: 6px 0px;
-    width: 86%;
+    flex: 1 1 auto;
+    width: auto;
+    min-width: 0;
 }
 
 .search-label {
-	min-width: 80px;
+	flex: 1 1 90px;
+	min-width: 50px;
+	max-width: 130px;
 	font-size: 13px;
 	font-weight: bold;
 	color: #2c3e50;
@@ -511,21 +555,26 @@ input.answer + label + div {
     align-items: center;
 }
 .search_button_area{
-    width: 13%;
+    flex: 0 0 auto;
+    width: auto;
     margin-left: auto;
     display: flex;
-    justify-content: space-around;
-    align-items: center;
+    justify-content: end;
+    align-items: flex-end;
+    padding-bottom: 6px;
+	gap: 10px;
 }
 .search_button_area_horizontal .btn{
     width: 48%;
     height: 67%;
-    font-weight: 600;	
+    font-weight: 600;
 }
 .search_button_area .btn{
-    width: 48%;
-    height: 63%;
-    font-weight: 600;	
+    width: 80px;
+    height: 34px;
+    font-weight: 600;
+	min-width: 80px;
+	padding: 3px;
 }
 .fa-solid.fa-magnifying-glass-chart.fa-lg,
 .menuCommon > label i,
@@ -578,11 +627,21 @@ th[data-sort].sort-desc::after {
  .table-container {
     display: flex;
     flex-direction: column;
+    min-height: 0;
+    position: relative;
 }
 
 .table-wrapper {
-    height: 87%;
+    height: 100%;
     width: 100%;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.table-container > .pagination,
+.table-container > .table-info,
+.table-container > .items-per-page-selector {
+    flex: 0 0 auto;
 }
 
 .data-table {

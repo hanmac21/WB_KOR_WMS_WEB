@@ -82,12 +82,16 @@ final long v = System.currentTimeMillis();
 </script>
 <style>
 body {
-	margin: 40px 10px;
+	margin: 0;
 	padding: 0;
 	font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
 	font-size: 14px;
 	display: flex;
-	flex-wrap: wrap;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	justify-content: flex-start;
+	align-items: stretch;
+	height: 100vh;
 }
 .fc-content {
 	cursor: pointer
@@ -154,8 +158,18 @@ input[type="checkbox"]:checked {
 }
 
 body>div.header-wrap {
-	margin-bottom: 0;
+	flex: 0 0 43px;
+	margin-bottom: 1px;
 	width: 100%;
+}
+
+body>div.serviceView {
+	flex: 1 1 auto;
+	min-height: 0;
+}
+
+body>div.serviceView>div.menuListArea {
+	height: 100%;
 }
 
 input[type="time"]::-webkit-calendar-picker-indicator {

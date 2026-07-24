@@ -180,7 +180,7 @@
 	display: flex;
 	flex-direction: column;
 	gap: 5px;
-	width: 33%;
+	width: 15%;
 	font-size: 15pt;
 	text-align: center;
 }
@@ -893,7 +893,7 @@ input.modalMenuAccess {
 
 /* 버튼 스타일 */
 .userInfoModal-body .btn {
-	padding: 8px 16px !important;
+	padding: 3px 16px !important;
 	border: none !important;
 	border-radius: 4px !important;
 	cursor: pointer !important;
@@ -2622,9 +2622,17 @@ input:checked + .modal_userUpdateForm_toggle_slider::before {
 }
 
 #view_mBasicData_consignee .search-label>div {
-    width: 25%;
+    width: auto;
+    flex: 0 0 auto;
+    white-space: nowrap;
     text-align: right;
     padding-right: 8px;
+}
+
+#view_mBasicData_consignee .search-label>input {
+    flex: 1 1 0;
+    min-width: 0;
+    width: auto;
 }
 
 #view_mBasicData_consignee .table-container{

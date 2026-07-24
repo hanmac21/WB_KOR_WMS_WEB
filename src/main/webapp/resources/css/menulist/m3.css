@@ -14,20 +14,7 @@
 }
 
 
-#view_mBasicData_magam #magamTableBody{
-	min-width: 100%;
-    width: max-content;
-    display: block;
-    min-height: 590px;
-    max-height: 590px;
-    overflow-y: auto;
-    overflow-x: hidden;
-}
-
-#view_mBasicData_magam .table-container{
-	max-height: 631px !important;
-    min-height: 631px !important;
-}
+/* (반응형) 마감(magam) 표의 고정 높이(590/631px) 제거 → 공용 유동 .table-wrapper 레이아웃 사용 */
 #purchaseStockCountWIPListWorkshop,
 #purchaseStockCountWIPListDate{
 	background:white;
